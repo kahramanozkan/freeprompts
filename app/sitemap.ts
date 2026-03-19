@@ -23,8 +23,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     // Get all prompts and lists for sitemap
     const [prompts, lists] = await Promise.all([
-      promptsApi.getAll().catch(() => []),
-      listsApi.getAll().catch(() => [])
+      promptsApi.getAllForSitemaps().catch(() => []),
+      listsApi.getAllForSitemaps().catch(() => [])
     ]);
 
     const staticPages: MetadataRoute.Sitemap = [

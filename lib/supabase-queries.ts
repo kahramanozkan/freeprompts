@@ -16,14 +16,28 @@ export const promptsApi = {
   async getAll(options?: { limit?: number }) {
     let query = supabase
       .from('prompts')
-      .select('id, title, image, tags, likes, views, created_at, user_id, content, updated_at, theme, category, group, json_prompt')
+      // Removed 'image', 'content', 'json_prompt' to prevent massive Base64 Out Of Memory crashes
+      .select('id, title, tags, likes, views, created_at, user_id, updated_at, theme, category, group')
       .order('created_at', { ascending: false })
 
     if (options && options.limit) {
       query = query.limit(options.limit)
+    } else {
+      query = query.limit(50) // Default limit to prevent OOM
     }
 
     const { data, error } = await query
+
+    if (error) throw error
+    return data
+  },
+
+  // Optimized specifically for sitemap to avoid memory overflow
+  async getAllForSitemaps() {
+    const { data, error } = await supabase
+      .from('prompts')
+      .select('id, title, created_at, updated_at')
+      .order('created_at', { ascending: false })
 
     if (error) throw error
     return data
@@ -284,9 +298,22 @@ export const listsApi = {
 
     if (options && options.limit) {
       query = query.limit(options.limit)
+    } else {
+      query = query.limit(50) // Default limit to prevent OOM
     }
 
     const { data, error } = await query
+
+    if (error) throw error
+    return data
+  },
+
+  // Optimized specifically for sitemaps
+  async getAllForSitemaps() {
+    const { data, error } = await supabase
+      .from('lists')
+      .select('id, slug, created_at, updated_at')
+      .order('created_at', { ascending: false })
 
     if (error) throw error
     return data
@@ -1105,14 +1132,22 @@ export const userLanguageApi = {
 // Enhanced queries with user data integration
 export const promptsWithUserApi = {
   // Get all prompts with user information (only necessary columns)
-  async getAllWithUsers() {
-    const { data, error } = await supabase
+  async getAllWithUsers(options?: { limit?: number }) {
+    let query = supabase
       .from('prompts')
       .select(`
         id, title, image, tags, likes, created_at, user_id,
         user:users(id, name)
       `)
       .order('created_at', { ascending: false })
+
+    if (options && options.limit) {
+      query = query.limit(options.limit)
+    } else {
+      query = query.limit(50) // Default limit to prevent OOM
+    }
+
+    const { data, error } = await query
 
     if (error) throw error
     return data
