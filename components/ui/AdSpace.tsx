@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface AdSpaceProps {
   slot?: string;
@@ -31,7 +31,10 @@ export default function AdSpace({
     rectangle: "h-64",
   };
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     // Load AdSense script if not already loaded
     if (typeof window !== "undefined" && shouldRenderAd) {
       try {
@@ -43,8 +46,8 @@ export default function AdSpace({
     }
   }, [shouldRenderAd]);
 
-  if (!shouldRenderAd) {
-    return null; // Don't render anything if ads are not configured
+  if (!mounted || !shouldRenderAd) {
+    return null; // Don't render anything on the server or if disabled
   }
 
   return (

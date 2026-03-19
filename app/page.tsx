@@ -15,64 +15,50 @@ const HomeSlider = dynamic(() => import('@/components/ui/HomeSlider'), { ssr: tr
 export const revalidate = 60;
 
 // Cached data fetching functions
-const getCachedHomepageStats = unstable_cache(
-  async () => {
-    try {
-      return await statsApi.getHomepageStats();
-    } catch (err) {
-      console.error('Error fetching cached homepage stats:', err);
-      return {
-        totalPrompts: 0,
-        totalLists: 0,
-        totalViews: 0,
-        totalLikes: 0
-      };
-    }
-  },
-  ['homepage-stats'],
-  { revalidate: 60 } // 60 seconds
-);
+// We rely on route segment config `export const revalidate = 60;` for caching,
+// avoiding `unstable_cache` here directly to prevent the 2MB data cache limit error on large base64 fields.
+const getCachedHomepageStats = async () => {
+  try {
+    return await statsApi.getHomepageStats();
+  } catch (err) {
+    console.error('Error fetching cached homepage stats:', err);
+    return {
+      totalPrompts: 0,
+      totalLists: 0,
+      totalViews: 0,
+      totalLikes: 0
+    };
+  }
+};
 
-const getCachedLatestPrompts = unstable_cache(
-  async () => {
-    try {
-      return await promptsApi.getLatest(8);
-    } catch (err) {
-      console.error('Error fetching cached latest prompts:', err);
-      return null;
-    }
-  },
-  ['latest-prompts'],
-  { revalidate: 60 }
-);
+const getCachedLatestPrompts = async () => {
+  try {
+    return await promptsApi.getLatest(8);
+  } catch (err) {
+    console.error('Error fetching cached latest prompts:', err);
+    return null;
+  }
+};
 
-const getCachedLatestLists = unstable_cache(
-  async () => {
-    try {
-      return await listsApi.getLatest(3);
-    } catch (err) {
-      console.error('Error fetching cached latest lists:', err);
-      return null;
-    }
-  },
-  ['latest-lists'],
-  { revalidate: 60 }
-);
+const getCachedLatestLists = async () => {
+  try {
+    return await listsApi.getLatest(3);
+  } catch (err) {
+    console.error('Error fetching cached latest lists:', err);
+    return null;
+  }
+};
 
-const getCachedVariantCounts = unstable_cache(
-  async (promptIds: string[]) => {
-    try {
-      return await promptVariantsApi.countByPromptIds(promptIds);
-    } catch (err) {
-      console.warn('Error fetching cached variant counts:', err);
-      const counts: Record<string, number> = {};
-      promptIds.forEach(id => counts[id] = 0);
-      return counts;
-    }
-  },
-  ['variant-counts'],
-  { revalidate: 60 }
-);
+const getCachedVariantCounts = async (promptIds: string[]) => {
+  try {
+    return await promptVariantsApi.countByPromptIds(promptIds);
+  } catch (err) {
+    console.warn('Error fetching cached variant counts:', err);
+    const counts: Record<string, number> = {};
+    promptIds.forEach(id => counts[id] = 0);
+    return counts;
+  }
+};
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -114,14 +100,6 @@ export default async function Home() {
     ]);
 
     stats = statsData;
-
-    // Log data for debugging (use console.error to appear in Netlify logs)
-    console.error('Homepage data (cached):', {
-      promptsCount: promptsData?.length || 0,
-      listsCount: listsData?.length || 0,
-      stats,
-      user: user?.id || 'no user'
-    });
 
     if (promptsData && promptsData.length > 0) {
       // Get variant counts for all prompts using cache
