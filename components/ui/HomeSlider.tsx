@@ -5,7 +5,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 
 interface HomeSliderProps {
   children: ReactNode[];
@@ -26,32 +26,47 @@ export default function HomeSlider({
   className = "",
   gridCols = 4,
 }: HomeSliderProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className={`relative ${className}`}>
       {/* Slider for mobile & tablet (hidden on desktop) */}
       <div className="lg:hidden">
-        <Swiper
-          modules={[Navigation, Pagination]}
-          spaceBetween={spaceBetween}
-          slidesPerView={slidesPerViewMobile}
-          navigation
-          pagination={{ clickable: true }}
-          breakpoints={{
-            640: {
-              slidesPerView: slidesPerViewTablet,
-              spaceBetween: 20,
-            },
-            1024: {
-              slidesPerView: slidesPerViewDesktop,
-              spaceBetween: 24,
-            },
-          }}
-          className="!pb-10"
-        >
-          {children.map((child, index) => (
-            <SwiperSlide key={index}>{child}</SwiperSlide>
-          ))}
-        </Swiper>
+        {mounted ? (
+          <Swiper
+            modules={[Navigation, Pagination]}
+            spaceBetween={spaceBetween}
+            slidesPerView={slidesPerViewMobile}
+            navigation
+            pagination={{ clickable: true }}
+            breakpoints={{
+              640: {
+                slidesPerView: slidesPerViewTablet,
+                spaceBetween: 20,
+              },
+              1024: {
+                slidesPerView: slidesPerViewDesktop,
+                spaceBetween: 24,
+              },
+            }}
+            className="!pb-10"
+          >
+            {children.map((child, index) => (
+              <SwiperSlide key={index}>{child}</SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          /* Server-side / initial render: show first item as static fallback */
+          <div className="flex gap-4 overflow-hidden">
+            {children.slice(0, 1).map((child, index) => (
+              <div key={index} className="w-full flex-shrink-0">{child}</div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Grid for desktop (hidden on mobile & tablet) */}

@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import Link from "next/link";
-import { unstable_cache } from 'next/cache';
 import { promptsApi, listsApi, userLikesApi, statsApi, promptVariantsApi } from "@/lib/supabase-queries";
 import { supabase } from "@/lib/supabase";
 import type { Database } from "@/lib/database.types";

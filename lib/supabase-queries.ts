@@ -16,8 +16,8 @@ export const promptsApi = {
   async getAll(options?: { limit?: number }) {
     let query = supabase
       .from('prompts')
-      // Removed 'image', 'content', 'json_prompt' to prevent massive Base64 Out Of Memory crashes
-      .select('id, title, tags, likes, views, created_at, user_id, updated_at, theme, category, group')
+      // Removed 'content', 'json_prompt' to prevent massive Base64 Out Of Memory crashes
+      .select('id, title, image, tags, likes, views, created_at, user_id, updated_at, theme, category, group')
       .order('created_at', { ascending: false })
 
     if (options && options.limit) {

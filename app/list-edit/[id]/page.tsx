@@ -9,7 +9,11 @@ import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
 
 type List = Database['public']['Tables']['lists']['Row'];
-type Prompt = Database['public']['Tables']['prompts']['Row'] & {
+type Prompt = Partial<Database['public']['Tables']['prompts']['Row']> & {
+  id: string;
+  title: string;
+  image: string | null;
+  tags: string[];
   userName?: string;
   list?: string;
 };
