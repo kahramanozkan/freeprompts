@@ -6,6 +6,13 @@ import { supabaseServer } from './supabase-server'
  * Use these in Server Components and API routes.
  */
 
+// Helper to extract readable error info from Supabase/Postgrest errors
+function extractError(err: any): string {
+  if (!err) return 'Unknown error'
+  if (typeof err === 'string') return err
+  return err.message || err.details || err.hint || JSON.stringify(err, Object.getOwnPropertyNames(err)) || 'Unknown error'
+}
+
 // Get latest prompts for homepage (server-side, lightweight)
 export async function getLatestPromptsServer(limit: number = 8) {
   const { data, error } = await supabaseServer
@@ -14,7 +21,7 @@ export async function getLatestPromptsServer(limit: number = 8) {
     .order('created_at', { ascending: false })
     .limit(limit)
 
-  if (error) throw error
+  if (error) throw new Error(`Supabase prompts query failed: ${extractError(error)}`)
   return data
 }
 
@@ -26,7 +33,7 @@ export async function getLatestListsServer(limit: number = 3) {
     .order('created_at', { ascending: false })
     .limit(limit)
 
-  if (error) throw error
+  if (error) throw new Error(`Supabase lists query failed: ${extractError(error)}`)
   return data
 }
 
@@ -37,7 +44,7 @@ export async function getHomepageStatsServer() {
     .select('metric, value')
     .order('metric')
 
-  if (error) throw error
+  if (error) throw new Error(`Supabase stats query failed: ${extractError(error)}`)
   const result: Record<string, number> = {}
   data?.forEach(row => result[row.metric] = row.value)
 
@@ -58,7 +65,7 @@ export async function getVariantCountsServer(promptIds: string[]) {
     .select('prompt_id')
     .in('prompt_id', promptIds)
 
-  if (error) throw error
+  if (error) throw new Error(`Supabase variants query failed: ${extractError(error)}`)
 
   const counts: Record<string, number> = {}
   promptIds.forEach(id => counts[id] = 0)
@@ -78,7 +85,7 @@ export async function getUserLikesServer(userId: string, promptIds: string[]) {
     .eq('user_id', userId)
     .in('prompt_id', promptIds)
 
-  if (error) throw error
+  if (error) throw new Error(`Supabase likes query failed: ${extractError(error)}`)
 
   const likesMap: Record<string, boolean> = {}
   promptIds.forEach(id => likesMap[id] = false)

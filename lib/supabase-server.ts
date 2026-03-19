@@ -6,26 +6,36 @@ import type { Database } from './database.types'
  * This client does NOT depend on `window` or `localStorage` and is safe to use
  * in Node.js environments (e.g., Netlify Functions, Next.js Server Components).
  *
- * For client-side (browser) usage, use the client from `./supabase.ts` instead.
+ * Uses lazy initialization to ensure env vars are available at access time.
  */
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+let _supabaseServer: ReturnType<typeof createClient<Database>> | null = null
 
-export function createServerSupabaseClient() {
+export function getSupabaseServer() {
+  if (_supabaseServer) return _supabaseServer
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
   if (!supabaseUrl || !supabaseAnonKey) {
-    // Return a dummy client for build time
+    console.warn('Supabase env vars missing, using dummy client')
     return createClient<Database>('https://dummy.supabase.co', 'dummy-key')
   }
 
-  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  _supabaseServer = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
       detectSessionInUrl: false,
     },
   })
+
+  return _supabaseServer
 }
 
-// Singleton for server-side usage (no localStorage dependency)
-export const supabaseServer = createServerSupabaseClient()
+// Backward compatibility — lazy getter
+export const supabaseServer = new Proxy({} as ReturnType<typeof createClient<Database>>, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getSupabaseServer(), prop, receiver)
+  }
+})
