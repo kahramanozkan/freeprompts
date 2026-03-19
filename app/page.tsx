@@ -1,0 +1,331 @@
+import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
+import Link from "next/link";
+import { unstable_cache } from 'next/cache';
+import { promptsApi, listsApi, userLikesApi, statsApi, promptVariantsApi } from "@/lib/supabase-queries";
+import { supabase } from "@/lib/supabase";
+import type { Database } from "@/lib/database.types";
+
+const Hero = dynamic(() => import('@/components/ui/Hero'), { ssr: true });
+const PromptCard = dynamic(() => import('@/components/ui/PromptCard'), { ssr: true });
+const Subscribe = dynamic(() => import('@/components/ui/Subscribe'), { ssr: true });
+const HomeSlider = dynamic(() => import('@/components/ui/HomeSlider'), { ssr: true });
+
+// Revalidate every 60 seconds
+export const revalidate = 60;
+
+// Cached data fetching functions
+const getCachedHomepageStats = unstable_cache(
+  async () => {
+    try {
+      return await statsApi.getHomepageStats();
+    } catch (err) {
+      console.error('Error fetching cached homepage stats:', err);
+      return {
+        totalPrompts: 0,
+        totalLists: 0,
+        totalViews: 0,
+        totalLikes: 0
+      };
+    }
+  },
+  ['homepage-stats'],
+  { revalidate: 60 } // 60 seconds
+);
+
+const getCachedLatestPrompts = unstable_cache(
+  async () => {
+    try {
+      return await promptsApi.getLatest(8);
+    } catch (err) {
+      console.error('Error fetching cached latest prompts:', err);
+      return null;
+    }
+  },
+  ['latest-prompts'],
+  { revalidate: 60 }
+);
+
+const getCachedLatestLists = unstable_cache(
+  async () => {
+    try {
+      return await listsApi.getLatest(3);
+    } catch (err) {
+      console.error('Error fetching cached latest lists:', err);
+      return null;
+    }
+  },
+  ['latest-lists'],
+  { revalidate: 60 }
+);
+
+const getCachedVariantCounts = unstable_cache(
+  async (promptIds: string[]) => {
+    try {
+      return await promptVariantsApi.countByPromptIds(promptIds);
+    } catch (err) {
+      console.warn('Error fetching cached variant counts:', err);
+      const counts: Record<string, number> = {};
+      promptIds.forEach(id => counts[id] = 0);
+      return counts;
+    }
+  },
+  ['variant-counts'],
+  { revalidate: 60 }
+);
+
+export const metadata: Metadata = {
+  title: 'Home',
+  description: 'Explore thousands of free AI prompts for ChatGPT, Claude, Gemini, and more. Find the perfect prompt for your needs.',
+  alternates: {
+    canonical: '/',
+  },
+};
+
+type Prompt = Database['public']['Tables']['prompts']['Row'] & {
+  userName?: string;
+  list?: string;
+};
+
+type List = Database['public']['Tables']['lists']['Row'];
+
+export default async function Home() {
+  let latestPrompts: Prompt[] = [];
+  let latestLists: List[] = [];
+  let error = null;
+  let userLikesMap: Record<string, boolean> = {};
+  let stats = {
+    totalPrompts: 0,
+    totalLists: 0,
+    totalViews: 0,
+    totalLikes: 0
+  };
+
+  try {
+    // Get current user session in parallel with data fetching
+    const userPromise = supabase.auth.getUser().then(({ data }) => data.user);
+
+    // Fetch cached data in parallel
+    const [promptsData, listsData, user, statsData] = await Promise.all([
+      getCachedLatestPrompts(),
+      getCachedLatestLists(),
+      userPromise,
+      getCachedHomepageStats()
+    ]);
+
+    stats = statsData;
+
+    // Log data for debugging (use console.error to appear in Netlify logs)
+    console.error('Homepage data (cached):', {
+      promptsCount: promptsData?.length || 0,
+      listsCount: listsData?.length || 0,
+      stats,
+      user: user?.id || 'no user'
+    });
+
+    if (promptsData && promptsData.length > 0) {
+      // Get variant counts for all prompts using cache
+      const promptIds = promptsData.map(p => p.id);
+      const variantCounts = await getCachedVariantCounts(promptIds);
+
+      latestPrompts = (promptsData as any[]).map(prompt => ({
+        ...prompt,
+        userName: "User",
+        list: prompt.tags?.[0] || "General",
+        variantCount: variantCounts[prompt.id] || 0
+      })) as Prompt[];
+    }
+
+    if (listsData) {
+      latestLists = listsData as unknown as List[];
+    }
+
+    // Fetch user likes if user is authenticated (not cached as it's user-specific)
+    if (user && latestPrompts.length > 0) {
+      const promptIds = latestPrompts.map(p => p.id);
+      userLikesMap = await userLikesApi.getUserLikesForPrompts(user.id, promptIds);
+    }
+  } catch (err) {
+    console.error('Error loading homepage data:', err);
+    error = 'Failed to load content';
+  }
+
+  return (
+    <div>
+      {/* Hero Section */}
+      <Hero />
+
+      {/* Stats Section */}
+      <section className="py-6 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {/* Total Prompts */}
+            <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200 hover:border-gray-300 transition-colors">
+              <div className="text-3xl md:text-4xl font-bold text-black mb-2">
+                {stats.totalPrompts.toLocaleString()}+
+              </div>
+              <div className="text-sm text-gray-600">
+                ready to use free prompts
+              </div>
+            </div>
+            {/* Total Lists */}
+            <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200 hover:border-gray-300 transition-colors">
+              <div className="text-3xl md:text-4xl font-bold text-black mb-2">
+                {stats.totalLists.toLocaleString()}+
+              </div>
+              <div className="text-sm text-gray-600">
+                groupped prompt lists
+              </div>
+            </div>
+            {/* Total Views */}
+            <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200 hover:border-gray-300 transition-colors">
+              <div className="text-3xl md:text-4xl font-bold text-black mb-2">
+                {stats.totalViews.toLocaleString()}+
+              </div>
+              <div className="text-sm text-gray-600">
+                viewed prompt contents
+              </div>
+            </div>
+            {/* Total Likes */}
+            <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200 hover:border-gray-300 transition-colors">
+              <div className="text-3xl md:text-4xl font-bold text-black mb-2">
+                {stats.totalLikes.toLocaleString()}+
+              </div>
+              <div className="text-sm text-gray-600">
+                liked prompts
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Prompts Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-semibold text-black">
+              Latest Prompts
+            </h2>
+            <Link
+              href="/prompts"
+              className="inline-block px-6 py-2 bg-yellow-100 text-gray-800 text-sm font-medium rounded-md hover:bg-yellow-200 transition-colors"
+            >
+              All Prompts →
+            </Link>
+          </div>
+
+          {/* Prompts Slider - Mobile 1 column, Tablet 2 columns, Desktop 4 columns */}
+          {latestPrompts.length > 0 ? (
+            <HomeSlider
+              slidesPerViewMobile={1}
+              slidesPerViewTablet={2}
+              slidesPerViewDesktop={4}
+              spaceBetween={16}
+              className="pb-12"
+            >
+              {latestPrompts.map((prompt) => (
+                <PromptCard
+                  key={prompt.id}
+                  prompt={prompt as any}
+                  initialLiked={userLikesMap[prompt.id] || false}
+                  variantCount={(prompt as any).variantCount || 0}
+                />
+              ))}
+            </HomeSlider>
+          ) : (
+            <div className="col-span-full text-center py-20">
+              <p className="text-gray-500">{error || "No prompts available yet"}</p>
+              <Link
+                href="/add-prompt"
+                className="inline-block mt-4 px-4 py-2 bg-black text-white text-sm rounded-md hover:bg-gray-800"
+              >
+                Add First Prompt
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Latest Lists Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-semibold text-black">
+              Latest Lists
+            </h2>
+            <Link
+              href="/lists"
+              className="inline-block px-6 py-2 bg-yellow-100 text-gray-800 text-sm font-medium rounded-md hover:bg-yellow-200 transition-colors"
+            >
+              All Lists →
+            </Link>
+          </div>
+
+          {/* Lists Slider - Mobile 1 column, Tablet 2 columns, Desktop 3 columns */}
+          {latestLists.length > 0 ? (
+            <HomeSlider
+              slidesPerViewMobile={1}
+              slidesPerViewTablet={2}
+              slidesPerViewDesktop={3}
+              spaceBetween={24}
+              className="pb-12"
+              gridCols={3}
+            >
+              {latestLists.map((list) => (
+                <Link
+                  key={list.id}
+                  href={`/list/${list.id}/${list.slug}`}
+                  className="group bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors block h-full"
+                >
+                  {/* Image - Square format */}
+                  <div
+                    className="w-full bg-cover bg-center relative"
+                    style={{ aspectRatio: '1/1', backgroundImage: list.image ? `url(${list.image})` : undefined }}
+                  >
+                    {!list.image && (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                        <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                    )}
+
+                    {/* Prompt count badge */}
+                    <div className="absolute top-3 right-3 px-3 py-1 bg-black/70 text-white text-sm rounded-full">
+                      {list.prompt_ids?.length || 0} prompts
+                    </div>
+                  </div>
+
+                  {/* Content - Expanded */}
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold text-black mb-4 line-clamp-2 group-hover:text-gray-700">
+                      {list.name}
+                    </h3>
+                    <div className="text-sm text-gray-500">
+                      {new Date(list.created_at).toLocaleDateString('en-US')}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </HomeSlider>
+          ) : (
+            <div className="col-span-full text-center py-20">
+              <p className="text-gray-500">{error || "No lists available yet"}</p>
+              <Link
+                href="/add-list"
+                className="inline-block mt-4 px-4 py-2 bg-black text-white text-sm rounded-md hover:bg-gray-800"
+              >
+                Add First List
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Subscribe Section */}
+      <section className="py-16 bg-gray-50">
+        <Subscribe />
+      </section>
+    </div>
+  );
+}

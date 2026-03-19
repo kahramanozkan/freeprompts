@@ -1,0 +1,1 @@
+SELECT metric, value FROM stats ORDER BY metric;
