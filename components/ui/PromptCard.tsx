@@ -84,6 +84,7 @@ function PromptCard({ prompt, initialLiked = false, variantCount = 0 }: PromptCa
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             priority={false}
+            unoptimized={prompt.image.startsWith('data:')}
           />
         )}
 

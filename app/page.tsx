@@ -1,8 +1,14 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import Link from "next/link";
-import { promptsApi, listsApi, userLikesApi, statsApi, promptVariantsApi } from "@/lib/supabase-queries";
-import { supabase } from "@/lib/supabase";
+import {
+  getLatestPromptsServer,
+  getLatestListsServer,
+  getHomepageStatsServer,
+  getVariantCountsServer,
+  getUserLikesServer
+} from "@/lib/supabase-server-queries";
+import { supabaseServer } from "@/lib/supabase-server";
 import type { Database } from "@/lib/database.types";
 
 const Hero = dynamic(() => import('@/components/ui/Hero'), { ssr: true });
@@ -13,14 +19,12 @@ const HomeSlider = dynamic(() => import('@/components/ui/HomeSlider'), { ssr: tr
 // Revalidate every 60 seconds
 export const revalidate = 60;
 
-// Cached data fetching functions
-// We rely on route segment config `export const revalidate = 60;` for caching,
-// avoiding `unstable_cache` here directly to prevent the 2MB data cache limit error on large base64 fields.
+// Server-side data fetching (using server-safe Supabase client)
 const getCachedHomepageStats = async () => {
   try {
-    return await statsApi.getHomepageStats();
+    return await getHomepageStatsServer();
   } catch (err) {
-    console.error('Error fetching cached homepage stats:', err);
+    console.error('Error fetching homepage stats:', err);
     return {
       totalPrompts: 0,
       totalLists: 0,
@@ -32,27 +36,27 @@ const getCachedHomepageStats = async () => {
 
 const getCachedLatestPrompts = async () => {
   try {
-    return await promptsApi.getLatest(8);
+    return await getLatestPromptsServer(8);
   } catch (err) {
-    console.error('Error fetching cached latest prompts:', err);
+    console.error('Error fetching latest prompts:', err);
     return null;
   }
 };
 
 const getCachedLatestLists = async () => {
   try {
-    return await listsApi.getLatest(3);
+    return await getLatestListsServer(3);
   } catch (err) {
-    console.error('Error fetching cached latest lists:', err);
+    console.error('Error fetching latest lists:', err);
     return null;
   }
 };
 
 const getCachedVariantCounts = async (promptIds: string[]) => {
   try {
-    return await promptVariantsApi.countByPromptIds(promptIds);
+    return await getVariantCountsServer(promptIds);
   } catch (err) {
-    console.warn('Error fetching cached variant counts:', err);
+    console.warn('Error fetching variant counts:', err);
     const counts: Record<string, number> = {};
     promptIds.forEach(id => counts[id] = 0);
     return counts;
@@ -88,7 +92,7 @@ export default async function Home() {
 
   try {
     // Get current user session in parallel with data fetching
-    const userPromise = supabase.auth.getUser().then(({ data }) => data.user);
+    const userPromise = supabaseServer.auth.getUser().then(({ data }: { data: any }) => data.user);
 
     // Fetch cached data in parallel
     const [promptsData, listsData, user, statsData] = await Promise.all([
@@ -120,7 +124,7 @@ export default async function Home() {
     // Fetch user likes if user is authenticated (not cached as it's user-specific)
     if (user && latestPrompts.length > 0) {
       const promptIds = latestPrompts.map(p => p.id);
-      userLikesMap = await userLikesApi.getUserLikesForPrompts(user.id, promptIds);
+      userLikesMap = await getUserLikesServer(user.id, promptIds);
     }
   } catch (err) {
     console.error('Error loading homepage data:', err);
