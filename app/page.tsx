@@ -91,22 +91,17 @@ export default async function Home() {
   };
 
   try {
-    // Get current user session in parallel with data fetching
-    const userPromise = supabaseServer.auth.getUser().then(({ data }: { data: any }) => data.user);
-
-    // Fetch cached data in parallel
-    const [promptsData, listsData, user, statsData] = await Promise.all([
+    // Fetch data independently from auth — auth failures must NOT block content
+    const [promptsData, listsData, statsData] = await Promise.all([
       getCachedLatestPrompts(),
       getCachedLatestLists(),
-      userPromise,
       getCachedHomepageStats()
     ]);
 
     stats = statsData;
 
     if (promptsData && promptsData.length > 0) {
-      // Get variant counts for all prompts using cache
-      const promptIds = promptsData.map(p => p.id);
+      const promptIds = promptsData.map((p: any) => p.id);
       const variantCounts = await getCachedVariantCounts(promptIds);
 
       latestPrompts = (promptsData as any[]).map(prompt => ({
@@ -121,10 +116,15 @@ export default async function Home() {
       latestLists = listsData as unknown as List[];
     }
 
-    // Fetch user likes if user is authenticated (not cached as it's user-specific)
-    if (user && latestPrompts.length > 0) {
-      const promptIds = latestPrompts.map(p => p.id);
-      userLikesMap = await getUserLikesServer(user.id, promptIds);
+    // Auth is separate — failures here don't affect content display
+    try {
+      const { data: { user } } = await supabaseServer.auth.getUser();
+      if (user && latestPrompts.length > 0) {
+        const promptIds = latestPrompts.map(p => p.id);
+        userLikesMap = await getUserLikesServer(user.id, promptIds);
+      }
+    } catch {
+      // Auth not available on server — this is expected, silently continue
     }
   } catch (err) {
     console.error('Error loading homepage data:', err);
