@@ -23,12 +23,6 @@ export default function AdSpace({
   format = "horizontal",
   className = "",
 }: AdSpaceProps) {
-  const formatClasses = {
-    horizontal: "h-24",
-    vertical: "h-96",
-    rectangle: "h-64",
-  };
-
   const [mounted, setMounted] = useState(false);
   const [activeSlot, setActiveSlot] = useState<string>("");
 
@@ -41,8 +35,13 @@ export default function AdSpace({
     }
   }, [slot]);
 
-  // Check if ads should render (only after mount to avoid hydration issues)
-  const shouldRenderAd = mounted && publisherId && publisherId.startsWith("ca-pub-") && activeSlot && activeSlot !== "ad-slot-1";
+  // Check if we have the basic configuration
+  const hasConfig = Boolean(publisherId && publisherId.startsWith("ca-pub-"));
+  
+  if (!hasConfig) return null;
+
+  // Check if ads should render
+  const shouldRenderAd = mounted && activeSlot && activeSlot !== "ad-slot-1";
 
   useEffect(() => {
     if (shouldRenderAd && typeof window !== "undefined") {
@@ -54,9 +53,8 @@ export default function AdSpace({
     }
   }, [shouldRenderAd, activeSlot]);
 
-  // Always render the same container div for consistent server/client HTML
   return (
-    <div className={`${formatClasses[format]} ${className}`}>
+    <div className={`w-full overflow-hidden ${className}`}>
       {shouldRenderAd && (
         <ins
           className="adsbygoogle"

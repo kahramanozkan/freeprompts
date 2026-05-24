@@ -8,6 +8,7 @@ import ImageWithLoader from "@/components/ui/ImageWithLoader";
 import { promptsApi, userLikesApi, userLanguageApi, promptVariantsApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import AdSpace from "@/components/ui/AdSpace";
+import Modal from "@/components/ui/Modal";
 import { promptLanguages } from "@/lib/languages";
 import LanguageSelector from "@/components/ui/LanguageSelector";
 import { useSiteLanguage } from "@/contexts/SiteLanguageContext";
@@ -39,12 +40,18 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
   // Output Variants state
   const [variants, setVariants] = useState<any[]>([]);
   const [variantsLoading, setVariantsLoading] = useState(false);
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
   const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [showJsonPrompt, setShowJsonPrompt] = useState(false);
+  
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'error' | 'warning' | 'info' | 'confirm';
+    onConfirm?: () => void;
+  }>({ isOpen: false, title: '', message: '', type: 'info' });
 
   // Ref to track if view has been incremented for the current prompt ID
   const viewIncrementedRef = useRef<string | null>(null);
@@ -285,13 +292,21 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
     // Validate file type and size
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      setUploadError('Invalid file type. Only JPG, PNG, and WebP are allowed.');
-      setShowUploadModal(true);
+      setModalState({
+        isOpen: true,
+        title: 'Upload Error',
+        message: 'Invalid file type. Only JPG, PNG, and WebP are allowed.',
+        type: 'error'
+      });
       return;
     }
     if (file.size > 2 * 1024 * 1024) {
-      setUploadError('File size exceeds 2MB limit.');
-      setShowUploadModal(true);
+      setModalState({
+        isOpen: true,
+        title: 'Upload Error',
+        message: 'File size exceeds 2MB limit.',
+        type: 'error'
+      });
       return;
     }
 
@@ -299,24 +314,29 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
     try {
       const hasVariant = await promptVariantsApi.userHasVariant(prompt.id, user.id);
       if (hasVariant) {
-        setUploadError('You have already uploaded a variant for this prompt. Each user can upload only one.');
-        setShowUploadModal(true);
+        setModalState({
+          isOpen: true,
+          title: 'Upload Error',
+          message: 'You have already uploaded a variant for this prompt. Each user can upload only one.',
+          type: 'warning'
+        });
         return;
       }
     } catch (err) {
       console.error('Failed to check existing variant:', err);
     }
 
-    // Upload variant
     try {
       setUploading(true);
       const newVariant = await promptVariantsApi.create(prompt.id, user.id, file);
       setVariants(prev => [newVariant, ...prev]);
-      setShowUploadModal(false);
-      setUploadError(null);
     } catch (err: any) {
-      setUploadError(err.message || 'Failed to upload variant.');
-      setShowUploadModal(true);
+      setModalState({
+        isOpen: true,
+        title: 'Upload Error',
+        message: err.message || 'Failed to upload variant.',
+        type: 'error'
+      });
     } finally {
       setUploading(false);
       // Clear file input
@@ -324,15 +344,28 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
     }
   };
 
-  const handleDeleteVariant = async (variantId: string) => {
-    if (!confirm('Are you sure you want to delete this variant?')) return;
-    try {
-      await promptVariantsApi.delete(variantId);
-      setVariants(prev => prev.filter(v => v.id !== variantId));
-    } catch (err) {
-      console.error('Failed to delete variant:', err);
-      alert('Failed to delete variant.');
-    }
+  const handleDeleteVariant = (variantId: string) => {
+    setModalState({
+      isOpen: true,
+      title: 'Delete Variant',
+      message: 'Are you sure you want to delete this variant?',
+      type: 'confirm',
+      onConfirm: async () => {
+        setModalState(prev => ({ ...prev, isOpen: false }));
+        try {
+          await promptVariantsApi.delete(variantId);
+          setVariants(prev => prev.filter(v => v.id !== variantId));
+        } catch (err) {
+          console.error('Failed to delete variant:', err);
+          setModalState({
+            isOpen: true,
+            title: 'Error',
+            message: 'Failed to delete variant.',
+            type: 'error'
+          });
+        }
+      }
+    });
   };
 
   const openGallery = (index: number) => {
@@ -751,7 +784,7 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
                   {user ? ' You can also upload your own variant.' : ' Log in to upload your own variant.'}
                 </p>
               </div>
-              {user && (
+              {user && !variants.some(v => v.user_id === user.id) && (
                 <div className="mt-2 md:mt-0">
                   <button
                     onClick={() => document.getElementById('variant-upload')?.click()}
@@ -999,23 +1032,16 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
           })
         }}
       />
-     {/* Upload Error Modal */}
-     {showUploadModal && uploadError && (
-       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-         <div className="bg-white rounded-lg max-w-md w-full mx-4 p-6">
-           <h3 className="text-lg font-semibold text-black mb-4">Upload Error</h3>
-           <p className="text-gray-700 mb-6">{uploadError}</p>
-           <div className="flex justify-end">
-             <button
-               onClick={() => setShowUploadModal(false)}
-               className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-             >
-               OK
-             </button>
-           </div>
-         </div>
-       </div>
-     )}
+     {/* Global Modal for prompt-detail */}
+     <Modal
+       isOpen={modalState.isOpen}
+       onClose={() => setModalState(prev => ({ ...prev, isOpen: false }))}
+       title={modalState.title}
+       message={modalState.message}
+       type={modalState.type}
+       onConfirm={modalState.onConfirm}
+       confirmText={modalState.type === 'confirm' ? 'Delete' : 'OK'}
+     />
 
      {/* Gallery Modal */}
      {showGalleryModal && selectedVariantIndex !== null && variants[selectedVariantIndex] && (
