@@ -19,50 +19,6 @@ const HomeSlider = dynamic(() => import('@/components/ui/HomeSlider'), { ssr: tr
 // Revalidate every 60 seconds
 export const revalidate = 60;
 
-// Server-side data fetching (using server-safe Supabase client)
-const getCachedHomepageStats = async () => {
-  try {
-    return await getHomepageStatsServer();
-  } catch (err) {
-    console.error('Error fetching homepage stats:', err);
-    return {
-      totalPrompts: 0,
-      totalLists: 0,
-      totalViews: 0,
-      totalLikes: 0
-    };
-  }
-};
-
-const getCachedLatestPrompts = async () => {
-  try {
-    return await getLatestPromptsServer(8);
-  } catch (err) {
-    console.error('Error fetching latest prompts:', err);
-    return null;
-  }
-};
-
-const getCachedLatestLists = async () => {
-  try {
-    return await getLatestListsServer(3);
-  } catch (err) {
-    console.error('Error fetching latest lists:', err);
-    return null;
-  }
-};
-
-const getCachedVariantCounts = async (promptIds: string[]) => {
-  try {
-    return await getVariantCountsServer(promptIds);
-  } catch (err) {
-    console.warn('Error fetching variant counts:', err);
-    const counts: Record<string, number> = {};
-    promptIds.forEach(id => counts[id] = 0);
-    return counts;
-  }
-};
-
 export const metadata: Metadata = {
   title: 'Home',
   description: 'Explore thousands of free AI prompts for ChatGPT, Claude, Gemini, and more. Find the perfect prompt for your needs.',
@@ -79,56 +35,47 @@ type Prompt = Database['public']['Tables']['prompts']['Row'] & {
 type List = Database['public']['Tables']['lists']['Row'];
 
 export default async function Home() {
+  // We do not catch data fetching errors here.
+  // If the database is slow or down, this will throw an error,
+  // causing Next.js to abort the revalidation and serve the previous successful cache!
+  // This prevents cache poisoning (where Next.js caches an empty page).
+
+  const [promptsData, listsData, statsData] = await Promise.all([
+    getLatestPromptsServer(8),
+    getLatestListsServer(3),
+    getHomepageStatsServer()
+  ]);
+
+  const stats = statsData;
   let latestPrompts: Prompt[] = [];
   let latestLists: List[] = [];
-  let error = null;
   let userLikesMap: Record<string, boolean> = {};
-  let stats = {
-    totalPrompts: 0,
-    totalLists: 0,
-    totalViews: 0,
-    totalLikes: 0
-  };
 
+  if (promptsData && promptsData.length > 0) {
+    const promptIds = promptsData.map((p: any) => p.id);
+    const variantCounts = await getVariantCountsServer(promptIds);
+
+    latestPrompts = (promptsData as any[]).map(prompt => ({
+      ...prompt,
+      userName: "User",
+      list: prompt.tags?.[0] || "General",
+      variantCount: variantCounts[prompt.id] || 0
+    })) as Prompt[];
+  }
+
+  if (listsData) {
+    latestLists = listsData as unknown as List[];
+  }
+
+  // Auth is separate — failures here don't affect content display
   try {
-    // Fetch data independently from auth — auth failures must NOT block content
-    const [promptsData, listsData, statsData] = await Promise.all([
-      getCachedLatestPrompts(),
-      getCachedLatestLists(),
-      getCachedHomepageStats()
-    ]);
-
-    stats = statsData;
-
-    if (promptsData && promptsData.length > 0) {
-      const promptIds = promptsData.map((p: any) => p.id);
-      const variantCounts = await getCachedVariantCounts(promptIds);
-
-      latestPrompts = (promptsData as any[]).map(prompt => ({
-        ...prompt,
-        userName: "User",
-        list: prompt.tags?.[0] || "General",
-        variantCount: variantCounts[prompt.id] || 0
-      })) as Prompt[];
+    const { data: { user } } = await supabaseServer.auth.getUser();
+    if (user && latestPrompts.length > 0) {
+      const promptIds = latestPrompts.map(p => p.id);
+      userLikesMap = await getUserLikesServer(user.id, promptIds);
     }
-
-    if (listsData) {
-      latestLists = listsData as unknown as List[];
-    }
-
-    // Auth is separate — failures here don't affect content display
-    try {
-      const { data: { user } } = await supabaseServer.auth.getUser();
-      if (user && latestPrompts.length > 0) {
-        const promptIds = latestPrompts.map(p => p.id);
-        userLikesMap = await getUserLikesServer(user.id, promptIds);
-      }
-    } catch {
-      // Auth not available on server — this is expected, silently continue
-    }
-  } catch (err) {
-    console.error('Error loading homepage data:', err);
-    error = 'Failed to load content';
+  } catch {
+    // Auth not available on server — this is expected, silently continue
   }
 
   return (
@@ -215,7 +162,7 @@ export default async function Home() {
             </HomeSlider>
           ) : (
             <div className="col-span-full text-center py-20">
-              <p className="text-gray-500">{error || "No prompts available yet"}</p>
+              <p className="text-gray-500">No prompts available yet</p>
               <Link
                 href="/add-prompt"
                 className="inline-block mt-4 px-4 py-2 bg-black text-white text-sm rounded-md hover:bg-gray-800"
@@ -291,7 +238,7 @@ export default async function Home() {
             </HomeSlider>
           ) : (
             <div className="col-span-full text-center py-20">
-              <p className="text-gray-500">{error || "No lists available yet"}</p>
+              <p className="text-gray-500">No lists available yet</p>
               <Link
                 href="/add-list"
                 className="inline-block mt-4 px-4 py-2 bg-black text-white text-sm rounded-md hover:bg-gray-800"
