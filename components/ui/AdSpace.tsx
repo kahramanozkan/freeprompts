@@ -9,7 +9,8 @@ interface AdSpaceProps {
 }
 
 const publisherId = process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID || "";
-const slotId = process.env.NEXT_PUBLIC_GOOGLE_ADS_SLOT_ID || "";
+const desktopSlotId = process.env.NEXT_PUBLIC_GOOGLE_ADS_SLOT_ID_DESKTOP || process.env.NEXT_PUBLIC_GOOGLE_ADS_SLOT_ID || "";
+const mobileSlotId = process.env.NEXT_PUBLIC_GOOGLE_ADS_SLOT_ID_MOBILE || desktopSlotId;
 
 declare global {
   interface Window {
@@ -18,7 +19,7 @@ declare global {
 }
 
 export default function AdSpace({
-  slot = slotId,
+  slot,
   format = "horizontal",
   className = "",
 }: AdSpaceProps) {
@@ -29,13 +30,19 @@ export default function AdSpace({
   };
 
   const [mounted, setMounted] = useState(false);
+  const [activeSlot, setActiveSlot] = useState<string>("");
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (typeof window !== "undefined") {
+      const isMobile = window.innerWidth < 768;
+      const slotToUse = slot || (isMobile ? mobileSlotId : desktopSlotId);
+      setActiveSlot(slotToUse);
+    }
+  }, [slot]);
 
   // Check if ads should render (only after mount to avoid hydration issues)
-  const shouldRenderAd = mounted && publisherId && publisherId.startsWith("ca-pub-") && slot && slot !== "ad-slot-1";
+  const shouldRenderAd = mounted && publisherId && publisherId.startsWith("ca-pub-") && activeSlot && activeSlot !== "ad-slot-1";
 
   useEffect(() => {
     if (shouldRenderAd && typeof window !== "undefined") {
@@ -45,7 +52,7 @@ export default function AdSpace({
         // Ignore errors from ad blockers
       }
     }
-  }, [shouldRenderAd]);
+  }, [shouldRenderAd, activeSlot]);
 
   // Always render the same container div for consistent server/client HTML
   return (
@@ -55,7 +62,7 @@ export default function AdSpace({
           className="adsbygoogle"
           style={{ display: "block" }}
           data-ad-client={publisherId}
-          data-ad-slot={slot}
+          data-ad-slot={activeSlot}
           data-ad-format="auto"
           data-full-width-responsive="true"
           data-ad-test={process.env.NODE_ENV === "development" ? "on" : undefined}
