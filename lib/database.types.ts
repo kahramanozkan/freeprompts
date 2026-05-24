@@ -75,6 +75,10 @@ export interface Database {
           category: string | null
           group: string | null
           json_prompt: string | null
+          share_text_twitter: string | null
+          share_text_facebook: string | null
+          share_text_pinterest: string | null
+          share_text_whatsapp: string | null
         }
         Insert: {
           id?: string
@@ -91,6 +95,10 @@ export interface Database {
           category?: string | null
           group?: string | null
           json_prompt?: string | null
+          share_text_twitter?: string | null
+          share_text_facebook?: string | null
+          share_text_pinterest?: string | null
+          share_text_whatsapp?: string | null
         }
         Update: {
           id?: string
@@ -107,6 +115,10 @@ export interface Database {
           category?: string | null
           group?: string | null
           json_prompt?: string | null
+          share_text_twitter?: string | null
+          share_text_facebook?: string | null
+          share_text_pinterest?: string | null
+          share_text_whatsapp?: string | null
         }
         Relationships: [
           {

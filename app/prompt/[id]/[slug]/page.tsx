@@ -115,10 +115,133 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ i
 
   // Pass data to client component
   return (
-    <PromptDetailClient
-      params={{ id, slug }}
-      initialPrompt={prompt}
-      error={error}
-    />
+    <>
+      {prompt && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "CreativeWork",
+                "name": prompt.title,
+                "description": prompt.content.length > 160
+                  ? `${prompt.content.substring(0, 157)}...`
+                  : prompt.content,
+                "url": `https://freeprompts.store/prompt/${prompt.id}/${slug}`,
+                "author": {
+                  "@type": "Person",
+                  "name": "Anonymous",
+                  "@id": "https://freeprompts.store/users/anonymous"
+                },
+                "dateCreated": prompt.created_at,
+                "dateModified": prompt.updated_at,
+                "keywords": prompt.tags?.join(", "),
+                "image": prompt.image ? [prompt.image] : [],
+                "genre": "AI Prompt",
+                "about": [
+                  { "@type": "Thing", "name": "Artificial Intelligence" },
+                  { "@type": "Thing", "name": "Prompt Engineering" }
+                ],
+                "interactionStatistic": [
+                  {
+                    "@type": "InteractionCounter",
+                    "interactionType": "https://schema.org/LikeAction",
+                    "userInteractionCount": prompt.likes || 0
+                  },
+                  {
+                    "@type": "InteractionCounter",
+                    "interactionType": "https://schema.org/ViewAction",
+                    "userInteractionCount": prompt.views || 0
+                  }
+                ],
+                "isPartOf": {
+                  "@type": "Collection",
+                  "name": "FreePrompts AI Prompts",
+                  "url": "https://freeprompts.store"
+                },
+                "mainEntityOfPage": {
+                  "@type": "WebPage",
+                  "@id": `https://freeprompts.store/prompt/${prompt.id}/${slug}`
+                }
+              })
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://freeprompts.store"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Prompts",
+                    "item": "https://freeprompts.store/prompts"
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": prompt.title,
+                    "item": `https://freeprompts.store/prompt/${prompt.id}/${slug}`
+                  }
+                ]
+              })
+            }}
+          />
+        </>
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "FreePrompts",
+            "url": "https://freeprompts.store",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://freeprompts.store/logo.png"
+            },
+            "sameAs": [
+              "https://twitter.com/freeprompts",
+              "https://github.com/freeprompts"
+            ],
+            "description": "Free AI Prompt Marketplace - Discover, share, and use high-quality free AI prompts"
+          })
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "FreePrompts",
+            "url": "https://freeprompts.store",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://freeprompts.store/prompts?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }}
+      />
+      <PromptDetailClient
+        params={{ id, slug }}
+        initialPrompt={prompt}
+        error={error}
+      />
+    </>
   );
 }

@@ -18,6 +18,7 @@ export default function robots(): MetadataRoute.Robots {
         '/list-edit/',
         '/prompt-edit/',
         '/*.json$',
+        '/*?*',
       ],
     },
     sitemap: [

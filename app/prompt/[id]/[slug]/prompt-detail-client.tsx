@@ -249,23 +249,34 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
 
     const url = window.location.href;
     const title = prompt.title;
-    const text = `Check out this prompt: ${title}`;
+    
+    // Default fallback text
+    const defaultText = `Check out this prompt: ${title}`;
     const hashtags = 'AI,Prompt,FreePrompts';
 
     let shareUrl = '';
     switch (platform) {
-      case 'twitter':
+      case 'twitter': {
+        const text = prompt.share_text_twitter || defaultText;
         shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=${encodeURIComponent(hashtags)}`;
         break;
-      case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+      }
+      case 'facebook': {
+        const text = prompt.share_text_facebook || defaultText;
+        // Facebook's share sharer doesn't easily accept pre-filled text, but some tools use quote parameter.
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
         break;
-      case 'pinterest':
-        shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(text)}`;
+      }
+      case 'pinterest': {
+        const text = prompt.share_text_pinterest || defaultText;
+        shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(text)}${prompt.image ? `&media=${encodeURIComponent(prompt.image)}` : ''}`;
         break;
-      case 'whatsapp':
+      }
+      case 'whatsapp': {
+        const text = prompt.share_text_whatsapp || defaultText;
         shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
         break;
+      }
     }
 
     window.open(shareUrl, '_blank', 'noopener,noreferrer');
@@ -891,147 +902,9 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
         </div>
       </div>
 
-      {/* Bottom Ad Space */}
-      <div className="py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AdSpace />
         </div>
       </div>
-
-      {/* Enhanced JSON-LD Structured Data */}
-      <Script
-        id="prompt-creativework-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "CreativeWork",
-            "name": prompt.title,
-            "description": prompt.content.length > 160
-              ? `${prompt.content.substring(0, 157)}...`
-              : prompt.content,
-            "url": `https://freeprompts.store/prompt/${prompt.id}/${params.slug}`,
-            "author": {
-              "@type": "Person",
-              "name": "Anonymous",
-              "@id": "https://freeprompts.store/users/anonymous"
-            },
-            "dateCreated": prompt.created_at,
-            "dateModified": prompt.updated_at,
-            "keywords": prompt.tags?.join(", "),
-            "image": prompt.image ? [prompt.image] : [],
-            "genre": "AI Prompt",
-            "about": [
-              {
-                "@type": "Thing",
-                "name": "Artificial Intelligence"
-              },
-              {
-                "@type": "Thing",
-                "name": "Prompt Engineering"
-              }
-            ],
-            "interactionStatistic": [
-              {
-                "@type": "InteractionCounter",
-                "interactionType": "https://schema.org/LikeAction",
-                "userInteractionCount": prompt.likes || 0
-              },
-              {
-                "@type": "InteractionCounter",
-                "interactionType": "https://schema.org/ViewAction",
-                "userInteractionCount": prompt.views || 0
-              }
-            ],
-            "isPartOf": {
-              "@type": "Collection",
-              "name": "FreePrompts AI Prompts",
-              "url": "https://freeprompts.store"
-            },
-            "mainEntityOfPage": {
-              "@type": "WebPage",
-              "@id": `https://freeprompts.store/prompt/${prompt.id}/${params.slug}`
-            }
-          })
-        }}
-      />
-
-      {/* BreadcrumbList Schema */}
-      <Script
-        id="breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://freeprompts.store"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Prompts",
-                "item": "https://freeprompts.store/prompts"
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": prompt.title,
-                "item": `https://freeprompts.store/prompt/${prompt.id}/${params.slug}`
-              }
-            ]
-          })
-        }}
-      />
-
-      {/* Organization Schema */}
-      <Script
-        id="organization-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "FreePrompts",
-            "url": "https://freeprompts.store",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://freeprompts.store/logo.png"
-            },
-            "sameAs": [
-              "https://twitter.com/freeprompts",
-              "https://github.com/freeprompts"
-            ],
-            "description": "Free AI Prompt Marketplace - Discover, share, and use high-quality free AI prompts"
-          })
-        }}
-      />
-
-      {/* WebSite Schema */}
-      <Script
-        id="website-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "FreePrompts",
-            "url": "https://freeprompts.store",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": {
-                "@type": "EntryPoint",
-                "urlTemplate": "https://freeprompts.store/prompts?q={search_term_string}"
-              },
-              "query-input": "required name=search_term_string"
-            }
-          })
-        }}
-      />
+      {/* JSON-LD moved to server component */}
      {/* Global Modal for prompt-detail */}
      <Modal
        isOpen={modalState.isOpen}

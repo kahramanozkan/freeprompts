@@ -6,6 +6,7 @@ import { promptsApi, imagesApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
+import Modal from "@/components/ui/Modal";
 
 type PromptInsert = Database['public']['Tables']['prompts']['Insert'];
 
@@ -25,7 +26,12 @@ export default function AddPromptPage() {
     category: "",
     group: "",
     jsonPrompt: "",
+    shareTwitter: "",
+    shareFacebook: "",
+    sharePinterest: "",
+    shareWhatsapp: "",
   });
+  const [showShareOptions, setShowShareOptions] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -69,6 +75,10 @@ export default function AddPromptPage() {
         category: formData.category.trim() || null,
         group: formData.group.trim() || null,
         json_prompt: formData.jsonPrompt.trim() || null,
+        share_text_twitter: formData.shareTwitter.trim() || null,
+        share_text_facebook: formData.shareFacebook.trim() || null,
+        share_text_pinterest: formData.sharePinterest.trim() || null,
+        share_text_whatsapp: formData.shareWhatsapp.trim() || null,
       };
 
       // Save to Supabase
@@ -347,6 +357,74 @@ export default function AddPromptPage() {
             )}
           </div>
 
+          {/* Social Media Share Texts (Optional) */}
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setShowShareOptions(!showShareOptions)}
+              className="w-full px-4 py-3 bg-gray-50 flex items-center justify-between text-left focus:outline-none"
+            >
+              <span className="font-medium text-black">Social Media Share Texts (Optional)</span>
+              <svg className={`w-5 h-5 text-gray-500 transform transition-transform ${showShareOptions ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            {showShareOptions && (
+              <div className="p-4 space-y-4 bg-white">
+                <p className="text-sm text-gray-500 mb-2">Custom texts to be used when users share this prompt. If left blank, the default Title + Link will be used.</p>
+                
+                <div>
+                  <label className="block text-sm font-medium text-blue-500 mb-1">Twitter Share Text</label>
+                  <textarea
+                    name="shareTwitter"
+                    value={formData.shareTwitter}
+                    onChange={handleChange}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400 text-sm"
+                    placeholder="Check out this awesome prompt..."
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-blue-700 mb-1">Facebook Share Text</label>
+                  <textarea
+                    name="shareFacebook"
+                    value={formData.shareFacebook}
+                    onChange={handleChange}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-600 text-sm"
+                    placeholder="I just found this great prompt..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-red-600 mb-1">Pinterest Share Text</label>
+                  <textarea
+                    name="sharePinterest"
+                    value={formData.sharePinterest}
+                    onChange={handleChange}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-500 text-sm"
+                    placeholder="Pin this prompt..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-green-600 mb-1">WhatsApp Share Text</label>
+                  <textarea
+                    name="shareWhatsapp"
+                    value={formData.shareWhatsapp}
+                    onChange={handleChange}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500 text-sm"
+                    placeholder="Look at this prompt I found..."
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Submit Buttons */}
           <div className="flex items-center justify-between pt-6 border-t border-gray-200">
             <button
@@ -366,23 +444,14 @@ export default function AddPromptPage() {
           </div>
         </form>
       </div>
-      {/* Alert Modal */}
-      {showAlertModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-md w-full mx-4 p-6">
-            <h3 className="text-lg font-semibold text-black mb-4">Information</h3>
-            <p className="text-gray-700 mb-6">{alertMessage}</p>
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowAlertModal(false)}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        title="Information"
+        message={alertMessage}
+        type="info"
+        confirmText="OK"
+      />
     </div>
   );
 }

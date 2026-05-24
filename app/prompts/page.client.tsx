@@ -6,6 +6,7 @@ import Script from "next/script";
 import React from "react";
 import { promptsWithUserApi, combinedApi, promptVariantsApi } from "@/lib/supabase-queries";
 import type { Database } from "@/lib/database.types";
+import MultiSelectDropdown from "@/components/ui/MultiSelectDropdown";
 
 const PromptCard = dynamic(() => import('@/components/ui/PromptCard'), { ssr: true });
 const AdSpace = dynamic(() => import('@/components/ui/AdSpace'), { ssr: true });
@@ -19,11 +20,23 @@ type Prompt = Database['public']['Tables']['prompts']['Row'] & {
 interface PromptsPageProps {
   initialPrompts: Prompt[];
   initialTags: string[];
+  initialCategories: string[];
+  initialThemes: string[];
+  initialGroups: string[];
 }
 
-export default function PromptsPage({ initialPrompts, initialTags }: PromptsPageProps) {
+export default function PromptsPage({ 
+  initialPrompts, 
+  initialTags,
+  initialCategories,
+  initialThemes,
+  initialGroups
+}: PromptsPageProps) {
   const [prompts, setPrompts] = useState<Prompt[]>(initialPrompts);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -51,13 +64,8 @@ export default function PromptsPage({ initialPrompts, initialTags }: PromptsPage
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Filter prompts based on selected tags
-  const filteredPrompts = useMemo(() => {
-    return prompts.filter((prompt) => {
-      if (selectedTags.length === 0) return true;
-      return selectedTags.some(tag => prompt.tags?.includes(tag) || false);
-    });
-  }, [prompts, selectedTags]);
+  // Filter prompts based on selected tags (Removed local filtering, we now use backend filtering)
+  const filteredPrompts = prompts;
 
   // Load more prompts function (loads next page from API)
   const loadMorePrompts = useCallback(async () => {
@@ -66,7 +74,14 @@ export default function PromptsPage({ initialPrompts, initialTags }: PromptsPage
     setLoadingMore(true);
     try {
       // Load next page
-      const data = await promptsWithUserApi.getPaginatedWithUsers(page, PROMPTS_PER_LOAD, searchTerm);
+      const filters = {
+        searchQuery: searchTerm,
+        categories: selectedCategories,
+        themes: selectedThemes,
+        groups: selectedGroups,
+        tags: selectedTags,
+      };
+      const data = await promptsWithUserApi.getPaginatedWithUsers(page, PROMPTS_PER_LOAD, filters);
       if (data && data.length > 0) {
         // Get variant counts for this batch
         const promptIds = data.map(p => p.id);
@@ -108,7 +123,7 @@ export default function PromptsPage({ initialPrompts, initialTags }: PromptsPage
     } finally {
       setLoadingMore(false);
     }
-  }, [loadingMore, hasMore, page, searchTerm]);
+  }, [loadingMore, hasMore, page, searchTerm, selectedCategories, selectedThemes, selectedGroups, selectedTags]);
 
   // Infinite scroll handler - same as /add-list
   const handleScroll = useCallback(() => {
@@ -139,13 +154,20 @@ export default function PromptsPage({ initialPrompts, initialTags }: PromptsPage
     );
   };
 
-  const handleSearchSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearchSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setSearchTerm(searchInput);
     // Reset and fetch first page
     setLoadingMore(true);
     try {
-      const data = await promptsWithUserApi.getPaginatedWithUsers(1, PROMPTS_PER_LOAD, searchInput);
+      const filters = {
+        searchQuery: searchInput,
+        categories: selectedCategories,
+        themes: selectedThemes,
+        groups: selectedGroups,
+        tags: selectedTags,
+      };
+      const data = await promptsWithUserApi.getPaginatedWithUsers(1, PROMPTS_PER_LOAD, filters);
       if (data) {
         const promptIds = data.map(p => p.id);
         let variantCounts: Record<string, number> = {};
@@ -169,6 +191,17 @@ export default function PromptsPage({ initialPrompts, initialTags }: PromptsPage
       setLoadingMore(false);
     }
   };
+
+  // Trigger search when any filter changes
+  useEffect(() => {
+    // Only run this if we are not in initial load state where searchInput is empty and all filters are empty.
+    if (selectedCategories.length > 0 || selectedThemes.length > 0 || selectedGroups.length > 0 || selectedTags.length > 0) {
+      handleSearchSubmit();
+    } else if (searchInput === "") {
+      // If everything is cleared, fetch default list
+      handleSearchSubmit();
+    }
+  }, [selectedCategories, selectedThemes, selectedGroups, selectedTags]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -200,7 +233,23 @@ export default function PromptsPage({ initialPrompts, initialTags }: PromptsPage
             </div>
           </form>
 
-          {/* Filter Toggle Button */}
+          {/* Main Filters: Categories and Groups */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <MultiSelectDropdown
+              label="Select Categories"
+              options={initialCategories}
+              selectedValues={selectedCategories}
+              onChange={setSelectedCategories}
+            />
+            <MultiSelectDropdown
+              label="Select Groups"
+              options={initialGroups}
+              selectedValues={selectedGroups}
+              onChange={setSelectedGroups}
+            />
+          </div>
+
+          {/* Filter Toggle Button for Advanced Filters */}
           <div className="mb-4">
             <button
               onClick={() => setShowFilter(!showFilter)}
@@ -209,42 +258,61 @@ export default function PromptsPage({ initialPrompts, initialTags }: PromptsPage
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
-              {showFilter ? 'Hide Filter' : 'Show Filter'}
+              {showFilter ? 'Hide Advanced Filters' : 'Advanced Search'}
             </button>
           </div>
 
-          {/* Tag Filter (Collapsible) */}
+          {/* Advanced Filters (Themes & Tags) */}
           {showFilter && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {allTags.length === 0 ? (
-                // Tag skeleton loading (if tags haven't loaded yet)
-                Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-8 w-16 bg-gray-200 rounded-md animate-pulse"></div>
-                ))
-              ) : (
-                <>
-                  {allTags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => toggleTag(tag)}
-                      className={`px-4 py-2 text-sm rounded-md border transition-colors ${selectedTags.includes(tag)
-                          ? "bg-black text-white border-black"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-black"
-                        }`}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                  {selectedTags.length > 0 && (
-                    <button
-                      onClick={() => setSelectedTags([])}
-                      className="px-4 py-2 text-sm text-gray-500 hover:text-black"
-                    >
-                      Clear all
-                    </button>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 space-y-6">
+              
+              {/* Themes Filter */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Themes</h3>
+                <div className="max-w-xs">
+                  <MultiSelectDropdown
+                    label="Select Themes"
+                    options={initialThemes}
+                    selectedValues={selectedThemes}
+                    onChange={setSelectedThemes}
+                  />
+                </div>
+              </div>
+
+              {/* Tags Filter */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700 mb-2">Tags</h3>
+                <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto p-2 border border-gray-300 rounded-md bg-white">
+                  {allTags.length === 0 ? (
+                    Array.from({ length: 6 }).map((_, i) => (
+                      <div key={i} className="h-8 w-16 bg-gray-200 rounded-md animate-pulse"></div>
+                    ))
+                  ) : (
+                    <>
+                      {allTags.map((tag) => (
+                        <button
+                          key={tag}
+                          onClick={() => toggleTag(tag)}
+                          className={`px-3 py-1 text-xs rounded-full border transition-colors ${selectedTags.includes(tag)
+                              ? "bg-black text-white border-black"
+                              : "bg-white text-gray-700 border-gray-300 hover:border-black"
+                            }`}
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </>
                   )}
-                </>
-              )}
+                </div>
+                {selectedTags.length > 0 && (
+                  <button
+                    onClick={() => setSelectedTags([])}
+                    className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                  >
+                    Clear all tags
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -372,66 +440,7 @@ export default function PromptsPage({ initialPrompts, initialTags }: PromptsPage
         </div>
       </section>
 
-      {/* Google Structured Data */}
-      {prompts.length > 0 && (
-        <Script
-          id="prompts-structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "CollectionPage",
-              "name": "Browse AI Prompts",
-              "description": "Discover and explore AI prompts for various purposes including ChatGPT, Claude, and other AI models.",
-              "url": "https://freeprompts.store/prompts",
-              "mainEntity": {
-                "@type": "ItemList",
-                "name": "AI Prompts Collection",
-                "description": "A curated collection of AI prompts for different use cases",
-                "numberOfItems": prompts.length,
-                "itemListElement": prompts.slice(0, 20).map((prompt, index) => ({
-                  "@type": "ListItem",
-                  "position": index + 1,
-                  "item": {
-                    "@type": "CreativeWork",
-                    "name": prompt.title,
-                    "description": prompt.content?.substring(0, 160) || "",
-                    "url": `https://freeprompts.store/prompt/${prompt.id}/${prompt.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-                    "creator": {
-                      "@type": "Person",
-                      "name": prompt.userName || "Anonymous"
-                    },
-                    "dateCreated": prompt.created_at,
-                    "keywords": prompt.tags?.join(", "),
-                    "interactionStatistic": {
-                      "@type": "InteractionCounter",
-                      "interactionType": "https://schema.org/LikeAction",
-                      "userInteractionCount": prompt.likes || 0
-                    }
-                  }
-                }))
-              },
-              "breadcrumb": {
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                  {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Home",
-                    "item": "https://freeprompts.store"
-                  },
-                  {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "Prompts",
-                    "item": "https://freeprompts.store/prompts"
-                  }
-                ]
-              }
-            })
-          }}
-        />
-      )}
+      {/* JSON-LD Schema Data moved to server component (page.tsx) */}
     </div>
   );
 }

@@ -55,33 +55,108 @@ async function getInitialPrompts(): Promise<Prompt[]> {
   }));
 }
 
-async function getUniqueTags(): Promise<string[]> {
+async function getUniqueMetadata(): Promise<{ tags: string[], categories: string[], themes: string[], groups: string[] }> {
+  // We fetch up to 1000 items to extract unique metadata
   const { data, error } = await supabaseServer
     .from('prompts')
-    .select('tags')
-    .limit(500);
+    .select('tags, category, theme, group')
+    .limit(1000);
 
-  if (error) throw new Error(`Supabase error fetching tags: ${error.message}`);
+  if (error) throw new Error(`Supabase error fetching metadata: ${error.message}`);
   
   const tagSet = new Set<string>();
+  const categorySet = new Set<string>();
+  const themeSet = new Set<string>();
+  const groupSet = new Set<string>();
+
   data?.forEach(row => {
     if (row.tags && Array.isArray(row.tags)) {
       row.tags.forEach((tag: string) => tagSet.add(tag));
     }
+    if (row.category) categorySet.add(row.category);
+    if (row.theme) themeSet.add(row.theme);
+    if (row.group) groupSet.add(row.group);
   });
-  return Array.from(tagSet).sort();
+  
+  return {
+    tags: Array.from(tagSet).sort(),
+    categories: Array.from(categorySet).sort(),
+    themes: Array.from(themeSet).sort(),
+    groups: Array.from(groupSet).sort()
+  };
 }
 
 export default async function PromptsPage() {
-  const [initialPrompts, allTags] = await Promise.all([
+  const [initialPrompts, metadata] = await Promise.all([
     getInitialPrompts(),
-    getUniqueTags()
+    getUniqueMetadata()
   ]);
 
   return (
-    <PromptsClient 
-      initialPrompts={initialPrompts}
-      initialTags={allTags}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "Browse AI Prompts",
+            "description": "Discover and explore AI prompts for various purposes including ChatGPT, Claude, and other AI models.",
+            "url": "https://freeprompts.store/prompts",
+            "mainEntity": {
+              "@type": "ItemList",
+              "name": "AI Prompts Collection",
+              "description": "A curated collection of AI prompts for different use cases",
+              "numberOfItems": initialPrompts.length,
+              "itemListElement": initialPrompts.slice(0, 20).map((prompt, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "item": {
+                  "@type": "CreativeWork",
+                  "name": prompt.title,
+                  "description": prompt.content?.substring(0, 160) || "",
+                  "url": `https://freeprompts.store/prompt/${prompt.id}/${prompt.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+                  "creator": {
+                    "@type": "Person",
+                    "name": prompt.userName || "Anonymous"
+                  },
+                  "dateCreated": prompt.created_at,
+                  "keywords": prompt.tags?.join(", "),
+                  "interactionStatistic": {
+                    "@type": "InteractionCounter",
+                    "interactionType": "https://schema.org/LikeAction",
+                    "userInteractionCount": prompt.likes || 0
+                  }
+                }
+              }))
+            },
+            "breadcrumb": {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://freeprompts.store"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Prompts",
+                  "item": "https://freeprompts.store/prompts"
+                }
+              ]
+            }
+          })
+        }}
+      />
+      <PromptsClient 
+        initialPrompts={initialPrompts}
+        initialTags={metadata.tags}
+        initialCategories={metadata.categories}
+        initialThemes={metadata.themes}
+        initialGroups={metadata.groups}
+      />
+    </>
   );
 }
