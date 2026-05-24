@@ -27,6 +27,12 @@ export default function ImageWithLoader({ src, alt, className = "" }: ImageWithL
           alt={alt}
           className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}
+          onError={() => setLoaded(true)} // Stop spinning if image fails to load
+          ref={(img) => {
+            if (img?.complete) {
+              setLoaded(true);
+            }
+          }}
         />
       )}
     </div>
