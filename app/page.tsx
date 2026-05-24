@@ -15,6 +15,7 @@ const Hero = dynamic(() => import('@/components/ui/Hero'), { ssr: true });
 const PromptCard = dynamic(() => import('@/components/ui/PromptCard'), { ssr: true });
 const Subscribe = dynamic(() => import('@/components/ui/Subscribe'), { ssr: true });
 const HomeSlider = dynamic(() => import('@/components/ui/HomeSlider'), { ssr: true });
+const LiveStats = dynamic(() => import('@/components/ui/LiveStats'), { ssr: true });
 
 // Revalidate every 60 seconds
 export const revalidate = 60;
@@ -84,48 +85,7 @@ export default async function Home() {
       <Hero />
 
       {/* Stats Section */}
-      <section className="py-6 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {/* Total Prompts */}
-            <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200 hover:border-gray-300 transition-colors">
-              <div className="text-3xl md:text-4xl font-bold text-black mb-2">
-                {stats.totalPrompts.toLocaleString()}+
-              </div>
-              <div className="text-sm text-gray-600">
-                ready to use free prompts
-              </div>
-            </div>
-            {/* Total Lists */}
-            <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200 hover:border-gray-300 transition-colors">
-              <div className="text-3xl md:text-4xl font-bold text-black mb-2">
-                {stats.totalLists.toLocaleString()}+
-              </div>
-              <div className="text-sm text-gray-600">
-                groupped prompt lists
-              </div>
-            </div>
-            {/* Total Views */}
-            <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200 hover:border-gray-300 transition-colors">
-              <div className="text-3xl md:text-4xl font-bold text-black mb-2">
-                {stats.totalViews.toLocaleString()}+
-              </div>
-              <div className="text-sm text-gray-600">
-                viewed prompt contents
-              </div>
-            </div>
-            {/* Total Likes */}
-            <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-200 hover:border-gray-300 transition-colors">
-              <div className="text-3xl md:text-4xl font-bold text-black mb-2">
-                {stats.totalLikes.toLocaleString()}+
-              </div>
-              <div className="text-sm text-gray-600">
-                liked prompts
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <LiveStats initialStats={stats} />
 
       {/* Latest Prompts Section */}
       <section className="py-16 bg-gray-50">
