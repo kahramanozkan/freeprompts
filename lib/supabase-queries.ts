@@ -1620,3 +1620,34 @@ export const usersApi = {
     return !!data
   }
 }
+
+// General Image Upload operations
+export const imagesApi = {
+  // Upload an image to the prompt-images bucket
+  async uploadImage(file: File): Promise<string> {
+    const timestamp = Date.now()
+    const random = Math.random().toString(36).substring(2, 8)
+    const extension = file.name.split('.').pop() || 'jpg'
+    const fileName = `${timestamp}-${random}.${extension}`
+    
+    // We can group them by year/month if we want, but a flat structure is fine for now
+    const storagePath = `${fileName}`
+
+    // Upload to Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('prompt-images')
+      .upload(storagePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      })
+
+    if (uploadError) throw uploadError
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('prompt-images')
+      .getPublicUrl(storagePath)
+
+    return publicUrl
+  }
+}

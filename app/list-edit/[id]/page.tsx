@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { listsApi, promptsApi } from "@/lib/supabase-queries";
+import { listsApi, promptsApi, imagesApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
@@ -202,17 +202,12 @@ export default function ListEditIndividualPage() {
     setError(null);
 
     try {
-      // Convert to base64 for demo purposes
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64 = e.target?.result as string;
-        setFormData(prev => ({ ...prev, image: base64 }));
-        setUploading(false);
-      };
-      reader.readAsDataURL(file);
+      const url = await imagesApi.uploadImage(file);
+      setFormData(prev => ({ ...prev, image: url }));
     } catch (err) {
       console.error('Error uploading image:', err);
       setError('Failed to upload image. Please try again.');
+    } finally {
       setUploading(false);
     }
   };

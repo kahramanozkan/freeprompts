@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { promptsApi } from "@/lib/supabase-queries";
+import { promptsApi, imagesApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
@@ -39,14 +39,17 @@ export default function AddPromptPage() {
     }
   }, [user, loading, router]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const url = await imagesApi.uploadImage(file);
+        setImagePreview(url);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        setAlertMessage("Failed to upload image.");
+        setShowAlertModal(true);
+      }
     }
   };
 
