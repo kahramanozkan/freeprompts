@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import ImageWithLoader from "@/components/ui/ImageWithLoader";
 import { useState, useEffect, memo } from "react";
 import type { Database } from "@/lib/database.types";
 import { userLikesApi } from "@/lib/supabase-queries";
@@ -77,14 +77,10 @@ function PromptCard({ prompt, initialLiked = false, variantCount = 0 }: PromptCa
       <div className="group relative bg-gray-200 rounded-lg overflow-hidden border border-gray-300 hover:border-black transition-all duration-300" style={{ aspectRatio: '2/3' }}>
         {/* Background Image */}
         {prompt.image && (
-          <Image
+          <ImageWithLoader
             src={prompt.image}
             alt={prompt.title || "Prompt Image"}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            priority={false}
-            unoptimized={prompt.image.startsWith('data:')}
+            className="absolute inset-0 w-full h-full"
           />
         )}
 

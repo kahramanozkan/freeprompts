@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Script from "next/script";
-import Image from "next/image";
+import ImageWithLoader from "@/components/ui/ImageWithLoader";
 import { promptsApi, userLikesApi, userLanguageApi, promptVariantsApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import AdSpace from "@/components/ui/AdSpace";
@@ -471,13 +471,10 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
                 className="relative"
                 style={{ aspectRatio: '2/3' }}
               >
-                <Image
+                <ImageWithLoader
                   src={prompt.image}
                   alt={prompt.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover rounded-lg shadow-lg"
-                  priority
+                  className="absolute inset-0 w-full h-full rounded-lg shadow-lg"
                 />
                 {/* Download button */}
                 <button
@@ -798,10 +795,10 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
                         className="aspect-[2/3] rounded-lg overflow-hidden bg-gray-100 cursor-pointer"
                         onClick={() => openGallery(index)}
                       >
-                        <img
+                        <ImageWithLoader
                           src={variant.image_url}
                           alt={`Variant by ${variant.user?.name || 'User'}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="absolute inset-0 w-full h-full group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div className="mt-3">

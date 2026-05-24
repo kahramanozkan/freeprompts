@@ -6,6 +6,7 @@ import Link from "next/link";
 import AdSpace from "@/components/ui/AdSpace";
 import { listsApi } from "@/lib/supabase-queries";
 import type { Database } from "@/lib/database.types";
+import ImageWithLoader from "@/components/ui/ImageWithLoader";
 
 type List = Database['public']['Tables']['lists']['Row'];
 
@@ -291,10 +292,16 @@ export default function ListsClient({ initialLists }: ListsClientProps) {
                             className="group bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors"
                           >
                             <div
-                              className="w-full bg-cover bg-center relative"
-                              style={{ aspectRatio: '1/1', backgroundImage: list.image ? `url(${list.image})` : undefined }}
+                              className="w-full relative"
+                              style={{ aspectRatio: '1/1' }}
                             >
-                              {!list.image && (
+                              {list.image ? (
+                                <ImageWithLoader 
+                                  src={list.image}
+                                  alt={list.name}
+                                  className="absolute inset-0 w-full h-full"
+                                />
+                              ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gray-200">
                                   <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
