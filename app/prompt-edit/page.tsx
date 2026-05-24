@@ -6,6 +6,7 @@ import { promptsWithUserApi, promptsApi, promptVariantsApi } from "@/lib/supabas
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
+import ImageWithLoader from "@/components/ui/ImageWithLoader";
 
 type Prompt = Database['public']['Tables']['prompts']['Row'] & {
   userName?: string;
@@ -234,9 +235,10 @@ export default function PromptEditPage() {
                   return (
                     <tr key={prompt.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
-                        <div 
-                          className="w-16 h-24 bg-cover bg-center rounded border border-gray-300"
-                          style={{ backgroundImage: `url(${prompt.image})` }}
+                        <ImageWithLoader 
+                          src={prompt.image || ''} 
+                          alt={prompt.title}
+                          className="w-16 h-24 rounded border border-gray-300"
                         />
                       </td>
                       <td className="px-6 py-4">

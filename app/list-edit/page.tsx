@@ -5,6 +5,7 @@ import Link from "next/link";
 import { listsWithUserApi, listsApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
+import ImageWithLoader from "@/components/ui/ImageWithLoader";
 
 type List = Database['public']['Tables']['lists']['Row'] & {
   userName?: string;
@@ -210,9 +211,10 @@ export default function ListEditPage() {
               {currentLists.map((list) => (
                 <tr key={list.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
-                    <div
-                      className="w-16 h-16 bg-cover bg-center rounded border border-gray-300"
-                      style={{ backgroundImage: `url(${list.image})` }}
+                    <ImageWithLoader 
+                      src={list.image || ''} 
+                      alt={list.name}
+                      className="w-16 h-16 rounded border border-gray-300"
                     />
                   </td>
                   <td className="px-6 py-4">
