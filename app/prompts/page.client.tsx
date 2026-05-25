@@ -212,9 +212,9 @@ export default function PromptsPage({
             Browse Prompts
           </h1>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="max-w-md mb-6">
-            <div className="relative">
+          {/* Main Filters: Search, Categories, Groups, Themes */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
                 value={searchInput}
@@ -230,11 +230,7 @@ export default function PromptsPage({
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-            </div>
-          </form>
-
-          {/* Main Filters: Categories and Groups */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            </form>
             <MultiSelectDropdown
               label="Select Categories"
               options={initialCategories}
@@ -247,10 +243,16 @@ export default function PromptsPage({
               selectedValues={selectedGroups}
               onChange={setSelectedGroups}
             />
+            <MultiSelectDropdown
+              label="Select Themes"
+              options={initialThemes}
+              selectedValues={selectedThemes}
+              onChange={setSelectedThemes}
+            />
           </div>
 
           {/* Filter Toggle Button for Advanced Filters */}
-          <div className="mb-4">
+          <div className="mb-6">
             <button
               onClick={() => setShowFilter(!showFilter)}
               className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white text-sm rounded-md hover:bg-gray-800 transition-colors"
@@ -262,22 +264,9 @@ export default function PromptsPage({
             </button>
           </div>
 
-          {/* Advanced Filters (Themes & Tags) */}
+          {/* Advanced Filters (Tags) */}
           {showFilter && (
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 space-y-6">
-              
-              {/* Themes Filter */}
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Themes</h3>
-                <div className="max-w-xs">
-                  <MultiSelectDropdown
-                    label="Select Themes"
-                    options={initialThemes}
-                    selectedValues={selectedThemes}
-                    onChange={setSelectedThemes}
-                  />
-                </div>
-              </div>
 
               {/* Tags Filter */}
               <div>
