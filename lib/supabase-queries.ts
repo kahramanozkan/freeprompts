@@ -1030,6 +1030,27 @@ export const combinedApi = {
 
     const allTags = data.flatMap(prompt => prompt.tags || [])
     return [...new Set(allTags)].sort()
+  },
+
+  async getUniqueMetadata() {
+    const { data, error } = await supabase
+      .from('prompts')
+      .select('tags, category, theme, group')
+
+    if (error) throw error
+    if (!data) return { tags: [], categories: [], themes: [], groups: [] }
+
+    const allTags = data.flatMap(row => row.tags || [])
+    const categories = data.map(row => row.category).filter(Boolean) as string[]
+    const themes = data.map(row => row.theme).filter(Boolean) as string[]
+    const groups = data.map(row => row.group).filter(Boolean) as string[]
+
+    return {
+      tags: [...new Set(allTags)].sort(),
+      categories: [...new Set(categories)].sort(),
+      themes: [...new Set(themes)].sort(),
+      groups: [...new Set(groups)].sort()
+    }
   }
 }
 

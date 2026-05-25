@@ -74,7 +74,7 @@ export default function AddListPage() {
           tags: selectedTags,
         };
         const data = await promptsWithUserApi.getPaginatedWithUsers(1, 10, filters);
-        const transformedPrompts: Prompt[] = data.map(prompt => ({
+        const transformedPrompts: any[] = data.map(prompt => ({
           ...prompt,
           userName: prompt.user?.name || "User",
           list: prompt.tags?.[0] || "General"
