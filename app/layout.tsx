@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || "6Dcb3UmtT0D1QbPhy3S3h11_tqn1mVZ8uAO7BIyx3yo",
   },
 };
 
@@ -104,7 +104,7 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID && (
           <Script
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             crossOrigin="anonymous"
           />
         )}
@@ -112,7 +112,7 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_GTM_ID && (
           <Script
             id="gtm-head"
-            strategy="beforeInteractive"
+            strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
                 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
