@@ -7,6 +7,7 @@ import React from "react";
 import { promptsWithUserApi, combinedApi, promptVariantsApi } from "@/lib/supabase-queries";
 import type { Database } from "@/lib/database.types";
 import MultiSelectDropdown from "@/components/ui/MultiSelectDropdown";
+import PromptFilter from "@/components/ui/PromptFilter";
 
 const PromptCard = dynamic(() => import('@/components/ui/PromptCard'), { ssr: true });
 const AdSpace = dynamic(() => import('@/components/ui/AdSpace'), { ssr: true });

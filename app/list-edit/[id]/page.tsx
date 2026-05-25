@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { listsApi, promptsApi, imagesApi } from "@/lib/supabase-queries";
+import { listsApi, promptsApi, imagesApi, combinedApi, promptsWithUserApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
@@ -155,7 +155,7 @@ export default function ListEditIndividualPage() {
       // We are supposed to pass filters to promptsApi.getPaginated but currently it doesn't take filters in its signature.
       // Wait! `promptsApi.getPaginated` does NOT accept filters. I must use `promptsWithUserApi.getPaginatedWithUsers`
       const data = await promptsWithUserApi.getPaginatedWithUsers(page, 10, filters);
-      const transformedPrompts: Prompt[] = data.map(prompt => ({
+      const transformedPrompts: any[] = data.map((prompt: any) => ({
         ...prompt,
         userName: prompt.user?.name || "User",
         list: prompt.tags?.[0] || "General"
