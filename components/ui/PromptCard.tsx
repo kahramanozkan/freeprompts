@@ -110,7 +110,7 @@ function PromptCard({ prompt, initialLiked = false, variantCount = 0 }: PromptCa
               <button
                 onClick={handleLikeClick}
                 disabled={isLoading}
-                className={`flex items-center transition-colors ${user ? 'hover:text-red-400' : 'cursor-not-allowed opacity-50'} ${isLoading ? 'opacity-50' : ''}`}
+                className={`flex items-center p-2 -mr-2 transition-colors ${user ? 'hover:text-red-400' : 'cursor-not-allowed opacity-50'} ${isLoading ? 'opacity-50' : ''}`}
                 title={user ? (isLiked ? 'Click to unlike' : 'Click to like') : 'Login required to like'}
               >
                 <svg

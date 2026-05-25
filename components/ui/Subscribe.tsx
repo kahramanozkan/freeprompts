@@ -109,11 +109,11 @@ export default function Subscribe() {
                 />
                 <label htmlFor="acceptTerms" className="text-xs text-gray-600 leading-relaxed">
                   I accept the{" "}
-                  <a href="/terms" className="text-black hover:underline">
+                  <a href="/terms" className="text-black underline">
                     Terms and Conditions
                   </a>{" "}
                   and{" "}
-                  <a href="/privacy" className="text-black hover:underline">
+                  <a href="/privacy" className="text-black underline">
                     Privacy Policy
                   </a>
                   , and I agree to receive newsletters and updates.

@@ -196,7 +196,7 @@ export default async function Home() {
                     <h3 className="text-xl font-bold text-black mb-4 line-clamp-2 group-hover:text-gray-700">
                       {list.name}
                     </h3>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-600">
                       {new Date(list.created_at).toLocaleDateString('en-US')}
                     </div>
                   </div>

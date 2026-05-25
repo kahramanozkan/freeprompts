@@ -111,6 +111,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
+            aria-label="Toggle menu"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2"
           >

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface ImageWithLoaderProps {
   src: string;
@@ -22,17 +23,14 @@ export default function ImageWithLoader({ src, alt, className = "" }: ImageWithL
       
       {/* Image */}
       {src && (
-        <img
+        <Image
           src={src}
           alt={alt}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className={`object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}
           onError={() => setLoaded(true)} // Stop spinning if image fails to load
-          ref={(img) => {
-            if (img?.complete) {
-              setLoaded(true);
-            }
-          }}
         />
       )}
     </div>
