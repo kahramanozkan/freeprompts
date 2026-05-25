@@ -22,6 +22,7 @@ export interface Database {
           views: number
           created_at: string
           updated_at: string
+          sort_order: number | null
         }
         Insert: {
           id?: string
@@ -35,6 +36,7 @@ export interface Database {
           views?: number
           created_at?: string
           updated_at?: string
+          sort_order?: number | null
         }
         Update: {
           id?: string
@@ -48,6 +50,7 @@ export interface Database {
           views?: number
           created_at?: string
           updated_at?: string
+          sort_order?: number | null
         }
         Relationships: [
           {
@@ -79,6 +82,7 @@ export interface Database {
           share_text_facebook: string | null
           share_text_pinterest: string | null
           share_text_whatsapp: string | null
+          sort_order: number | null
         }
         Insert: {
           id?: string
@@ -99,6 +103,7 @@ export interface Database {
           share_text_facebook?: string | null
           share_text_pinterest?: string | null
           share_text_whatsapp?: string | null
+          sort_order?: number | null
         }
         Update: {
           id?: string
@@ -119,6 +124,7 @@ export interface Database {
           share_text_facebook?: string | null
           share_text_pinterest?: string | null
           share_text_whatsapp?: string | null
+          sort_order?: number | null
         }
         Relationships: [
           {

@@ -100,14 +100,26 @@ export default function RootLayout({
           shadow="0 0 10px #000000,0 0 5px #000000"
           zIndex={1600}
         />
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=G-9HG703EXQQ`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-9HG703EXQQ');
+          `}
+        </Script>
+
         {/* Google AdSense */}
-        {process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID && (
-          <Script
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}`}
-            strategy="lazyOnload"
-            crossOrigin="anonymous"
-          />
-        )}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5496537037248215"
+          strategy="lazyOnload"
+          crossOrigin="anonymous"
+        />
         {/* Google Tag Manager (head) */}
         {process.env.NEXT_PUBLIC_GTM_ID && (
           <Script

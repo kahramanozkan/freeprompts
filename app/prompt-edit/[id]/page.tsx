@@ -35,6 +35,10 @@ export default function PromptEditIndividualPage() {
     category: '',
     group: '',
     json_prompt: '',
+    share_text_twitter: '',
+    share_text_facebook: '',
+    share_text_pinterest: '',
+    share_text_whatsapp: '',
   });
 
   useEffect(() => {
@@ -81,6 +85,10 @@ export default function PromptEditIndividualPage() {
           category: data.category || '',
           group: data.group || '',
           json_prompt: data.json_prompt || '',
+          share_text_twitter: data.share_text_twitter || '',
+          share_text_facebook: data.share_text_facebook || '',
+          share_text_pinterest: data.share_text_pinterest || '',
+          share_text_whatsapp: data.share_text_whatsapp || '',
         });
 
         // Load variants for this prompt
@@ -130,6 +138,10 @@ export default function PromptEditIndividualPage() {
         category: formData.category.trim() || null,
         group: formData.group.trim() || null,
         json_prompt: formData.json_prompt.trim() || null,
+        share_text_twitter: formData.share_text_twitter.trim() || null,
+        share_text_facebook: formData.share_text_facebook.trim() || null,
+        share_text_pinterest: formData.share_text_pinterest.trim() || null,
+        share_text_whatsapp: formData.share_text_whatsapp.trim() || null,
       };
 
       await promptsApi.update(prompt.id, updates);
@@ -462,6 +474,54 @@ export default function PromptEditIndividualPage() {
                   placeholder="Enter JSON formatted prompt (e.g., for API usage)..."
                 />
                 <p className="text-xs text-gray-500 mt-1">JSON format for advanced usage</p>
+              </div>
+
+              {/* Social Media Sharing Texts */}
+              <div className="mb-6">
+                <h4 className="text-lg font-medium text-black mb-4">Social Media Sharing Texts (Optional)</h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Twitter / X</label>
+                    <textarea
+                      value={formData.share_text_twitter}
+                      onChange={(e) => setFormData(prev => ({ ...prev, share_text_twitter: e.target.value }))}
+                      rows={3}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-sm"
+                      placeholder="Share text for Twitter..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Facebook</label>
+                    <textarea
+                      value={formData.share_text_facebook}
+                      onChange={(e) => setFormData(prev => ({ ...prev, share_text_facebook: e.target.value }))}
+                      rows={3}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-sm"
+                      placeholder="Share text for Facebook..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">Pinterest</label>
+                    <textarea
+                      value={formData.share_text_pinterest}
+                      onChange={(e) => setFormData(prev => ({ ...prev, share_text_pinterest: e.target.value }))}
+                      rows={3}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-sm"
+                      placeholder="Share text for Pinterest..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">WhatsApp</label>
+                    <textarea
+                      value={formData.share_text_whatsapp}
+                      onChange={(e) => setFormData(prev => ({ ...prev, share_text_whatsapp: e.target.value }))}
+                      rows={3}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-sm"
+                      placeholder="Share text for WhatsApp..."
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Tags */}

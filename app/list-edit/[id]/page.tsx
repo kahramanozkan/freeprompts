@@ -285,6 +285,80 @@ export default function ListEditIndividualPage() {
     setFormData(prev => ({ ...prev, image: '' }));
   };
 
+  const formatText = (format: string) => {
+    const textarea = document.getElementById('description-textarea') as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = formData.description.substring(start, end);
+    const beforeText = formData.description.substring(0, start);
+    const afterText = formData.description.substring(end);
+
+    let newText = '';
+    
+    switch (format) {
+      case 'bold':
+        newText = beforeText + `**${selectedText || 'bold text'}**` + afterText;
+        break;
+      case 'italic':
+        newText = beforeText + `*${selectedText || 'italic text'}*` + afterText;
+        break;
+      case 'h1':
+        newText = beforeText + `\n# ${selectedText || 'Heading 1'}\n` + afterText;
+        break;
+      case 'h2':
+        newText = beforeText + `\n## ${selectedText || 'Heading 2'}\n` + afterText;
+        break;
+      case 'h3':
+        newText = beforeText + `\n### ${selectedText || 'Heading 3'}\n` + afterText;
+        break;
+      case 'bullet':
+        newText = beforeText + `\n- ${selectedText || 'Bullet point'}\n` + afterText;
+        break;
+      case 'number':
+        newText = beforeText + `\n1. ${selectedText || 'Numbered item'}\n` + afterText;
+        break;
+      case 'quote':
+        newText = beforeText + `\n> ${selectedText || 'Quote'}\n` + afterText;
+        break;
+      case 'link':
+        newText = beforeText + `[${selectedText || 'link text'}](url)` + afterText;
+        break;
+      default:
+        return;
+    }
+    
+    setFormData(prev => ({ ...prev, description: newText }));
+  };
+
+  const handleKeyboardShortcuts = (e: React.KeyboardEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key) {
+        case 'b':
+          e.preventDefault();
+          formatText('bold');
+          break;
+        case 'i':
+          e.preventDefault();
+          formatText('italic');
+          break;
+        case '1':
+          e.preventDefault();
+          formatText('h1');
+          break;
+        case '2':
+          e.preventDefault();
+          formatText('h2');
+          break;
+        case '3':
+          e.preventDefault();
+          formatText('h3');
+          break;
+      }
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -451,16 +525,54 @@ export default function ListEditIndividualPage() {
               {/* Description */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-black mb-2">
-                  Description *
+                  List Description <span className="text-red-500">*</span>
                 </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  rows={6}
-                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
-                  placeholder="Enter list description..."
-                  required
-                />
+                
+                <div className="border border-gray-300 rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-black focus-within:border-black transition-all">
+                  {/* Formatting Toolbar */}
+                  <div className="flex flex-wrap items-center gap-1 p-2 bg-gray-50 border-b border-gray-300">
+                    <button type="button" onClick={() => formatText('bold')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded" title="Bold (Ctrl+B)">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 12h8a4 4 0 100-8H6v8zm0 0h9a4 4 0 110 8H6v-8z" /></svg>
+                    </button>
+                    <button type="button" onClick={() => formatText('italic')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded" title="Italic (Ctrl+I)">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                    </button>
+                    <div className="w-px h-4 bg-gray-300 mx-1"></div>
+                    <button type="button" onClick={() => formatText('h1')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded font-bold text-sm" title="Heading 1 (Ctrl+1)">H1</button>
+                    <button type="button" onClick={() => formatText('h2')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded font-bold text-sm" title="Heading 2 (Ctrl+2)">H2</button>
+                    <button type="button" onClick={() => formatText('h3')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded font-bold text-sm" title="Heading 3 (Ctrl+3)">H3</button>
+                    <div className="w-px h-4 bg-gray-300 mx-1"></div>
+                    <button type="button" onClick={() => formatText('bullet')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded" title="Bullet List">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    </button>
+                    <button type="button" onClick={() => formatText('number')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded" title="Numbered List">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
+                    </button>
+                    <div className="w-px h-4 bg-gray-300 mx-1"></div>
+                    <button type="button" onClick={() => formatText('quote')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded" title="Blockquote">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                    </button>
+                    <button type="button" onClick={() => formatText('link')} className="p-1.5 text-gray-600 hover:text-black hover:bg-gray-200 rounded" title="Link">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                    </button>
+                  </div>
+                  
+                  {/* Textarea */}
+                  <textarea
+                    id="description-textarea"
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                    onKeyDown={handleKeyboardShortcuts}
+                    rows={8}
+                    className="w-full px-4 py-3 border-none focus:outline-none focus:ring-0 resize-y"
+                    placeholder="Describe your list... (Markdown supported)"
+                    required
+                  />
+                </div>
+                <div className="mt-2 flex justify-between text-xs text-gray-500">
+                  <span>Supports Markdown formatting</span>
+                  <span>Select text to format</span>
+                </div>
               </div>
 
               {/* Actions */}

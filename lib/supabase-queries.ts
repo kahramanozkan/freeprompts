@@ -17,8 +17,8 @@ export const promptsApi = {
     let query = supabase
       .from('prompts')
       // Removed 'content', 'json_prompt' to prevent massive Base64 Out Of Memory crashes
-      .select('id, title, image, tags, likes, views, created_at, user_id, updated_at, theme, category, group')
-      .order('sort_order', { ascending: true })
+      .select('id, title, image, tags, likes, views, created_at, user_id, updated_at, theme, category, group, sort_order')
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
 
     if (options && options.limit) {
@@ -37,8 +37,8 @@ export const promptsApi = {
   async getAllForSitemaps() {
     const { data, error } = await supabase
       .from('prompts')
-      .select('id, title, created_at, updated_at')
-      .order('sort_order', { ascending: true })
+      .select('id, title, created_at, updated_at, sort_order')
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
 
     if (error) throw error
@@ -51,7 +51,7 @@ export const promptsApi = {
     const { data, error } = await supabase
       .from('prompts')
       .select('*')
-      .order('sort_order', { ascending: true })
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
       .range(from, from + pageSize - 1)
 
@@ -63,8 +63,8 @@ export const promptsApi = {
   async getLatest(limit: number = 8) {
     const { data, error } = await supabase
       .from('prompts')
-      .select('id, title, image, tags, likes, created_at, user_id')
-      .order('sort_order', { ascending: true })
+      .select('id, title, image, tags, likes, created_at, user_id, sort_order')
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
       .limit(limit)
 
@@ -297,8 +297,8 @@ export const listsApi = {
   async getAll(options?: { limit?: number }) {
     let query = supabase
       .from('lists')
-      .select('id, name, slug, description, image, prompt_ids, likes, views, created_at, user_id, updated_at')
-      .order('sort_order', { ascending: true })
+      .select('id, name, slug, description, image, prompt_ids, likes, views, created_at, user_id, updated_at, sort_order')
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
 
     if (options && options.limit) {
@@ -317,8 +317,8 @@ export const listsApi = {
   async getAllForSitemaps() {
     const { data, error } = await supabase
       .from('lists')
-      .select('id, slug, created_at, updated_at')
-      .order('sort_order', { ascending: true })
+      .select('id, slug, created_at, updated_at, sort_order')
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
 
     if (error) throw error
@@ -329,8 +329,8 @@ export const listsApi = {
   async getLatest(limit: number = 3) {
     const { data, error } = await supabase
       .from('lists')
-      .select('id, name, slug, image, prompt_ids, created_at')
-      .order('sort_order', { ascending: true })
+      .select('id, name, slug, image, prompt_ids, created_at, sort_order')
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
       .limit(limit)
 
@@ -1002,7 +1002,7 @@ export const combinedApi = {
       .from('prompts')
       .select('*')
       .in('id', list.prompt_ids)
-      .order('sort_order', { ascending: true })
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
 
     if (error) throw error
@@ -1168,7 +1168,7 @@ export const promptsWithUserApi = {
         id, title, image, tags, likes, created_at, user_id,
         user:users(id, name)
       `)
-      .order('sort_order', { ascending: true })
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
 
     if (options && options.limit) {
@@ -1202,7 +1202,7 @@ export const promptsWithUserApi = {
         id, title, image, tags, likes, created_at, user_id, content,
         user:users(id, name)
       `)
-      .order('sort_order', { ascending: true })
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
       .range(from, from + pageSize - 1)
 
@@ -1266,7 +1266,7 @@ export const promptsWithUserApi = {
         user:users(id, name, avatar_url)
       `)
       .in('id', list.prompt_ids)
-      .order('sort_order', { ascending: true })
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
 
     if (error) throw error
@@ -1283,7 +1283,7 @@ export const listsWithUserApi = {
         *,
         user:users(id, name, avatar_url)
       `)
-      .order('sort_order', { ascending: true })
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
 
     if (error) throw error

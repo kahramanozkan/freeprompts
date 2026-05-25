@@ -12,7 +12,8 @@ export const revalidate = 60;
 export default async function ListsPage() {
   const { data: initialLists, error } = await supabaseServer
     .from('lists')
-    .select('id, name, slug, description, image, prompt_ids, likes, views, created_at, user_id, updated_at')
+    .select('id, name, slug, description, image, prompt_ids, likes, views, created_at, user_id, updated_at, sort_order')
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false })
     .limit(18); // Fetch enough for the first few rows
 

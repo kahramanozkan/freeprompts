@@ -5,6 +5,7 @@ import Link from "next/link";
 import { listsWithUserApi, listsApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
+import PromptFilter from "@/components/ui/PromptFilter";
 import ImageWithLoader from "@/components/ui/ImageWithLoader";
 import {
   DndContext,
@@ -34,6 +35,11 @@ export default function ListEditPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Filter states
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
 
   const listsPerPage = 10;
 
@@ -93,6 +99,18 @@ export default function ListEditPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSearchTerm(searchInput);
+    setCurrentPage(1);
+  };
+
+  const filteredLists = lists.filter(list => 
+    searchTerm === "" || 
+    list.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (list.description && list.description.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -128,10 +146,10 @@ export default function ListEditPage() {
   };
 
   // Pagination logic
-  const totalPages = Math.ceil(lists.length / listsPerPage);
+  const totalPages = Math.ceil(filteredLists.length / listsPerPage);
   const startIndex = (currentPage - 1) * listsPerPage;
   const endIndex = startIndex + listsPerPage;
-  const currentLists = lists.slice(startIndex, endIndex);
+  const currentLists = filteredLists.slice(startIndex, endIndex);
 
   if (authLoading) {
     return (
@@ -235,15 +253,38 @@ export default function ListEditPage() {
           </Link>
         </div>
 
+        <PromptFilter
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          handleSearchSubmit={handleSearchSubmit}
+          initialCategories={[]}
+          selectedCategories={[]}
+          setSelectedCategories={() => {}}
+          initialGroups={[]}
+          selectedGroups={[]}
+          setSelectedGroups={() => {}}
+          initialThemes={[]}
+          selectedThemes={[]}
+          setSelectedThemes={() => {}}
+          allTags={[]}
+          selectedTags={[]}
+          setSelectedTags={() => {}}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+        />
+
         {/* Lists Table */}
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mt-6">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
+                <th className="px-2 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider w-10">
+                  SORT
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                   Image
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider w-48">
                   Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">

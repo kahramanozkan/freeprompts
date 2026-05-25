@@ -20,9 +20,10 @@ async function getInitialPrompts(): Promise<Prompt[]> {
   const { data, error } = await supabaseServer
     .from('prompts')
     .select(`
-      id, title, image, tags, likes, created_at, user_id,
+      id, title, image, tags, likes, created_at, user_id, sort_order,
       user:users(id, name)
     `)
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false })
     .range(0, 11); // First 12 items
 

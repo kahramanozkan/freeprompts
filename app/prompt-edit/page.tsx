@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { promptsWithUserApi, promptsApi, promptVariantsApi } from "@/lib/supabase-queries";
+import { promptsWithUserApi, promptsApi, promptVariantsApi, combinedApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
+import PromptFilter from "@/components/ui/PromptFilter";
 import ImageWithLoader from "@/components/ui/ImageWithLoader";
 import {
   DndContext,
@@ -37,6 +38,19 @@ export default function PromptEditPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Filter states
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [initialCategories, setInitialCategories] = useState<string[]>([]);
+  const [initialThemes, setInitialThemes] = useState<string[]>([]);
+  const [initialGroups, setInitialGroups] = useState<string[]>([]);
+  const [showFilter, setShowFilter] = useState(false);
+
   const promptsPerPage = 10;
 
   useEffect(() => {
@@ -56,7 +70,15 @@ export default function PromptEditPage() {
       try {
         setLoading(true);
         setError(null);
-        const data = await promptsWithUserApi.getAllWithUsers();
+        const [data, metadata] = await Promise.all([
+          promptsWithUserApi.getAllWithUsers(),
+          combinedApi.getUniqueMetadata()
+        ]);
+        
+        setAllTags(metadata.tags);
+        setInitialCategories(metadata.categories);
+        setInitialThemes(metadata.themes);
+        setInitialGroups(metadata.groups);
 
         // Fetch variant counts for all prompts in parallel
         const promptsWithCounts = await Promise.all(
@@ -106,6 +128,32 @@ export default function PromptEditPage() {
     }
   };
 
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSearchTerm(searchInput);
+    setCurrentPage(1);
+  };
+
+  const filteredPrompts = prompts.filter(prompt => {
+    const matchesSearch = searchTerm === "" || 
+      prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (prompt.content && prompt.content.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+    const matchesCategory = selectedCategories.length === 0 || 
+      (prompt.category && selectedCategories.includes(prompt.category));
+      
+    const matchesTheme = selectedThemes.length === 0 || 
+      (prompt.theme && selectedThemes.includes(prompt.theme));
+      
+    const matchesGroup = selectedGroups.length === 0 || 
+      (prompt.group && selectedGroups.includes(prompt.group));
+      
+    const matchesTags = selectedTags.length === 0 || 
+      (prompt.tags && selectedTags.every(t => prompt.tags.includes(t)));
+
+    return matchesSearch && matchesCategory && matchesTheme && matchesGroup && matchesTags;
+  });
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -146,10 +194,10 @@ export default function PromptEditPage() {
   };
 
   // Pagination logic
-  const totalPages = Math.ceil(prompts.length / promptsPerPage);
+  const totalPages = Math.ceil(filteredPrompts.length / promptsPerPage);
   const startIndex = (currentPage - 1) * promptsPerPage;
   const endIndex = startIndex + promptsPerPage;
-  const currentPrompts = prompts.slice(startIndex, endIndex);
+  const currentPrompts = filteredPrompts.slice(startIndex, endIndex);
 
   if (authLoading) {
     return (
@@ -255,18 +303,41 @@ export default function PromptEditPage() {
           </Link>
         </div>
 
+        <PromptFilter
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          handleSearchSubmit={handleSearchSubmit}
+          initialCategories={initialCategories}
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
+          initialGroups={initialGroups}
+          selectedGroups={selectedGroups}
+          setSelectedGroups={setSelectedGroups}
+          initialThemes={initialThemes}
+          selectedThemes={selectedThemes}
+          setSelectedThemes={setSelectedThemes}
+          allTags={allTags}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags as React.Dispatch<React.SetStateAction<string[]>>}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+        />
+
         {/* Prompts Table */}
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mt-6">
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  <th className="px-2 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider w-10">
+                    SORT
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                     Image
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                     Title
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider w-64">
                     Tags
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider w-40">

@@ -17,7 +17,8 @@ function extractError(err: any): string {
 export async function getLatestPromptsServer(limit: number = 8) {
   const { data, error } = await supabaseServer
     .from('prompts')
-    .select('id, title, image, tags, likes, created_at, user_id')
+    .select('id, title, image, tags, likes, created_at, user_id, sort_order')
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false })
     .limit(limit)
 
@@ -29,7 +30,8 @@ export async function getLatestPromptsServer(limit: number = 8) {
 export async function getLatestListsServer(limit: number = 3) {
   const { data, error } = await supabaseServer
     .from('lists')
-    .select('id, name, slug, image, prompt_ids, created_at')
+    .select('id, name, slug, image, prompt_ids, created_at, sort_order')
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false })
     .limit(limit)
 
