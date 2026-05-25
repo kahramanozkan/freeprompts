@@ -901,9 +901,6 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
           )}
         </div>
       </div>
-
-        </div>
-      </div>
       {/* JSON-LD moved to server component */}
      {/* Global Modal for prompt-detail */}
      <Modal
