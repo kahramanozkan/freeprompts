@@ -7,6 +7,7 @@ import { listsApi, promptsApi, imagesApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
+import PromptFilter from "@/components/ui/PromptFilter";
 
 type List = Database['public']['Tables']['lists']['Row'];
 type Prompt = Partial<Database['public']['Tables']['prompts']['Row']> & {
@@ -84,35 +85,112 @@ export default function ListEditIndividualPage() {
     }
   }, [params.id, user]);
 
-  const allTags = ["all", "Creative", "Business", "Tech", "Marketing", "Education", "Lifestyle"];
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [initialCategories, setInitialCategories] = useState<string[]>([]);
+  const [initialThemes, setInitialThemes] = useState<string[]>([]);
+  const [initialGroups, setInitialGroups] = useState<string[]>([]);
+  const [showFilter, setShowFilter] = useState(false);
+  
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    const loadPrompts = async () => {
+    const loadInitialData = async () => {
       try {
-        const data = await promptsApi.getAll();
+        const metadata = await combinedApi.getUniqueMetadata();
+        setAllTags(metadata.tags);
+        setInitialCategories(metadata.categories);
+        setInitialThemes(metadata.themes);
+        setInitialGroups(metadata.groups);
+
+        const filters = {
+          searchQuery: searchTerm,
+          categories: selectedCategories,
+          themes: selectedThemes,
+          groups: selectedGroups,
+          tags: selectedTags,
+        };
+        const data = await promptsApi.getPaginated(1, 10); // Or use promptsWithUserApi if available
+        // For list-edit we just need the prompts, so we will use promptsApi for now
+        // Wait, list-edit doesn't use the complex user fields as much, but let's map it.
         const transformedPrompts: Prompt[] = data.map(prompt => ({
           ...prompt,
           userName: "User",
           list: prompt.tags[0] || "General"
         }));
         setPrompts(transformedPrompts);
+        setHasMore(data.length === 10);
+        setPage(2);
       } catch (error) {
-        console.error('Error loading prompts:', error);
+        console.error('Error loading initial data:', error);
       }
     };
 
-    loadPrompts();
-  }, []);
+    loadInitialData();
+  }, [searchTerm, selectedCategories, selectedThemes, selectedGroups, selectedTags]);
 
-  const filteredPrompts = prompts.filter(prompt =>
-    selectedTag === "all" || prompt.tags.some((tag: string) => tag === selectedTag)
-  );
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSearchTerm(searchInput);
+  };
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredPrompts.length / promptsPerPage);
-  const startIndex = (currentPage - 1) * promptsPerPage;
-  const endIndex = startIndex + promptsPerPage;
-  const currentPrompts = filteredPrompts.slice(startIndex, endIndex);
+  const loadMore = async () => {
+    if (loadingMore || !hasMore) return;
+    try {
+      setLoadingMore(true);
+      const filters = {
+        searchQuery: searchTerm,
+        categories: selectedCategories,
+        themes: selectedThemes,
+        groups: selectedGroups,
+        tags: selectedTags,
+      };
+      // We are supposed to pass filters to promptsApi.getPaginated but currently it doesn't take filters in its signature.
+      // Wait! `promptsApi.getPaginated` does NOT accept filters. I must use `promptsWithUserApi.getPaginatedWithUsers`
+      const data = await promptsWithUserApi.getPaginatedWithUsers(page, 10, filters);
+      const transformedPrompts: Prompt[] = data.map(prompt => ({
+        ...prompt,
+        userName: prompt.user?.name || "User",
+        list: prompt.tags?.[0] || "General"
+      }));
+      setPrompts(prev => {
+        const newPrompts = [...prev, ...transformedPrompts];
+        return newPrompts.filter((p, index, self) => self.findIndex(t => t.id === p.id) === index);
+      });
+      setHasMore(data.length === 10);
+      setPage(prev => prev + 1);
+    } catch (error) {
+      console.error('Error loading more prompts:', error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+      if (distanceFromBottom < 300 && !loadingMore && hasMore) {
+        loadMore();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loadingMore, hasMore, page, searchTerm, selectedCategories, selectedThemes, selectedGroups, selectedTags]);
+
+  const filteredPrompts = prompts;
+
+  const currentPrompts = filteredPrompts; // Use all loaded prompts directly
 
   const togglePrompt = (promptId: string) => {
     setFormData(prev => ({
@@ -121,15 +199,6 @@ export default function ListEditIndividualPage() {
         ? prev.prompt_ids.filter(id => id !== promptId)
         : [...prev.prompt_ids, promptId]
     }));
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleTagChange = (tag: string) => {
-    setSelectedTag(tag);
-    setCurrentPage(1); // Reset to first page when tag changes
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -422,10 +491,7 @@ export default function ListEditIndividualPage() {
                 Manage Prompts ({formData.prompt_ids.length} selected)
               </h3>
               <p className="text-sm text-gray-600">
-                Showing {startIndex + 1}-{Math.min(endIndex, filteredPrompts.length)} of {filteredPrompts.length} prompts
-                {totalPages > 1 && (
-                  <span className="ml-2">• Page {currentPage} of {totalPages}</span>
-                )}
+                Showing {currentPrompts.length} prompts
               </p>
             </div>
             {formData.prompt_ids.length > 0 && (
@@ -439,28 +505,26 @@ export default function ListEditIndividualPage() {
             )}
           </div>
 
-          {/* Tag Filter */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-black mb-3">
-              Filter Prompts by Tag
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {allTags.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => handleTagChange(tag)}
-                  className={`px-4 py-2 text-sm rounded-md border transition-colors ${
-                    selectedTag === tag
-                      ? "bg-black text-white border-black"
-                      : "bg-white text-gray-700 border-gray-300 hover:border-black"
-                  }`}
-                >
-                  {tag === "all" ? "All" : tag}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* Filter Prompts */}
+          <PromptFilter
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            handleSearchSubmit={handleSearchSubmit}
+            initialCategories={initialCategories}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            initialGroups={initialGroups}
+            selectedGroups={selectedGroups}
+            setSelectedGroups={setSelectedGroups}
+            initialThemes={initialThemes}
+            selectedThemes={selectedThemes}
+            setSelectedThemes={setSelectedThemes}
+            allTags={allTags}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags as React.Dispatch<React.SetStateAction<string[]>>}
+            showFilter={showFilter}
+            setShowFilter={setShowFilter}
+          />
 
           {/* Prompts Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -502,84 +566,14 @@ export default function ListEditIndividualPage() {
                       )}
                     </div>
                   </div>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1">
-                    {prompt.tags.slice(0, 2).map((tag: string, index: number) => (
-                      <span
-                        key={index}
-                        className="px-2 py-0.5 bg-white/20 backdrop-blur-sm text-white rounded text-xs border border-white/30"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
               </button>
             ))}
           </div>
-
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-6">
-              {/* Previous Button */}
-              <button
-                type="button"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`px-3 py-2 text-sm rounded border ${
-                  currentPage === 1
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-black"
-                }`}
-              >
-                Previous
-              </button>
-
-              {/* Page Numbers */}
-              <div className="flex gap-1">
-                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
-
-                  return (
-                    <button
-                      key={pageNum}
-                      type="button"
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 py-2 text-sm rounded border ${
-                        currentPage === pageNum
-                          ? "bg-black text-white border-black"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-black"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Next Button */}
-              <button
-                type="button"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`px-3 py-2 text-sm rounded border ${
-                  currentPage === totalPages
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-gray-700 border-gray-300 hover:border-black"
-                }`}
-              >
-                Next
-              </button>
+          
+          {loadingMore && (
+            <div className="py-8 flex justify-center">
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-black rounded-full animate-spin"></div>
             </div>
           )}
         </div>

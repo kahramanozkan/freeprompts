@@ -6,6 +6,22 @@ import { listsWithUserApi, listsApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import ImageWithLoader from "@/components/ui/ImageWithLoader";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { SortableRow } from '@/components/ui/SortableRow';
 
 type List = Database['public']['Tables']['lists']['Row'] & {
   userName?: string;
@@ -75,6 +91,40 @@ export default function ListEditPage() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setLists((items) => {
+        const oldIndex = items.findIndex((i) => i.id === active.id);
+        const newIndex = items.findIndex((i) => i.id === over.id);
+        
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        
+        // Compute new order for items on this page
+        const pageItems = newItems.slice(startIndex, endIndex);
+        
+        // Update sort_order based on startIndex
+        Promise.all(pageItems.map((item, index) => 
+          listsApi.update(item.id, { sort_order: startIndex + index } as any)
+        )).catch(err => console.error("Error updating list sort order:", err));
+
+        return newItems;
+      });
+    }
   };
 
   // Pagination logic
@@ -207,9 +257,18 @@ export default function ListEditPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
-              {currentLists.map((list) => (
-                <tr key={list.id} className="hover:bg-gray-50">
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext 
+                items={currentLists.map(l => l.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <tbody className="divide-y divide-gray-200">
+                  {currentLists.map((list) => (
+                <SortableRow key={list.id} id={list.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <ImageWithLoader 
                       src={list.image || ''} 
@@ -267,10 +326,12 @@ export default function ListEditPage() {
                       </button>
                     </div>
                   </td>
-                </tr>
+                </SortableRow>
               ))}
             </tbody>
-          </table>
+            </SortableContext>
+          </DndContext>
+        </table>
         </div>
 
         {/* Pagination */}

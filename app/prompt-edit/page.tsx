@@ -7,6 +7,22 @@ import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
 import ImageWithLoader from "@/components/ui/ImageWithLoader";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { SortableRow } from '@/components/ui/SortableRow';
 
 type Prompt = Database['public']['Tables']['prompts']['Row'] & {
   userName?: string;
@@ -65,7 +81,7 @@ export default function PromptEditPage() {
           })
         );
 
-        setPrompts(promptsWithCounts);
+        setPrompts(promptsWithCounts.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)));
       } catch (err) {
         console.error('Error loading prompts:', err);
         setError('Failed to load prompts. Please try again.');
@@ -87,6 +103,40 @@ export default function PromptEditPage() {
         console.error('Error deleting prompt:', err);
         alert('Failed to delete prompt. Please try again.');
       }
+    }
+  };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setPrompts((items) => {
+        const oldIndex = items.findIndex((i) => i.id === active.id);
+        const newIndex = items.findIndex((i) => i.id === over.id);
+        
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        
+        // Compute new order for items on this page based on their sorted order in the global list
+        const pageItems = newItems.slice(startIndex, endIndex);
+        
+        // Use an arbitrary starting point based on startIndex
+        Promise.all(pageItems.map((item, index) => 
+          promptsApi.update(item.id, { sort_order: startIndex + index })
+        )).catch(err => console.error("Error updating sort order:", err));
+
+        return newItems;
+      });
     }
   };
 
@@ -227,13 +277,22 @@ export default function PromptEditPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                {currentPrompts.map((prompt) => {
-                  // Create slug from title
+              <DndContext 
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext 
+                  items={currentPrompts.map(p => p.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <tbody className="divide-y divide-gray-200">
+                    {currentPrompts.map((prompt) => {
+                      // Create slug from title
                   const slug = createSlug(prompt.title);
                   
                   return (
-                    <tr key={prompt.id} className="hover:bg-gray-50">
+                    <SortableRow key={prompt.id} id={prompt.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <ImageWithLoader 
                           src={prompt.image || ''} 
@@ -298,11 +357,13 @@ export default function PromptEditPage() {
                           </button>
                         </div>
                       </td>
-                    </tr>
+                    </SortableRow>
                   );
                 })}
               </tbody>
-            </table>
+            </SortableContext>
+          </DndContext>
+        </table>
           </div>
 
           {/* Pagination */}

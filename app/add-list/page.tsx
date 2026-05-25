@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { promptsApi, listsApi, combinedApi, imagesApi } from "@/lib/supabase-queries";
+import { promptsWithUserApi, listsApi, combinedApi, imagesApi } from "@/lib/supabase-queries";
 import { useAuth } from "@/components/ui/AuthProvider";
 import type { Database } from "@/lib/database.types";
 import { createSlug } from "@/lib/utils";
+import PromptFilter from "@/components/ui/PromptFilter";
 
 type Prompt = Database['public']['Tables']['prompts']['Row'] & {
   userName?: string;
@@ -42,58 +43,82 @@ export default function AddListPage() {
     }
   }, [user, authLoading, router]);
 
-  const [allTags, setAllTags] = useState<string[]>(["all", "Creative", "Business", "Tech", "Marketing", "Education", "Lifestyle"]);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [initialCategories, setInitialCategories] = useState<string[]>([]);
+  const [initialThemes, setInitialThemes] = useState<string[]>([]);
+  const [initialGroups, setInitialGroups] = useState<string[]>([]);
 
   useEffect(() => {
-    const loadPrompts = async () => {
+    const loadInitialData = async () => {
       try {
         setLoading(true);
-        const data = await promptsApi.getPaginated(1, 10);
+        // Load metadata
+        const metadata = await combinedApi.getUniqueMetadata();
+        setAllTags(metadata.tags);
+        setInitialCategories(metadata.categories);
+        setInitialThemes(metadata.themes);
+        setInitialGroups(metadata.groups);
+
+        // Load initial prompts
+        const filters = {
+          searchQuery: searchTerm,
+          categories: selectedCategories,
+          themes: selectedThemes,
+          groups: selectedGroups,
+          tags: selectedTags,
+        };
+        const data = await promptsWithUserApi.getPaginatedWithUsers(1, 10, filters);
         const transformedPrompts: Prompt[] = data.map(prompt => ({
           ...prompt,
-          userName: "User",
-          list: prompt.tags[0] || "General"
+          userName: prompt.user?.name || "User",
+          list: prompt.tags?.[0] || "General"
         }));
         setPrompts(transformedPrompts);
         setHasMore(data.length === 10);
         setPage(2);
       } catch (error) {
-        console.error('Error loading prompts:', error);
+        console.error('Error loading initial data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    const loadTags = async () => {
-      try {
-        const tags = await combinedApi.getUniqueTags();
-        setAllTags(["all", ...tags]);
-      } catch (error) {
-        console.error('Error loading tags:', error);
-      }
-    };
+    loadInitialData();
+  }, [searchTerm, selectedCategories, selectedThemes, selectedGroups, selectedTags]);
 
-    loadPrompts();
-    loadTags();
-  }, []);
-
-  const filteredPrompts = prompts
-    .filter(prompt =>
-      selectedTag === "all" || prompt.tags.some((tag: string) => tag === selectedTag)
-    )
-    .filter((prompt, index, self) => self.findIndex(p => p.id === prompt.id) === index);
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSearchTerm(searchInput);
+  };
 
   const loadMore = async () => {
     if (loadingMore || !hasMore) return;
     try {
       setLoadingMore(true);
-      const data = await promptsApi.getPaginated(page, 10);
+      const filters = {
+        searchQuery: searchTerm,
+        categories: selectedCategories,
+        themes: selectedThemes,
+        groups: selectedGroups,
+        tags: selectedTags,
+      };
+      const data = await promptsWithUserApi.getPaginatedWithUsers(page, 10, filters);
       const transformedPrompts: Prompt[] = data.map(prompt => ({
         ...prompt,
-        userName: "User",
-        list: prompt.tags[0] || "General"
+        userName: prompt.user?.name || "User",
+        list: prompt.tags?.[0] || "General"
       }));
-      setPrompts(prev => [...prev, ...transformedPrompts]);
+      setPrompts(prev => {
+        const newPrompts = [...prev, ...transformedPrompts];
+        // Deduplicate
+        return newPrompts.filter((p, index, self) => self.findIndex(t => t.id === p.id) === index);
+      });
       setHasMore(data.length === 10);
       setPage(prev => prev + 1);
     } catch (error) {
@@ -117,7 +142,9 @@ export default function AddListPage() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loadingMore, hasMore, page]);
+  }, [loadingMore, hasMore, page, searchTerm, selectedCategories, selectedThemes, selectedGroups, selectedTags]);
+
+  const filteredPrompts = prompts;
 
   const togglePrompt = (promptId: string) => {
     setSelectedPrompts(prev =>
@@ -467,39 +494,26 @@ export default function AddListPage() {
             </div>
           </div>
 
-          {/* Tag Filter */}
-          <div>
-            <div className="mb-3">
-              <button
-                type="button"
-                onClick={() => setShowFilter(!showFilter)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white text-sm rounded-md hover:bg-gray-800 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                {showFilter ? 'Hide Filter' : 'Show Filter'}
-              </button>
-            </div>
-            {showFilter && (
-              <div className="flex flex-wrap gap-2">
-                {allTags.map((tag) => (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => setSelectedTag(tag)}
-                    className={`px-4 py-2 text-sm rounded-md border transition-colors ${
-                      selectedTag === tag
-                        ? "bg-black text-white border-black"
-                        : "bg-white text-gray-700 border-gray-300 hover:border-black"
-                    }`}
-                  >
-                    {tag === "all" ? "All" : tag}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Filter Prompts */}
+          <PromptFilter
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            handleSearchSubmit={handleSearchSubmit}
+            initialCategories={initialCategories}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            initialGroups={initialGroups}
+            selectedGroups={selectedGroups}
+            setSelectedGroups={setSelectedGroups}
+            initialThemes={initialThemes}
+            selectedThemes={selectedThemes}
+            setSelectedThemes={setSelectedThemes}
+            allTags={allTags}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags as React.Dispatch<React.SetStateAction<string[]>>}
+            showFilter={showFilter}
+            setShowFilter={setShowFilter}
+          />
 
           {/* Prompts Selection */}
           <div>
