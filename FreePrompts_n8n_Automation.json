@@ -31,7 +31,7 @@
             },
             {
               "name": "x-goog-api-key",
-              "value": "YOUR_GEMINI_API_KEY"
+              "value": "BURAYA_GEMINI_API_KEY_YAZIN"
             }
           ]
         },
@@ -41,19 +41,19 @@
         "options": {}
       },
       "id": "e331c2bb-1234-4b5c-9c9d-123456789abc",
-      "name": "Generate Prompt (Gemini)",
+      "name": "Generate Prompt (LLM)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [200, 200],
       "notesInFlow": true,
-      "notes": "Gemini API ile Prompt Üretimi. JSON formatında çıktı verir."
+      "notes": "DIKKAT: x-goog-api-key kısmına kendi Gemini API anahtarınızı girin."
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "YOUR_GOOGLE_SHEET_ID",
+          "value": "BURAYA_EXCEL_ID_YAZIN",
           "mode": "id"
         },
         "sheetName": {
@@ -72,17 +72,19 @@
         "options": {}
       },
       "id": "a4b2c3d4-1234-4e5f-8f8g-123456789abc",
-      "name": "Save to Google Sheets (Open)",
+      "name": "Save to Sheets (Open)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
-      "position": [400, 200]
+      "position": [400, 200],
+      "notesInFlow": true,
+      "notes": "DIKKAT: Google Hesabınızı bağlayın ve Excel (Sheet) ID'sini seçin."
     },
     {
       "parameters": {
         "resource": "folder",
         "name": "={{ $execution.id }}",
         "parents": [
-          "YOUR_PARENT_DRIVE_FOLDER_ID"
+          "BURAYA_DRIVE_KLASOR_ID_YAZIN"
         ],
         "options": {}
       },
@@ -90,19 +92,21 @@
       "name": "Create Drive Folder",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [600, 200]
+      "position": [600, 200],
+      "notesInFlow": true,
+      "notes": "DIKKAT: Google Drive hesabınızı bağlayın ve ana klasör ID'nizi yapıştırın."
     },
     {
       "parameters": {
-        "fileContent": "={{ $node[\"Generate Prompt (Gemini)\"].json.candidates[0].content.parts[0].text }}",
-        "name": "prompt_data.txt",
+        "fileContent": "={{ $node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text }}",
+        "name": "prompt_data.json",
         "parents": [
           "={{ $json.id }}"
         ],
         "options": {}
       },
       "id": "c6d4e5f6-1234-4g7h-0h0i-123456789abc",
-      "name": "Save Text to Drive",
+      "name": "Save JSON to Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [800, 200]
@@ -110,32 +114,32 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.openai.com/v1/images/generations",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
-              "name": "Authorization",
-              "value": "Bearer YOUR_IMAGE_AI_API_KEY"
-            },
-            {
               "name": "Content-Type",
               "value": "application/json"
+            },
+            {
+              "name": "x-goog-api-key",
+              "value": "BURAYA_GEMINI_API_KEY_YAZIN"
             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\n  \"prompt\": \"={{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title }}\",\n  \"n\": 1,\n  \"size\": \"1024x1024\"\n}",
+        "jsonBody": "{\n  \"contents\": [{\n    \"parts\": [{\n      \"text\": \"={{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title }} konusu için yüksek kaliteli bir görsel üret.\"\n    }]\n  }]\n}",
         "options": {}
       },
       "id": "d7e5f6g7-1234-4h8i-1i1j-123456789abc",
-      "name": "Generate Image (AI)",
+      "name": "Generate Image (Nano Banana 2)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [1000, 200],
       "notesInFlow": true,
-      "notes": "Görsel üretimi (DALL-E veya Midjourney API buraya bağlanacak)"
+      "notes": "DIKKAT: Görsel üretimi için API URL'sini (Nano Banana) ve yetkilendirmeyi buraya girin."
     },
     {
       "parameters": {
@@ -173,7 +177,7 @@
           "parameters": [
             {
               "name": "x-api-key",
-              "value": "YOUR_N8N_API_KEY_FROM_NETLIFY"
+              "value": "BURAYA_NETLIFY_N8N_API_KEY_YAZIN"
             },
             {
               "name": "Content-Type",
@@ -183,21 +187,23 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"title\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title }}\",\n  \"content\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).content }}\",\n  \"json_prompt\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).json_prompt }}\",\n  \"tags\": {{ JSON.stringify(JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).tags) }},\n  \"category\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).category }}\",\n  \"theme\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).theme }}\",\n  \"group\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).group }}\",\n  \"share_text_twitter\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_twitter }}\",\n  \"share_text_facebook\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_facebook }}\",\n  \"share_text_pinterest\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_pinterest }}\",\n  \"share_text_whatsapp\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_whatsapp }}\",\n  \"image_url\": \"{{ $node['Generate Image (AI)'].json.data[0].url }}\"\n}",
+        "jsonBody": "={\n  \"title\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title }}\",\n  \"content\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).content }}\",\n  \"json_prompt\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).json_prompt }}\",\n  \"tags\": {{ JSON.stringify(JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).tags) }},\n  \"category\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).category }}\",\n  \"theme\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).theme }}\",\n  \"group\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).group }}\",\n  \"share_text_twitter\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_twitter }}\",\n  \"share_text_facebook\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_facebook }}\",\n  \"share_text_pinterest\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_pinterest }}\",\n  \"share_text_whatsapp\": \"{{ JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_whatsapp }}\",\n  \"image_url\": \"{{ $node['Generate Image (Nano Banana 2)'].json.data[0].url }}\"\n}",
         "options": {}
       },
       "id": "f9g7h8i9-1234-4j0k-3k3l-123456789abc",
       "name": "Send to FreePrompts API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1600, 200]
+      "position": [1600, 200],
+      "notesInFlow": true,
+      "notes": "DIKKAT: x-api-key kısmına Netlify'daki API Key'inizi girin."
     },
     {
       "parameters": {
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "YOUR_GOOGLE_SHEET_ID",
+          "value": "BURAYA_EXCEL_ID_YAZIN",
           "mode": "id"
         },
         "sheetName": {
@@ -208,7 +214,8 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Status": "closed"
+            "Status": "closed",
+            "Prompt URL": "={{ $node[\"Send to FreePrompts API\"].json.prompt.url }}"
           }
         },
         "options": {
@@ -216,10 +223,12 @@
         }
       },
       "id": "g0h8i9j0-1234-4k1l-4l4m-123456789abc",
-      "name": "Update Google Sheets (Closed)",
+      "name": "Update Sheets (Closed)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
-      "position": [1800, 200]
+      "position": [1800, 200],
+      "notesInFlow": true,
+      "notes": "DIKKAT: Excel ID'sini tekrar seçin. URL sütunu güncellenecek."
     }
   ],
   "connections": {
@@ -227,25 +236,25 @@
       "main": [
         [
           {
-            "node": "Generate Prompt (Gemini)",
+            "node": "Generate Prompt (LLM)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Generate Prompt (Gemini)": {
+    "Generate Prompt (LLM)": {
       "main": [
         [
           {
-            "node": "Save to Google Sheets (Open)",
+            "node": "Save to Sheets (Open)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Save to Google Sheets (Open)": {
+    "Save to Sheets (Open)": {
       "main": [
         [
           {
@@ -260,25 +269,25 @@
       "main": [
         [
           {
-            "node": "Save Text to Drive",
+            "node": "Save JSON to Drive",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Save Text to Drive": {
+    "Save JSON to Drive": {
       "main": [
         [
           {
-            "node": "Generate Image (AI)",
+            "node": "Generate Image (Nano Banana 2)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Generate Image (AI)": {
+    "Generate Image (Nano Banana 2)": {
       "main": [
         [
           {
@@ -315,7 +324,7 @@
       "main": [
         [
           {
-            "node": "Update Google Sheets (Closed)",
+            "node": "Update Sheets (Closed)",
             "type": "main",
             "index": 0
           }
