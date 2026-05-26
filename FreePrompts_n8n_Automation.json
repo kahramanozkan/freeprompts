@@ -157,7 +157,7 @@
         "fileContent": "={{ JSON.stringify($node[\"Parse JSON\"].json, null, 2) }}",
         "name": "prompt_data.json",
         "parents": [
-          "={{ $json.id }}"
+          "={{ $node['Create Drive Folder'].json.id }}"
         ],
         "options": {}
       },
@@ -208,7 +208,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ Object.assign({}, $node['Parse JSON'].json, { image_url: 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' high quality illustration, visually stunning') }) }}",
+        "jsonBody": "={{ JSON.stringify(Object.assign({}, $node['Parse JSON'].json, { image_url: 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' high quality professional illustration, visually stunning') })) }}",
         "options": {}
       },
       "id": "f9g7h8i9-1234-4j0k-3k3l-123456789abc",
