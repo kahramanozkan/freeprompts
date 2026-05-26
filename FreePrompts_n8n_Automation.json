@@ -236,13 +236,15 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
+            "Prompt ID": "={{ $node['Parse JSON'].json.id }}",
             "Status": "closed",
-            "Prompt URL": "={{ $node[\"Send to FreePrompts API\"].json.prompt.url }}"
-          }
+            "Prompt URL": "={{ $node['Send to FreePrompts API'].json.data && $node['Send to FreePrompts API'].json.data.url ? $node['Send to FreePrompts API'].json.data.url : ($node['Send to FreePrompts API'].json.prompt ? $node['Send to FreePrompts API'].json.prompt : '') }}"
+          },
+          "matchingColumns": [
+            "Prompt ID"
+          ]
         },
-        "options": {
-          "dataMode": "autoMapInputData"
-        }
+        "options": {}
       },
       "id": "g0h8i9j0-1234-4k1l-4l4m-123456789abc",
       "name": "Update Sheets (Closed)",
@@ -250,22 +252,6 @@
       "typeVersion": 4.2,
       "position": [
         2050,
-        200
-      ]
-    },
-    {
-      "parameters": {
-        "method": "GET",
-        "url": "={{ 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' high quality illustration, visually stunning') }}",
-        "responseFormat": "file",
-        "options": {}
-      },
-      "id": "generate-image-pollinations",
-      "name": "Generate Image (Pollinations)",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        1300,
         200
       ]
     },
@@ -295,6 +281,53 @@
       "typeVersion": 3.4,
       "position": [
         1850,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.getimg.ai/v2/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer BURAYA_GETIMG_API_KEY_YAZIN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ \"prompt\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content, \"model\": \"stable-diffusion-v1-5\", \"width\": 1024, \"height\": 1024, \"steps\": 30, \"guidance\": 7.5, \"output_format\": \"jpeg\" }) }}",
+        "options": {}
+      },
+      "id": "generate-image-getimg",
+      "name": "Generate Image (Getimg.ai)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1300,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.data[0].url }}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "id": "download-image-getimg",
+      "name": "Download Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1450,
         200
       ]
     }
@@ -370,7 +403,7 @@
       "main": [
         [
           {
-            "node": "Generate Image (Pollinations)",
+            "node": "Generate Image (Getimg.ai)",
             "type": "main",
             "index": 0
           }
@@ -399,22 +432,33 @@
         ]
       ]
     },
-    "Generate Image (Pollinations)": {
+    "Set Prompt ID": {
       "main": [
         [
           {
-            "node": "Save Image to Drive",
+            "node": "Update Sheets (Closed)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Set Prompt ID": {
+    "Generate Image (Getimg.ai)": {
       "main": [
         [
           {
-            "node": "Update Sheets (Closed)",
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Save Image to Drive",
             "type": "main",
             "index": 0
           }
