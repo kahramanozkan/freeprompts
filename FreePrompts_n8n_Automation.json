@@ -208,7 +208,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify(Object.assign({}, $node['Parse JSON'].json, { image_url: 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' high quality professional illustration, visually stunning') })) }}",
+        "jsonBody": "{\n  \"id\": \"={{ $node['Parse JSON'].json.id }}\",\n  \"title\": \"={{ $node['Parse JSON'].json.title }}\",\n  \"content\": \"={{ $node['Parse JSON'].json.content }}\",\n  \"json_prompt\": \"={{ typeof $node['Parse JSON'].json.json_prompt === 'object' ? JSON.stringify($node['Parse JSON'].json.json_prompt).replace(/\\\"/g, '\\\\\"') : $node['Parse JSON'].json.json_prompt }}\",\n  \"tags\": \"={{ Array.isArray($node['Parse JSON'].json.tags) ? $node['Parse JSON'].json.tags.join(', ') : $node['Parse JSON'].json.tags }}\",\n  \"category\": \"={{ $node['Parse JSON'].json.category }}\",\n  \"theme\": \"={{ $node['Parse JSON'].json.theme }}\",\n  \"group\": \"={{ $node['Parse JSON'].json.group }}\",\n  \"share_text_twitter\": \"={{ $node['Parse JSON'].json.share_text_twitter }}\",\n  \"share_text_facebook\": \"={{ $node['Parse JSON'].json.share_text_facebook }}\",\n  \"share_text_pinterest\": \"={{ $node['Parse JSON'].json.share_text_pinterest }}\",\n  \"share_text_whatsapp\": \"={{ $node['Parse JSON'].json.share_text_whatsapp }}\",\n  \"image_url\": \"={{ 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' high quality professional illustration, visually stunning') }}\"\n}",
         "options": {}
       },
       "id": "f9g7h8i9-1234-4j0k-3k3l-123456789abc",
