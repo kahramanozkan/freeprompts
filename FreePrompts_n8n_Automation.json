@@ -72,15 +72,13 @@
     },
     {
       "parameters": {
-        "jsCode": "const text = $input.first().json.candidates[0].content.parts[0].text;\nlet parsed = {};\ntry {\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  if (firstBrace === -1 || lastBrace === -1) {\n    throw new Error('No JSON object found in LLM response');\n  }\n  const jsonString = text.substring(firstBrace, lastBrace + 1);\n  parsed = JSON.parse(jsonString);\n} catch(e) {\n  throw new Error('LLM did not return valid JSON: ' + e.message + '\\nRaw text: ' + text);\n}\nreturn { json: parsed };"
+        "jsCode": "const text = $input.first().json.candidates[0].content.parts[0].text;\nlet parsed = {};\n\n// 1. Önce standart JSON formatını yakalamayı deneriz\ntry {\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < 200) {\n    const jsonString = text.substring(firstBrace, lastBrace + 1);\n    const tempParsed = JSON.parse(jsonString);\n    // Eğer anahtar kelimelerimiz (title, content) içindeyse doğru JSON budur\n    if (tempParsed.title || tempParsed.content) {\n      parsed = tempParsed;\n    }\n  }\n} catch(e) {}\n\n// 2. Eğer JSON bulunamadıysa veya LLM sizin düz metin (STANDART ÇIKTI) formatınızı bastıysa, Regex ile parçalayalım:\nif (!parsed.title) {\n  const extract = (regex) => {\n    const match = text.match(regex);\n    return match ? match[1].trim() : \"\";\n  };\n\n  parsed = {\n    title: extract(/Title:\\s*(.*?)(?=\\n|$)/i),\n    content: extract(/Prompt:\\s*([\\s\\S]*?)(?=JSON Prompt:)/i),\n    json_prompt: extract(/JSON Prompt:\\s*([\\s\\S]*?)(?=Tags:)/i),\n    tags: extract(/Tags:\\s*(.*?)(?=\\n|$)/i),\n    category: extract(/(?:Sub-theme \\/ Category:|Category:)\\s*(.*?)(?=\\n|$)/i),\n    theme: extract(/Theme:\\s*(.*?)(?=\\n|$)/i),\n    group: extract(/Group:\\s*(.*?)(?=\\n|$)/i),\n    share_text_twitter: extract(/(?:X share text:|Twitter share text:)\\s*([\\s\\S]*?)(?=Facebook share text:)/i),\n    share_text_facebook: extract(/Facebook share text:\\s*([\\s\\S]*?)(?=Pinterest share text:)/i),\n    share_text_pinterest: extract(/Pinterest share text:\\s*([\\s\\S]*?)(?=Whatsapp share text:)/i),\n    share_text_whatsapp: extract(/Whatsapp share text:\\s*([\\s\\S]*?)(?=$)/i)\n  };\n\n  if (parsed.json_prompt) {\n      parsed.json_prompt = parsed.json_prompt.replace(/```json/gi, '').replace(/```/g, '').trim();\n  }\n}\n\nreturn { json: parsed };"
       },
       "id": "parse-json-node-123",
       "name": "Parse JSON",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [600, 200],
-      "notesInFlow": true,
-      "notes": "LLM'den gelen veriyi sorunsuz JSON formatına dönüştürür."
+      "position": [600, 200]
     },
     {
       "parameters": {
