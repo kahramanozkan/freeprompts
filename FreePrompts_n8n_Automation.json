@@ -1,0 +1,326 @@
+{
+  "name": "FreePrompts Auto Generation Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "c1f1f1e0-1234-4a2b-8a8b-123456789abc",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [0, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-goog-api-key",
+              "value": "YOUR_GEMINI_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"contents\": [{\n    \"parts\": [{\n      \"text\": \"Bana yeni bir prompt üret. Çıktıyı kesinlikle aşağıdaki JSON formatında ver:\\n{\\n \\\"title\\\": \\\"...\\\",\\n \\\"content\\\": \\\"...\\\",\\n \\\"json_prompt\\\": \\\"...\\\",\\n \\\"tags\\\": [\\\"...\\\"],\\n \\\"category\\\": \\\"...\\\",\\n \\\"theme\\\": \\\"...\\\",\\n \\\"group\\\": \\\"...\\\",\\n \\\"share_text_twitter\\\": \\\"...\\\",\\n \\\"share_text_facebook\\\": \\\"...\\\",\\n \\\"share_text_pinterest\\\": \\\"...\\\",\\n \\\"share_text_whatsapp\\\": \\\"...\\\"\\n}\\n\\nÖzel Talimatlar (Gem): [BURAYA GEM TALİMATLARINIZI YAPIŞTIRIN]\"\n    }]\n  }]\n}",
+        "options": {}
+      },
+      "id": "e331c2bb-1234-4b5c-9c9d-123456789abc",
+      "name": "Generate Prompt (Gemini)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [200, 200],
+      "notesInFlow": true,
+      "notes": "Gemini API ile Prompt Üretimi. JSON formatında çıktı verir."
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Prompt ID": "={{ $execution.id }}",
+            "Status": "open",
+            "Title": "={{ JSON.parse($json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "a4b2c3d4-1234-4e5f-8f8g-123456789abc",
+      "name": "Save to Google Sheets (Open)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [400, 200]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $execution.id }}",
+        "parents": [
+          "YOUR_PARENT_DRIVE_FOLDER_ID"
+        ],
+        "options": {}
+      },
+      "id": "b5c3d4e5-1234-4f6g-9g9h-123456789abc",
+      "name": "Create Drive Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [600, 200]
+    },
+    {
+      "parameters": {
+        "fileContent": "={{ $node[\"Generate Prompt (Gemini)\"].json.candidates[0].content.parts[0].text }}",
+        "name": "prompt_data.txt",
+        "parents": [
+          "={{ $json.id }}"
+        ],
+        "options": {}
+      },
+      "id": "c6d4e5f6-1234-4g7h-0h0i-123456789abc",
+      "name": "Save Text to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [800, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_IMAGE_AI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"prompt\": \"={{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title }}\",\n  \"n\": 1,\n  \"size\": \"1024x1024\"\n}",
+        "options": {}
+      },
+      "id": "d7e5f6g7-1234-4h8i-1i1j-123456789abc",
+      "name": "Generate Image (AI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1000, 200],
+      "notesInFlow": true,
+      "notes": "Görsel üretimi (DALL-E veya Midjourney API buraya bağlanacak)"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.data[0].url }}",
+        "options": {}
+      },
+      "id": "x1y2z3a4-1234-4a2b-8a8b-123456789abc",
+      "name": "Download Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1200, 200]
+    },
+    {
+      "parameters": {
+        "name": "image.jpg",
+        "parents": [
+          "={{ $node[\"Create Drive Folder\"].json.id }}"
+        ],
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "e8f6g7h8-1234-4i9j-2j2k-123456789abc",
+      "name": "Save Image to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1400, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://freeprompts.store/api/prompts/external",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "YOUR_N8N_API_KEY_FROM_NETLIFY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title }}\",\n  \"content\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).content }}\",\n  \"json_prompt\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).json_prompt }}\",\n  \"tags\": {{ JSON.stringify(JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).tags) }},\n  \"category\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).category }}\",\n  \"theme\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).theme }}\",\n  \"group\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).group }}\",\n  \"share_text_twitter\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_twitter }}\",\n  \"share_text_facebook\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_facebook }}\",\n  \"share_text_pinterest\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_pinterest }}\",\n  \"share_text_whatsapp\": \"{{ JSON.parse($node['Generate Prompt (Gemini)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_whatsapp }}\",\n  \"image_url\": \"{{ $node['Generate Image (AI)'].json.data[0].url }}\"\n}",
+        "options": {}
+      },
+      "id": "f9g7h8i9-1234-4j0k-3k3l-123456789abc",
+      "name": "Send to FreePrompts API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1600, 200]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "closed"
+          }
+        },
+        "options": {
+          "dataMode": "autoMapInputData"
+        }
+      },
+      "id": "g0h8i9j0-1234-4k1l-4l4m-123456789abc",
+      "name": "Update Google Sheets (Closed)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [1800, 200]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate Prompt (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Prompt (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Save to Google Sheets (Open)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Google Sheets (Open)": {
+      "main": [
+        [
+          {
+            "node": "Create Drive Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Drive Folder": {
+      "main": [
+        [
+          {
+            "node": "Save Text to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Text to Drive": {
+      "main": [
+        [
+          {
+            "node": "Generate Image (AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image (AI)": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Save Image to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Image to Drive": {
+      "main": [
+        [
+          {
+            "node": "Send to FreePrompts API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to FreePrompts API": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets (Closed)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
