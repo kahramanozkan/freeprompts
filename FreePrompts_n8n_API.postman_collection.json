@@ -1,0 +1,91 @@
+{
+	"info": {
+		"_postman_id": "b3e8ad6b-8b01-447a-8b89-123456789abc",
+		"name": "FreePrompts n8n API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Prompt (Localhost)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "my_super_secret_n8n_key_123",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Postman Test Prompt - Local\",\r\n  \"content\": \"Bu, n8n API entegrasyonunu test etmek için Postman üzerinden oluşturulmuş bir deneme içeriğidir.\",\r\n  \"json_prompt\": \"{\\n  \\\"test\\\": \\\"value\\\"\\n}\",\r\n  \"tags\": [\"Test\", \"API\", \"Postman\"],\r\n  \"category\": \"Teknoloji\",\r\n  \"theme\": \"Karanlık\",\r\n  \"group\": \"Geliştiriciler\",\r\n  \"image_url\": \"https://images.unsplash.com/photo-1707343843437-caacff5cfa74\",\r\n  \"share_text_twitter\": \"Check out this prompt on Twitter!\",\r\n  \"share_text_facebook\": \"Check out this prompt on Facebook!\",\r\n  \"share_text_pinterest\": \"Check out this prompt on Pinterest!\",\r\n  \"share_text_whatsapp\": \"Check out this prompt on WhatsApp!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/prompts/external",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"prompts",
+						"external"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Prompt (Production/Canlı)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "CANLI_ORTAM_SIFRENIZI_YAZIN",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Postman Test Prompt - Canlı\",\r\n  \"content\": \"Bu, n8n API entegrasyonunu test etmek için Postman üzerinden oluşturulmuş bir deneme içeriğidir.\",\r\n  \"json_prompt\": \"{\\n  \\\"test\\\": \\\"value\\\"\\n}\",\r\n  \"tags\": [\"Test\", \"API\", \"Postman\"],\r\n  \"category\": \"Teknoloji\",\r\n  \"theme\": \"Karanlık\",\r\n  \"group\": \"Geliştiriciler\",\r\n  \"image_url\": \"https://images.unsplash.com/photo-1707343843437-caacff5cfa74\",\r\n  \"share_text_twitter\": \"Check out this prompt on Twitter!\",\r\n  \"share_text_facebook\": \"Check out this prompt on Facebook!\",\r\n  \"share_text_pinterest\": \"Check out this prompt on Pinterest!\",\r\n  \"share_text_whatsapp\": \"Check out this prompt on WhatsApp!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://freeprompts.store/api/prompts/external",
+					"protocol": "https",
+					"host": [
+						"freeprompts",
+						"store"
+					],
+					"path": [
+						"api",
+						"prompts",
+						"external"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

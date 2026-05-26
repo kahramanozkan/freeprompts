@@ -24,7 +24,20 @@ export async function POST(request: Request) {
 
     // 2. Parse payload
     const body = await request.json();
-    const { title, content, tags, category, theme, group, image_url } = body;
+    const { 
+      title, 
+      content, 
+      tags, 
+      category, 
+      theme, 
+      group, 
+      image_url,
+      json_prompt,
+      share_text_twitter,
+      share_text_facebook,
+      share_text_pinterest,
+      share_text_whatsapp
+    } = body;
 
     if (!title || !content) {
       return NextResponse.json({ error: 'Missing required fields: title and content are required' }, { status: 400 });
@@ -117,6 +130,11 @@ export async function POST(request: Request) {
       group: group || null,
       image: finalImageUrl,
       user_id: userId,
+      json_prompt: json_prompt || null,
+      share_text_twitter: share_text_twitter || null,
+      share_text_facebook: share_text_facebook || null,
+      share_text_pinterest: share_text_pinterest || null,
+      share_text_whatsapp: share_text_whatsapp || null,
       likes: 0,
       views: 0
       // updated_at and created_at usually default to now()
