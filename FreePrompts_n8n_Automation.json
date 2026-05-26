@@ -16,7 +16,10 @@
       "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.1,
-      "position": [0, 200]
+      "position": [
+        0,
+        200
+      ]
     },
     {
       "parameters": {
@@ -36,7 +39,10 @@
       "name": "Set Instructions",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [200, 200],
+      "position": [
+        200,
+        200
+      ],
       "notesInFlow": true,
       "notes": "DIKKAT: Gem talimatlarınızı (prompt) buraya yapıştırın."
     },
@@ -66,7 +72,10 @@
       "name": "Generate Prompt (LLM)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [400, 200],
+      "position": [
+        400,
+        200
+      ],
       "notesInFlow": true,
       "notes": "DIKKAT: Sadece API Anahtarınızı girin."
     },
@@ -78,7 +87,10 @@
       "name": "Parse JSON",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [600, 200]
+      "position": [
+        600,
+        200
+      ]
     },
     {
       "parameters": {
@@ -117,7 +129,10 @@
       "name": "Save to Sheets (Open)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
-      "position": [800, 200]
+      "position": [
+        800,
+        200
+      ]
     },
     {
       "parameters": {
@@ -132,7 +147,10 @@
       "name": "Create Drive Folder",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1000, 200]
+      "position": [
+        1000,
+        200
+      ]
     },
     {
       "parameters": {
@@ -147,52 +165,16 @@
       "name": "Save JSON to Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1200, 200]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "x-goog-api-key",
-              "value": "BURAYA_GEMINI_API_KEY_YAZIN"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ { \"contents\": [{ \"parts\": [{ \"text\": $node[\"Parse JSON\"].json.title + \" konusu için yüksek kaliteli bir görsel üret.\" }] }] } }}",
-        "options": {}
-      },
-      "id": "d7e5f6g7-1234-4h8i-1i1j-123456789abc",
-      "name": "Generate Image (Nano Banana 2)",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [1400, 200]
-    },
-    {
-      "parameters": {
-        "url": "={{ $json.data[0].url }}",
-        "options": {}
-      },
-      "id": "x1y2z3a4-1234-4a2b-8a8b-123456789abc",
-      "name": "Download Image",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [1600, 200]
+      "position": [
+        1200,
+        200
+      ]
     },
     {
       "parameters": {
         "name": "image.jpg",
         "parents": [
-          "={{ $node[\"Create Drive Folder\"].json.id }}"
+          "={{ $node['Create Drive Folder'].json.id }}"
         ],
         "binaryData": true,
         "binaryPropertyName": "data",
@@ -202,7 +184,10 @@
       "name": "Save Image to Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1800, 200]
+      "position": [
+        1500,
+        200
+      ]
     },
     {
       "parameters": {
@@ -223,14 +208,17 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ Object.assign({}, $node['Parse JSON'].json, { image_url: $node['Generate Image (Nano Banana 2)'].json.data[0].url }) }}",
+        "jsonBody": "={{ Object.assign({}, $node['Parse JSON'].json, { image_url: 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' high quality illustration, visually stunning') }) }}",
         "options": {}
       },
       "id": "f9g7h8i9-1234-4j0k-3k3l-123456789abc",
       "name": "Send to FreePrompts API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [2000, 200]
+      "position": [
+        1700,
+        200
+      ]
     },
     {
       "parameters": {
@@ -260,7 +248,26 @@
       "name": "Update Sheets (Closed)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
-      "position": [2200, 200]
+      "position": [
+        1900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' high quality illustration, visually stunning') }}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "id": "generate-image-pollinations",
+      "name": "Generate Image (Pollinations)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1300,
+        200
+      ]
     }
   ],
   "connections": {
@@ -334,29 +341,7 @@
       "main": [
         [
           {
-            "node": "Generate Image (Nano Banana 2)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Generate Image (Nano Banana 2)": {
-      "main": [
-        [
-          {
-            "node": "Download Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Image": {
-      "main": [
-        [
-          {
-            "node": "Save Image to Drive",
+            "node": "Generate Image (Pollinations)",
             "type": "main",
             "index": 0
           }
@@ -379,6 +364,17 @@
         [
           {
             "node": "Update Sheets (Closed)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image (Pollinations)": {
+      "main": [
+        [
+          {
+            "node": "Save Image to Drive",
             "type": "main",
             "index": 0
           }
