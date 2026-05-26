@@ -81,7 +81,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const text = $input.first().json.candidates[0].content.parts[0].text;\nlet parsed = {};\n\n// 1. Önce standart JSON formatını yakalamayı deneriz\ntry {\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < 200) {\n    const jsonString = text.substring(firstBrace, lastBrace + 1);\n    const tempParsed = JSON.parse(jsonString);\n    // Eğer anahtar kelimelerimiz (title, content) içindeyse doğru JSON budur\n    if (tempParsed.title || tempParsed.content) {\n      parsed = tempParsed;\n    }\n  }\n} catch(e) {}\n\n// 2. Eğer JSON bulunamadıysa veya LLM sizin düz metin (STANDART ÇIKTI) formatınızı bastıysa, Regex ile parçalayalım:\nif (!parsed.title) {\n  const extract = (regex) => {\n    const match = text.match(regex);\n    return match ? match[1].trim() : \"\";\n  };\n\n  parsed = {\n    id: extract(/Prompt number:\\s*(.*?)(?=\\n|$)/i),\n    title: extract(/Title:\\s*(.*?)(?=\\n|$)/i),\n    content: extract(/Prompt:\\s*([\\s\\S]*?)(?=JSON Prompt:)/i),\n    json_prompt: extract(/JSON Prompt:\\s*([\\s\\S]*?)(?=Tags:)/i),\n    tags: extract(/Tags:\\s*(.*?)(?=\\n|$)/i),\n    category: extract(/(?:Sub-theme \\/ Category:|Category:)\\s*(.*?)(?=\\n|$)/i),\n    theme: extract(/Theme:\\s*(.*?)(?=\\n|$)/i),\n    group: extract(/Group:\\s*(.*?)(?=\\n|$)/i),\n    share_text_twitter: extract(/(?:X share text:|Twitter share text:)\\s*([\\s\\S]*?)(?=Facebook share text:)/i),\n    share_text_facebook: extract(/Facebook share text:\\s*([\\s\\S]*?)(?=Pinterest share text:)/i),\n    share_text_pinterest: extract(/Pinterest share text:\\s*([\\s\\S]*?)(?=Whatsapp share text:)/i),\n    share_text_whatsapp: extract(/Whatsapp share text:\\s*([\\s\\S]*?)(?=$)/i)\n  };\n\n  if (parsed.json_prompt) {\n      parsed.json_prompt = parsed.json_prompt.replace(/```json/gi, '').replace(/```/g, '').trim();\n  }\n}\n\nreturn { json: parsed };"
+        "jsCode": "const text = $input.first().json.candidates[0].content.parts[0].text;\nlet parsed = {};\n\n// 1. Önce standart JSON formatını yakalamayı deneriz\ntry {\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < 200) {\n    const jsonString = text.substring(firstBrace, lastBrace + 1);\n    const tempParsed = JSON.parse(jsonString);\n    if (tempParsed.title || tempParsed.content) {\n      parsed = tempParsed;\n    }\n  }\n} catch(e) {}\n\n// 2. Regex parsing\nif (!parsed.title) {\n  const extract = (regex) => {\n    const match = text.match(regex);\n    return match ? match[1].trim() : \"\";\n  };\n\n  parsed = {\n    id: extract(/Prompt number:\\s*(.*?)(?=\\n|$)/i),\n    title: extract(/Title:\\s*(.*?)(?=\\n|$)/i),\n    content: extract(/Prompt:\\s*([\\s\\S]*?)(?=JSON Prompt:)/i),\n    json_prompt: extract(/JSON Prompt:\\s*([\\s\\S]*?)(?=Tags:)/i),\n    tags: extract(/Tags:\\s*(.*?)(?=\\n|$)/i),\n    category: extract(/(?:Sub-theme \\/ Category:|Category:)\\s*(.*?)(?=\\n|$)/i),\n    theme: extract(/Theme:\\s*(.*?)(?=\\n|$)/i),\n    group: extract(/Group:\\s*(.*?)(?=\\n|$)/i),\n    share_text_twitter: extract(/(?:X share text:|Twitter share text:)\\s*([\\s\\S]*?)(?=Facebook share text:)/i),\n    share_text_facebook: extract(/Facebook share text:\\s*([\\s\\S]*?)(?=Pinterest share text:)/i),\n    share_text_pinterest: extract(/Pinterest share text:\\s*([\\s\\S]*?)(?=Whatsapp share text:)/i),\n    share_text_whatsapp: extract(/Whatsapp share text:\\s*([\\s\\S]*?)(?=$)/i)\n  };\n\n  if (parsed.json_prompt) {\n      parsed.json_prompt = parsed.json_prompt.replace(/\\x60\\x60\\x60json/gi, '').replace(/\\x60\\x60\\x60/g, '').trim();\n  }\n  if (parsed.content) {\n      parsed.content = parsed.content.replace(/\\x60\\x60\\x60text/gi, '').replace(/\\x60\\x60\\x60/g, '').trim();\n  }\n  if (parsed.tags) {\n      parsed.tags = parsed.tags.replace(/[\\[\\]\"]/g, '').trim();\n  }\n}\n\nreturn { json: parsed };"
       },
       "id": "parse-json-node-123",
       "name": "Parse JSON",
@@ -249,7 +249,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
       "position": [
-        1900,
+        2050,
         200
       ]
     },
@@ -266,6 +266,35 @@
       "typeVersion": 4.1,
       "position": [
         1300,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "20c78e1d-c9b0-4a81-9b16-41e17d653775",
+              "name": "Prompt ID",
+              "value": "={{ $node['Parse JSON'].json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "30c78e1d-c9b0-4a81-9b16-41e17d653776",
+              "name": "Prompt URL",
+              "value": "={{ $json.prompt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-prompt-id-node",
+      "name": "Set Prompt ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1850,
         200
       ]
     }
@@ -363,7 +392,7 @@
       "main": [
         [
           {
-            "node": "Update Sheets (Closed)",
+            "node": "Set Prompt ID",
             "type": "main",
             "index": 0
           }
@@ -375,6 +404,17 @@
         [
           {
             "node": "Save Image to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Prompt ID": {
+      "main": [
+        [
+          {
+            "node": "Update Sheets (Closed)",
             "type": "main",
             "index": 0
           }
