@@ -287,13 +287,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.segmind.com/v1/fast-flux-schnell",
+        "url": "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
-              "name": "x-api-key",
-              "value": "BURAYA_SEGMIND_API_KEY_YAZIN"
+              "name": "Authorization",
+              "value": "Bearer BURAYA_HUGGINGFACE_API_KEY_YAZIN"
             },
             {
               "name": "Content-Type",
@@ -303,12 +303,12 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ \"prompt\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content, \"steps\": 4, \"aspect_ratio\": \"1:1\", \"base64\": false }) }}",
+        "jsonBody": "={{ JSON.stringify({ \"inputs\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content }) }}",
         "responseFormat": "file",
         "options": {}
       },
-      "id": "generate-image-segmind",
-      "name": "Generate Image (Segmind)",
+      "id": "generate-image-hf",
+      "name": "Generate Image (Hugging Face)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
@@ -388,7 +388,7 @@
       "main": [
         [
           {
-            "node": "Generate Image (Segmind)",
+            "node": "Generate Image (Hugging Face)",
             "type": "main",
             "index": 0
           }
@@ -428,7 +428,7 @@
         ]
       ]
     },
-    "Generate Image (Segmind)": {
+    "Generate Image (Hugging Face)": {
       "main": [
         [
           {
