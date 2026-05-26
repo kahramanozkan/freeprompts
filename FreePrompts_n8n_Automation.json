@@ -72,6 +72,18 @@
     },
     {
       "parameters": {
+        "jsCode": "const text = $input.first().json.candidates[0].content.parts[0].text;\nlet cleaned = text.replace(/```json/gi, '').replace(/```/g, '').trim();\nlet parsed = {};\ntry {\n  parsed = JSON.parse(cleaned);\n} catch(e) {\n  throw new Error('LLM did not return valid JSON: ' + cleaned);\n}\nreturn { json: parsed };"
+      },
+      "id": "parse-json-node-123",
+      "name": "Parse JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 200],
+      "notesInFlow": true,
+      "notes": "LLM'den gelen veriyi sorunsuz JSON formatına dönüştürür."
+    },
+    {
+      "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
@@ -88,17 +100,17 @@
           "value": {
             "Prompt ID": "={{ $execution.id }}",
             "Status": "open",
-            "Title": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title }}",
-            "Content": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).content }}",
-            "JSON Prompt": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).json_prompt }}",
-            "Tags": "={{ JSON.stringify(JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).tags) }}",
-            "Category": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).category }}",
-            "Theme": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).theme }}",
-            "Group": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).group }}",
-            "Share Twitter": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_twitter }}",
-            "Share Facebook": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_facebook }}",
-            "Share Pinterest": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_pinterest }}",
-            "Share WhatsApp": "={{ JSON.parse($node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_whatsapp }}"
+            "Title": "={{ $json.title }}",
+            "Content": "={{ $json.content }}",
+            "JSON Prompt": "={{ typeof $json.json_prompt === 'object' ? JSON.stringify($json.json_prompt) : $json.json_prompt }}",
+            "Tags": "={{ Array.isArray($json.tags) ? $json.tags.join(', ') : $json.tags }}",
+            "Category": "={{ $json.category }}",
+            "Theme": "={{ $json.theme }}",
+            "Group": "={{ $json.group }}",
+            "Share Twitter": "={{ $json.share_text_twitter }}",
+            "Share Facebook": "={{ $json.share_text_facebook }}",
+            "Share Pinterest": "={{ $json.share_text_pinterest }}",
+            "Share WhatsApp": "={{ $json.share_text_whatsapp }}"
           }
         },
         "options": {}
@@ -107,7 +119,7 @@
       "name": "Save to Sheets (Open)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
-      "position": [600, 200]
+      "position": [800, 200]
     },
     {
       "parameters": {
@@ -122,11 +134,11 @@
       "name": "Create Drive Folder",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [800, 200]
+      "position": [1000, 200]
     },
     {
       "parameters": {
-        "fileContent": "={{ $node[\"Generate Prompt (LLM)\"].json.candidates[0].content.parts[0].text }}",
+        "fileContent": "={{ JSON.stringify($node[\"Parse JSON\"].json, null, 2) }}",
         "name": "prompt_data.json",
         "parents": [
           "={{ $json.id }}"
@@ -137,7 +149,7 @@
       "name": "Save JSON to Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1000, 200]
+      "position": [1200, 200]
     },
     {
       "parameters": {
@@ -158,14 +170,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ { \"contents\": [{ \"parts\": [{ \"text\": JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title + \" konusu için yüksek kaliteli bir görsel üret.\" }] }] } }}",
+        "jsonBody": "={{ { \"contents\": [{ \"parts\": [{ \"text\": $node[\"Parse JSON\"].json.title + \" konusu için yüksek kaliteli bir görsel üret.\" }] }] } }}",
         "options": {}
       },
       "id": "d7e5f6g7-1234-4h8i-1i1j-123456789abc",
       "name": "Generate Image (Nano Banana 2)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1200, 200]
+      "position": [1400, 200]
     },
     {
       "parameters": {
@@ -176,7 +188,7 @@
       "name": "Download Image",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1400, 200]
+      "position": [1600, 200]
     },
     {
       "parameters": {
@@ -192,7 +204,7 @@
       "name": "Save Image to Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1600, 200]
+      "position": [1800, 200]
     },
     {
       "parameters": {
@@ -213,14 +225,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ { title: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).title, content: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).content, json_prompt: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).json_prompt, tags: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).tags, category: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).category, theme: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).theme, group: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).group, share_text_twitter: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_twitter, share_text_facebook: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_facebook, share_text_pinterest: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_pinterest, share_text_whatsapp: JSON.parse($node['Generate Prompt (LLM)'].json.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '')).share_text_whatsapp, image_url: $node['Generate Image (Nano Banana 2)'].json.data[0].url } }}",
+        "jsonBody": "={{ Object.assign({}, $node['Parse JSON'].json, { image_url: $node['Generate Image (Nano Banana 2)'].json.data[0].url }) }}",
         "options": {}
       },
       "id": "f9g7h8i9-1234-4j0k-3k3l-123456789abc",
       "name": "Send to FreePrompts API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1800, 200]
+      "position": [2000, 200]
     },
     {
       "parameters": {
@@ -250,7 +262,7 @@
       "name": "Update Sheets (Closed)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
-      "position": [2000, 200]
+      "position": [2200, 200]
     }
   ],
   "connections": {
@@ -277,6 +289,17 @@
       ]
     },
     "Generate Prompt (LLM)": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSON": {
       "main": [
         [
           {
