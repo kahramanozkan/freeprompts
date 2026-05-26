@@ -287,13 +287,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.getimg.ai/v2/images/generations",
+        "url": "https://api.segmind.com/v1/fast-flux-schnell",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
-              "name": "Authorization",
-              "value": "Bearer BURAYA_GETIMG_API_KEY_YAZIN"
+              "name": "x-api-key",
+              "value": "BURAYA_SEGMIND_API_KEY_YAZIN"
             },
             {
               "name": "Content-Type",
@@ -303,31 +303,16 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ \"prompt\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content, \"model\": \"stable-diffusion-v1-5\", \"width\": 1024, \"height\": 1024, \"steps\": 30, \"guidance\": 7.5, \"output_format\": \"jpeg\" }) }}",
+        "jsonBody": "={{ JSON.stringify({ \"prompt\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content, \"steps\": 4, \"aspect_ratio\": \"1:1\", \"base64\": false }) }}",
+        "responseFormat": "file",
         "options": {}
       },
-      "id": "generate-image-getimg",
-      "name": "Generate Image (Getimg.ai)",
+      "id": "generate-image-segmind",
+      "name": "Generate Image (Segmind)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
         1300,
-        200
-      ]
-    },
-    {
-      "parameters": {
-        "method": "GET",
-        "url": "={{ $json.data[0].url }}",
-        "responseFormat": "file",
-        "options": {}
-      },
-      "id": "download-image-getimg",
-      "name": "Download Image",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        1450,
         200
       ]
     }
@@ -403,7 +388,7 @@
       "main": [
         [
           {
-            "node": "Generate Image (Getimg.ai)",
+            "node": "Generate Image (Segmind)",
             "type": "main",
             "index": 0
           }
@@ -443,18 +428,7 @@
         ]
       ]
     },
-    "Generate Image (Getimg.ai)": {
-      "main": [
-        [
-          {
-            "node": "Download Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Image": {
+    "Generate Image (Segmind)": {
       "main": [
         [
           {
