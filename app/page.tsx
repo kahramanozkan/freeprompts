@@ -16,6 +16,7 @@ const PromptCard = dynamic(() => import('@/components/ui/PromptCard'), { ssr: tr
 const Subscribe = dynamic(() => import('@/components/ui/Subscribe'), { ssr: true });
 const HomeSlider = dynamic(() => import('@/components/ui/HomeSlider'), { ssr: true });
 const LiveStats = dynamic(() => import('@/components/ui/LiveStats'), { ssr: true });
+import AutoRefresh from '@/components/ui/AutoRefresh';
 import ImageWithLoader from "@/components/ui/ImageWithLoader";
 
 // Revalidate every 60 seconds
@@ -82,6 +83,9 @@ export default async function Home() {
 
   return (
     <div>
+      {/* Auto refresh data on page every 5 minutes (300000ms) without caching */}
+      <AutoRefresh intervalMs={300000} />
+
       {/* Hero Section */}
       <Hero />
 

@@ -1220,7 +1220,7 @@ export const promptsWithUserApi = {
         query = query.in('theme', filters.themes)
       }
       if (filters.tags && filters.tags.length > 0) {
-        query = query.contains('tags', filters.tags)
+        query = query.overlaps('tags', filters.tags)
       }
     }
 
@@ -1228,6 +1228,53 @@ export const promptsWithUserApi = {
 
     if (error) throw error
     return data
+  },
+
+  // Get paginated prompts with user information and total count for pagination
+  async getPaginatedWithUsersAndCount(
+    page: number, 
+    pageSize: number = 12, 
+    filters?: {
+      searchQuery?: string;
+      themes?: string[];
+      categories?: string[];
+      groups?: string[];
+      tags?: string[];
+    }
+  ) {
+    const from = (page - 1) * pageSize
+    let query = supabase
+      .from('prompts')
+      .select(`
+        id, title, image, tags, likes, created_at, user_id, content,
+        user:users(id, name)
+      `, { count: 'exact' })
+      .order('sort_order', { ascending: true, nullsFirst: false })
+      .order('created_at', { ascending: false })
+      .range(from, from + pageSize - 1)
+
+    if (filters) {
+      if (filters.searchQuery && filters.searchQuery.trim() !== '') {
+        query = query.or(`title.ilike.%${filters.searchQuery}%,content.ilike.%${filters.searchQuery}%`)
+      }
+      if (filters.categories && filters.categories.length > 0) {
+        query = query.in('category', filters.categories)
+      }
+      if (filters.groups && filters.groups.length > 0) {
+        query = query.in('group', filters.groups)
+      }
+      if (filters.themes && filters.themes.length > 0) {
+        query = query.in('theme', filters.themes)
+      }
+      if (filters.tags && filters.tags.length > 0) {
+        query = query.overlaps('tags', filters.tags)
+      }
+    }
+
+    const { data, count, error } = await query
+
+    if (error) throw error
+    return { data, count: count || 0 }
   },
 
   // Get single prompt with user information

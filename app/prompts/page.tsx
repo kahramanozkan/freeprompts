@@ -16,19 +16,19 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
-async function getInitialPrompts(): Promise<Prompt[]> {
-  const { data, error } = await supabaseServer
+async function getInitialPrompts(): Promise<{ prompts: Prompt[], totalCount: number }> {
+  const { data, count, error } = await supabaseServer
     .from('prompts')
     .select(`
       id, title, image, tags, likes, created_at, user_id, sort_order,
       user:users(id, name)
-    `)
+    `, { count: 'exact' })
     .order('sort_order', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: false })
     .range(0, 11); // First 12 items
 
   if (error) throw new Error(`Supabase error fetching prompts: ${error.message}`);
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) return { prompts: [], totalCount: 0 };
 
   // Get variant counts
   const promptIds = data.map(p => p.id);
@@ -48,12 +48,14 @@ async function getInitialPrompts(): Promise<Prompt[]> {
     });
   }
 
-  return data.map((prompt: any) => ({
+  const prompts = data.map((prompt: any) => ({
     ...prompt,
     userName: prompt.user?.name || "Anonymous",
     list: prompt.tags?.[0] || "General",
     variantCount: variantCounts[prompt.id] || 0
   }));
+
+  return { prompts, totalCount: count || 0 };
 }
 
 async function getUniqueMetadata(): Promise<{ tags: string[], categories: string[], themes: string[], groups: string[] }> {
@@ -88,10 +90,13 @@ async function getUniqueMetadata(): Promise<{ tags: string[], categories: string
 }
 
 export default async function PromptsPage() {
-  const [initialPrompts, metadata] = await Promise.all([
+  const [initialData, metadata] = await Promise.all([
     getInitialPrompts(),
     getUniqueMetadata()
   ]);
+
+  const initialPrompts = initialData.prompts;
+  const initialTotalCount = initialData.totalCount;
 
   return (
     <>
@@ -153,6 +158,7 @@ export default async function PromptsPage() {
       />
       <PromptsClient 
         initialPrompts={initialPrompts}
+        initialTotalCount={initialTotalCount}
         initialTags={metadata.tags}
         initialCategories={metadata.categories}
         initialThemes={metadata.themes}

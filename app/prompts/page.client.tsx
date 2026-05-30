@@ -20,6 +20,7 @@ type Prompt = Database['public']['Tables']['prompts']['Row'] & {
 
 interface PromptsPageProps {
   initialPrompts: Prompt[];
+  initialTotalCount: number;
   initialTags: string[];
   initialCategories: string[];
   initialThemes: string[];
@@ -28,12 +29,14 @@ interface PromptsPageProps {
 
 export default function PromptsPage({ 
   initialPrompts, 
+  initialTotalCount,
   initialTags,
   initialCategories,
   initialThemes,
   initialGroups
 }: PromptsPageProps) {
   const [prompts, setPrompts] = useState<Prompt[]>(initialPrompts);
+  const [totalPrompts, setTotalPrompts] = useState<number>(initialTotalCount);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
@@ -82,7 +85,7 @@ export default function PromptsPage({
         groups: selectedGroups,
         tags: selectedTags,
       };
-      const data = await promptsWithUserApi.getPaginatedWithUsers(page, PROMPTS_PER_LOAD, filters);
+      const { data, count } = await promptsWithUserApi.getPaginatedWithUsersAndCount(page, PROMPTS_PER_LOAD, filters);
       if (data && data.length > 0) {
         // Get variant counts for this batch
         const promptIds = data.map(p => p.id);
@@ -168,7 +171,7 @@ export default function PromptsPage({
         groups: selectedGroups,
         tags: selectedTags,
       };
-      const data = await promptsWithUserApi.getPaginatedWithUsers(1, PROMPTS_PER_LOAD, filters);
+      const { data, count } = await promptsWithUserApi.getPaginatedWithUsersAndCount(1, PROMPTS_PER_LOAD, filters);
       if (data) {
         const promptIds = data.map(p => p.id);
         let variantCounts: Record<string, number> = {};
@@ -180,10 +183,12 @@ export default function PromptsPage({
           variantCount: variantCounts[prompt.id] || 0
         }));
         setPrompts(newPrompts);
+        setTotalPrompts(count);
         setPage(2);
         setHasMore(data.length === PROMPTS_PER_LOAD);
       } else {
         setPrompts([]);
+        setTotalPrompts(0);
         setHasMore(false);
       }
     } catch (error) {
@@ -242,7 +247,7 @@ export default function PromptsPage({
           {prompts.length > 0 && (
             <div className="mb-6">
               <p className="text-gray-600">
-                Showing {filteredPrompts.length > 0 ? 1 : 0}-{filteredPrompts.length} of {filteredPrompts.length} prompts
+                Showing {filteredPrompts.length > 0 ? 1 : 0}-{filteredPrompts.length} of {totalPrompts} prompts
                 {selectedTags.length > 0 && (
                   <span className="ml-2">• Filtered by: {selectedTags.join(', ')}</span>
                 )}
