@@ -286,17 +286,87 @@
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={{ 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content) + '?model=flux-realism&width=1024&height=1024&nologo=true' }}",
-        "responseFormat": "file",
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer BURAYA_KIE_API_KEY_YAZIN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ \"model\": \"gpt-image-2-text-to-image\", \"input\": { \"prompt\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content } }) }}",
         "options": {}
       },
-      "id": "generate-image-pollinations",
-      "name": "Generate Image (Pollinations Flux)",
+      "id": "kie-create-task",
+      "name": "Create Task (Kie.ai)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
         1300,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 20,
+        "unit": "seconds"
+      },
+      "id": "kie-wait",
+      "name": "Wait 20s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        200
+      ],
+      "webhookId": "some-webhook-id"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.kie.ai/api/v1/jobs/recordInfo?taskId=' + $node['Create Task (Kie.ai)'].json.data.taskId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer BURAYA_KIE_API_KEY_YAZIN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "kie-check-task",
+      "name": "Check Task (Kie.ai)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1600,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.data.result || $json.data.imageUrl || $json.data.images[0] || $json.data.images[0].url || $json.data.data.url }}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "id": "kie-download",
+      "name": "Download Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1750,
         200
       ]
     }
@@ -372,7 +442,7 @@
       "main": [
         [
           {
-            "node": "Generate Image (Pollinations Flux)",
+            "node": "Create Task (Kie.ai)",
             "type": "main",
             "index": 0
           }
@@ -413,6 +483,50 @@
       ]
     },
     "Generate Image (Pollinations Flux)": {
+      "main": [
+        [
+          {
+            "node": "Save Image to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Task (Kie.ai)": {
+      "main": [
+        [
+          {
+            "node": "Wait 20s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 20s": {
+      "main": [
+        [
+          {
+            "node": "Check Task (Kie.ai)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Task (Kie.ai)": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
       "main": [
         [
           {
