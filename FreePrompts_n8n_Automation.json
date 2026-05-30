@@ -286,29 +286,13 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer BURAYA_HUGGINGFACE_API_KEY_YAZIN"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ \"inputs\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content }) }}",
+        "method": "GET",
+        "url": "={{ 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content) + '?model=flux-realism&width=1024&height=1024&nologo=true' }}",
         "responseFormat": "file",
         "options": {}
       },
-      "id": "generate-image-hf",
-      "name": "Generate Image (Hugging Face)",
+      "id": "generate-image-pollinations",
+      "name": "Generate Image (Pollinations Flux)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
@@ -388,7 +372,7 @@
       "main": [
         [
           {
-            "node": "Generate Image (Hugging Face)",
+            "node": "Generate Image (Pollinations Flux)",
             "type": "main",
             "index": 0
           }
@@ -428,7 +412,7 @@
         ]
       ]
     },
-    "Generate Image (Hugging Face)": {
+    "Generate Image (Pollinations Flux)": {
       "main": [
         [
           {
