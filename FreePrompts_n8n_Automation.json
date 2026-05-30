@@ -6,19 +6,19 @@
         "rule": {
           "interval": [
             {
-              "field": "hours",
-              "hoursInterval": 2
+              "field": "minutes",
+              "minutesInterval": 15
             }
           ]
         }
       },
-      "id": "c1f1f1e0-1234-4a2b-8a8b-123456789abc",
+      "id": "c2ca1df7-0fec-4d15-87a0-610794334a2f",
       "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.1,
       "position": [
-        0,
-        200
+        240,
+        304
       ]
     },
     {
@@ -28,20 +28,20 @@
             {
               "id": "e0e2e505-1a2f-4886-ae1d-91b4266857ea",
               "name": "gem_instructions",
-              "value": "BURAYA GEM TALİMATLARINIZI YAPIŞTIRIN\n\n(Buraya kopyaladığınız metinde tırnak işareti, satır atlama gibi karakterler olması sistemi bozmaz. İstediğiniz gibi yapıştırabilirsiniz.)",
+              "value": "Sen yapay zeka görsel üretimi otomasyonları için çalışan uzman bir Prompt Mühendisisin. Çok detaylı ve profesyonel seviyede prompt'lar üreteceksin. Tüm prompt içeriklerini İngilizce dilinde oluşturmalısın KESİNLİKLE. Temel görevin; kullanıcıların kendi yüzlerini yerleştirebilecekleri (face-swap) yapıda, yüksek kaliteli, hayal gücü sınırlarını zorlayan, yaratıcı ve kusursuz promptlar üretmektir.  Sana manuel olarak veya API üzerinden gelen her \"yeni prompt oluştur\" talebinde, birbirini asla tekrar etmeyen, benzersiz kompozisyonlar kurgulamalısın. Üreteceğin her prompt, yüz değiştirme algoritmalarının sorunsuz çalışması için belirli teknik kısıtlamalara kesinlikle uymalıdır.  KRONİK SORUNLAR VE KESİN ÇÖZÜMLERİ (BUNLARA KESİNLİKLE UY):    TEKRARA DÜŞME (ZORUNLU ENTROPY): Aynı sohbet içinde peş peşe yüzlerce istek gelse bile ASLA bir önceki ürettiğin kurguyu, mekanı veya pozu tekrar etme. Her yeni istekte sanal bir zarl at; sana verilen listelerden daha önce hiç kullanmadığın veya en zıt kombinasyonları seç. Her üretim %100 sıfırdan ve farklı bir sinematik evrende kurgulanmalıdır.  TEK KİŞİLİK PORTRE SIKICILIĞI: Sadece \"Man\" veya \"Woman\" gibi standart tek kişilik portreler değil, çeşitliliği maksimuma çıkaran; \"Couple\", \"Mixed Friends Group\", \"Family of Four\", \"Dance Couple\", \"Bride and Groom\" gibi çoklu karakter barındıran, etkileşimli ve dinamik grupları da kullan. BAZI ÖRNEK THEME'LER: THEME (ANA TEMALAR) Bu alan en üst konsepti temsil eder. Her biri kendi içinde onlarca sub-theme üretebilir.  Christmas New Year Winter Autumn Spring Summer Halloween Valentine’s Day Wedding Engagement Birthday Luxury Lifestyle Fashion Editorial Street Fashion Cinematic Noir Cozy Home Coffee Culture Travel Diaries Beach Escape Desert Stories Mountain Retreat Cottagecore Dark Academia Light Academia Vintage 70s Vintage 80s Y2K Aesthetic Cyberpunk Futuristic Minimalism Fantasy Kingdom Medieval Fantasy Fairytale Dreamscape Cottage Christmas Scandinavian Interior Urban Nightlife Rainy Day Mood Sunrise Serenity Sunset Glow Golden Hour Studio Minimal Luxury Hotel Parisian Chic Japanese Zen Korean Lifestyle Italian Summer Bohemian Soul Rustic Farmhouse Old Money Quiet Luxury Tropical Escape Music Studio Artist Atelier Library Atmosphere Rainforest Mood Floral Bloom Nature Portraits Fine Art Portraits Editorial Studio Family Moments Generational Family Childhood Memories Romantic Escape Cozy Evenings Firelight Stories Snow Atmosphere Candlelight Mood Window Light Interiors Rooftop Evenings Moonlight Scene Luxury Christmas Nordic Winter Holiday Baking  BİR THEME ÜZERİNDEN TÜRETİLEN BAZI ÖRNEK SUB THEME'LER:  SUB-THEME / CATEGORY LIST (Sub-theme alanı sahnenin spesifik fotoğrafik dünyasını tanımlar.Bunlar otomasyonda:filtreleme,preset generation,style consistency için ana alan olacak.) CHRISTMAS SUB-THEMES (Sub-theme / Category) Editorial Studio Christmas Christmas Window Light Interior Christmas Fireplace Evening Christmas Kitchen Moments Christmas Night Lights Interior Christmas Morning Pajama Scene Luxury Christmas Dinner Christmas Tree Decorating Snowy Window Portrait Cozy Christmas Bedroom Candlelight Christmas Portrait Christmas Gift Wrapping Scene Scandinavian Christmas Interior Vintage Christmas Living Room Christmas Movie Night Christmas Jazz Lounge Christmas Balcony Snow Scene Christmas Cabin Retreat Rustic Christmas Kitchen Christmas Reading Corner Christmas Market Evening Christmas Café Window Christmas Snow Walk Christmas Rooftop Lights Christmas Luxury Hotel Christmas Family Gathering Christmas Baking Scene Christmas Golden Hour Christmas Warm Blanket Scene Christmas Piano Room Christmas Dining Table Editorial Christmas Hallway Lights Christmas Loft Apartment Christmas Red & Gold Editorial Christmas Minimal Neutral Interior Christmas Candlelit Dinner Christmas Snowstorm Window Christmas Fireplace Storytelling Christmas Wine Evening Christmas Tree Reflection Scene Christmas Silent Night Mood Christmas Hallway Portrait Christmas Home Cinema Christmas Velvet Editorial Christmas Old Money Interior Christmas Nordic Minimalism Christmas Green & Beige Palette Christmas Warm Lamp Scene Christmas Luxury Apartment Christmas Morning Coffee.  THEME VE SUBTHEME BAĞIMSIZ OLARAK TERCİH EDİLEREK KOMPOZİSYON OLUŞTURULACAK BAZI ÖRNEK GROUP'LAR: GROUP LIST GROUP Bu alan sahnedeki insan yapısını temsil eder. Otomasyonda kompozisyon üretiminin temelini oluşturur. Woman Man Couple Child Teenage Girl Teenage Boy Young Couple Elderly Woman Elderly Man Grandmother Grandfather Mother Father Sister Duo Brother Duo Female Friends Male Friends Mixed Friends Group Mother and Daughter Father and Son Mother and Son Father and Daughter Parents with Child Family of Three Family of Four Large Family Grandparents with Grandchildren Grandmother and Grandchildren Grandfather and Grandchildren Three Generation Family Woman with Dog Man with Dog Couple with Dog Woman with Cat Couple with Cat Twin Sisters Twin Brothers Bride Groom Bride and Groom Fashion Model Group Dance Couple Music Band Artist Collective Woman and Child Man and Child Sisters Brothers Female Trio Male Trio Couple with Baby Mother with Baby Father with Baby Elderly Couple Multi-Generation Family Girl Best Friends Boy Best Friends Cozy Family Gathering Holiday Friends Group.  ADIMLAR & İŞ AKIŞI:  DEĞİŞKENLERİ BELİRLE: Kendi hafızandaki veya \"degisken-bilgileri\" referansındaki Theme, Sub-theme / Category ve Group değişkenlerinden tamamen rastgele, ezber bozan bir kombinasyon seç.  KOMPOZİSYON HAYAL ET: Seçilen gruba uygun olarak; karakterlerin birbirleriyle veya çevreleriyle etkileşimde olduğu, mekan, ışık, atmosfer, ve renk paletinin detaylıca tasarlandığı sinematografik ve derinliği olan bir sahne kurgula.  ÇIKTIYI ÜRET: Belirlenen standart formata (Text Prompt + JSON Prompt) tam sadakatle çıktıyı oluştur. Her görsel standart olarak 9:16 dikey mobil AR oranında olmalı.  YÜZ DEĞİŞTİRME (FACE-SWAP) İÇİN KESİN KURALLAR (KRİTİK):  Sahnede kaç kişi olursa olsun, yüzü değiştirilecek ana karakterin/karakterlerin aşağıdaki kurallara uyması ŞARTTIR:    Yüz Görünürlüğü: Karakterin yüzü/yüzleri (front-facing) en azından yüzün tamamı veya karakteristik bir kısmı görünebilir açıda olmalıdır. Arkadan görünümler kesinlikle yasaktır.  Engelsiz Yüz (No Occlusion): Karakterin yüzünü tamamen kapatacak öğeler kesinlikle yasaktır. Ancak güneş gözlüğü, atkı, saç perçemi, şapka gölgesi, kadehler, mikrofonlar veya yüze temas eden eller GİBİ nesnelerin dahil olacağı kompozisyonlar kullanılabilir.   Işıklandırma: Yüz üzerinde aşırı karanlık görünüm olmamalıdır. Ancak dramatik bölünmüş gölgeler veya patlayan (overexposed) ışıklar kullanılabilir; yüz bölgesinde aydınlatma her zaman dengeli ve detayları gösterir nitelikte olmalıdır.  FORMAT VE İÇERİK KURALLARI:    Prompt number: Rastgele üretilmiş, harf ve rakamlardan oluşan benzersiz bir ID (Örn: PRM-8X2A).  Theme / Sub-theme / Group: Seçtiğin özgün değerler.  Title: Üretilen kompozisyonu özetleyen, 20-100 karakter arası yaratıcı ve spot bir başlık.  Text Prompt: Yaratıcı, detaylı, teknik kamera/lens bilgileri, ortam detayları ve ışıklandırma verileri içeren İngilizce metin. Karakterlerin kıyafetlerinden, mekanın dokusuna kadar her şey betimlenmeli.  JSON Prompt: Text prompt ile %100 uyumlu, API tarafından hatasız parse edilebilecek geçerli (valid) JSON yapısı. Tüm detayları (tema, ortam, ışık, kamera, stil, subjects listesi vb.) hiyerarşik olarak içermelidir. JSON içinde string ifadelerde tırnak işaretlerinden kaçışlara (escape) dikkat et.  Tags: Virgülle ayrılmış, her biri 1-3 kelimeden oluşan, SEO mantığına uygun 5-10 adet İngilizce etiket.  X share text: Twitter jargonuna özgü, bir son kullanıcının dilinden içeriği x üzerinden paylaşırken kullanacağı tonda, 150-250 karakterlik oluşturulacak metin.  Facebook share text: Facebook jargonuna özgü, bir son kullanıcının dilinden içeriği facebook üzerinden paylaşırken kullanacağı tonda, 150-250 karakterlik oluşturulacak metin.  Pinterest share text: Pinterest jargonuna özgü, bir son kullanıcının dilinden içeriği pinterest üzerinden paylaşırken kullanacağı tonda, 150-250 karakterlik oluşturulacak metin.  Whatsapp share text: Whatsapp jargonuna özgü, bir son kullanıcının dilinden içeriği whatsapp üzerinden paylaşırken kullanacağı tonda, 150-250 karakterlik oluşturulacak metin.    Face Identity Komutu: Hem Text hem de JSON promptun (constraints kısmına vb.) sonuna mutlaka şu cümleyi ekle: \"Replace the subject's face with the uploaded reference face, preserving exact facial identity, bone structure, skin texture, and natural expression with 100% accuracy.\"  STANDART ÇIKTI FORMATI:  Prompt number: [Rastgele ID]  Theme: [Seçilen Tema]  Sub-theme / Category: [Seçilen Alt Tema]  Group: [Seçilen Grup]  Title: [Başlık]  Prompt:   [İngilizce Detaylı Text Prompt Code area formatında]  JSON Prompt:  [Geçerli JSON Çıktısı]  Tags: [Etiketler, virgülle ayrılmış]  X share text: [X için hazırladığın paylaşım metni]  Facebook share text: [Facebook için hazırladığın paylaşım metni]  Pinterest share text: [Pinterest için hazırladığın paylaşım metni]  Whatsapp share text: [Whatsapp için hazırladığın paylaşım metni]",
               "type": "string"
             }
           ]
         },
         "options": {}
       },
-      "id": "new-set-node-123456",
+      "id": "8577029f-c7ab-4594-94a8-7cea2809cc29",
       "name": "Set Instructions",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        200,
-        200
+        448,
+        304
       ],
       "notesInFlow": true,
       "notes": "DIKKAT: Gem talimatlarınızı (prompt) buraya yapıştırın."
@@ -49,7 +49,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -59,7 +59,7 @@
             },
             {
               "name": "x-goog-api-key",
-              "value": "BURAYA_GEMINI_API_KEY_YAZIN"
+              "value": "AIzaSyAN-nUHjSxy-D3HZO2mPmF8mxoJjumhxi4"
             }
           ]
         },
@@ -68,126 +68,318 @@
         "jsonBody": "={{ { \"contents\": [{ \"parts\": [{ \"text\": \"Bana yeni bir prompt üret. Çıktıyı kesinlikle aşağıdaki JSON formatında ver:\\n{\\n \\\"title\\\": \\\"...\\\",\\n \\\"content\\\": \\\"...\\\",\\n \\\"json_prompt\\\": \\\"...\\\",\\n \\\"tags\\\": [\\\"...\\\"],\\n \\\"category\\\": \\\"...\\\",\\n \\\"theme\\\": \\\"...\\\",\\n \\\"group\\\": \\\"...\\\",\\n \\\"share_text_twitter\\\": \\\"...\\\",\\n \\\"share_text_facebook\\\": \\\"...\\\",\\n \\\"share_text_pinterest\\\": \\\"...\\\",\\n \\\"share_text_whatsapp\\\": \\\"...\\\"\\n}\\n\\nÖzel Talimatlar:\\n\" + $json.gem_instructions }] }] } }}",
         "options": {}
       },
-      "id": "e331c2bb-1234-4b5c-9c9d-123456789abc",
+      "id": "25f0bf0d-8b17-485d-bb27-880c57fb70a7",
       "name": "Generate Prompt (LLM)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        400,
-        200
+        640,
+        304
       ],
       "notesInFlow": true,
       "notes": "DIKKAT: Sadece API Anahtarınızı girin."
     },
     {
       "parameters": {
-        "jsCode": "const text = $input.first().json.candidates[0].content.parts[0].text;\nlet parsed = {};\n\n// 1. Önce standart JSON formatını yakalamayı deneriz\ntry {\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < 200) {\n    const jsonString = text.substring(firstBrace, lastBrace + 1);\n    const tempParsed = JSON.parse(jsonString);\n    if (tempParsed.title || tempParsed.content) {\n      parsed = tempParsed;\n    }\n  }\n} catch(e) {}\n\n// 2. Regex parsing\nif (!parsed.title) {\n  const extract = (regex) => {\n    const match = text.match(regex);\n    return match ? match[1].trim() : \"\";\n  };\n\n  parsed = {\n    id: extract(/Prompt number:\\s*(.*?)(?=\\n|$)/i),\n    title: extract(/Title:\\s*(.*?)(?=\\n|$)/i),\n    content: extract(/Prompt:\\s*([\\s\\S]*?)(?=JSON Prompt:)/i),\n    json_prompt: extract(/JSON Prompt:\\s*([\\s\\S]*?)(?=Tags:)/i),\n    tags: extract(/Tags:\\s*(.*?)(?=\\n|$)/i),\n    category: extract(/(?:Sub-theme \\/ Category:|Category:)\\s*(.*?)(?=\\n|$)/i),\n    theme: extract(/Theme:\\s*(.*?)(?=\\n|$)/i),\n    group: extract(/Group:\\s*(.*?)(?=\\n|$)/i),\n    share_text_twitter: extract(/(?:X share text:|Twitter share text:)\\s*([\\s\\S]*?)(?=Facebook share text:)/i),\n    share_text_facebook: extract(/Facebook share text:\\s*([\\s\\S]*?)(?=Pinterest share text:)/i),\n    share_text_pinterest: extract(/Pinterest share text:\\s*([\\s\\S]*?)(?=Whatsapp share text:)/i),\n    share_text_whatsapp: extract(/Whatsapp share text:\\s*([\\s\\S]*?)(?=$)/i)\n  };\n\n  if (parsed.json_prompt) {\n      parsed.json_prompt = parsed.json_prompt.replace(/\\x60\\x60\\x60json/gi, '').replace(/\\x60\\x60\\x60/g, '').trim();\n  }\n  if (parsed.content) {\n      parsed.content = parsed.content.replace(/\\x60\\x60\\x60text/gi, '').replace(/\\x60\\x60\\x60/g, '').trim();\n  }\n  if (parsed.tags) {\n      parsed.tags = parsed.tags.replace(/[\\[\\]\"]/g, '').trim();\n  }\n}\n\nreturn { json: parsed };"
+        "jsCode": "const text = $input.first().json.candidates[0].content.parts[0].text;\nlet parsed = {};\n\ntry {\n  const firstBrace = text.indexOf('{');\n  const lastBrace = text.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < 200) {\n    const jsonString = text.substring(firstBrace, lastBrace + 1);\n    const tempParsed = JSON.parse(jsonString);\n    if (tempParsed.title || tempParsed.content) {\n      parsed = tempParsed;\n    }\n  }\n} catch(e) {}\n\nif (!parsed.title) {\n  const extract = (regex) => {\n    const match = text.match(regex);\n    return match ? match[1].trim() : \"\";\n  };\n\n  parsed = {\n    id: extract(/Prompt number:\\s*(.*?)(?=\\n|$)/i),\n    title: extract(/Title:\\s*(.*?)(?=\\n|$)/i),\n    content: extract(/Prompt:\\s*([\\s\\S]*?)(?=JSON Prompt:)/i),\n    json_prompt: extract(/JSON Prompt:\\s*([\\s\\S]*?)(?=Tags:)/i),\n    tags: extract(/Tags:\\s*(.*?)(?=\\n|$)/i),\n    category: extract(/(?:Sub-theme \\/ Category:|Category:)\\s*(.*?)(?=\\n|$)/i),\n    theme: extract(/Theme:\\s*(.*?)(?=\\n|$)/i),\n    group: extract(/Group:\\s*(.*?)(?=\\n|$)/i),\n    share_text_twitter: extract(/(?:X share text:|Twitter share text:)\\s*([\\s\\S]*?)(?=Facebook share text:)/i),\n    share_text_facebook: extract(/Facebook share text:\\s*([\\s\\S]*?)(?=Pinterest share text:)/i),\n    share_text_pinterest: extract(/Pinterest share text:\\s*([\\s\\S]*?)(?=Whatsapp share text:)/i),\n    share_text_whatsapp: extract(/Whatsapp share text:\\s*([\\s\\S]*?)(?=$)/i)\n  };\n\n  // ```text ve ``` ifadelerini content'ten temizle\n  if (parsed.content) {\n    parsed.content = parsed.content.replace(/```text/gi, '').replace(/```/g, '').trim();\n  }\n  // json_prompt'tan backtick'leri temizle\n  if (parsed.json_prompt) {\n    parsed.json_prompt = parsed.json_prompt.replace(/```json/gi, '').replace(/```/g, '').trim();\n  }\n  // Etiketleri temizle: [\"tag1\",\"tag2\"] → tag1,tag2\n  if (parsed.tags) {\n    parsed.tags = parsed.tags.replace(/[\\[\\]\"]/g, '').trim();\n  }\n}\n\nreturn { json: parsed };"
       },
-      "id": "parse-json-node-123",
+      "id": "da8172f1-31cc-4424-9fc5-ef3b67117a00",
       "name": "Parse JSON",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        600,
-        200
-      ]
+        848,
+        304
+      ],
+      "notesInFlow": true,
+      "notes": "LLM'den gelen veriyi sorunsuz JSON formatına dönüştürür."
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "BURAYA_EXCEL_ID_YAZIN",
-          "mode": "id"
+          "value": "1XEwdxi3bxqFpUl7Vn2vIhkJRm7Ti2-kgLWyH0HROrzs",
+          "mode": "list",
+          "cachedResultName": "freeprompts_generatring_archive",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEwdxi3bxqFpUl7Vn2vIhkJRm7Ti2-kgLWyH0HROrzs/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Sheet1",
-          "mode": "id"
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sayfa1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEwdxi3bxqFpUl7Vn2vIhkJRm7Ti2-kgLWyH0HROrzs/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Prompt ID": "={{ $execution.id }}",
-            "Status": "open",
-            "Title": "={{ $json.title }}",
-            "Content": "={{ $json.content }}",
-            "JSON Prompt": "={{ typeof $json.json_prompt === 'object' ? JSON.stringify($json.json_prompt) : $json.json_prompt }}",
-            "Tags": "={{ Array.isArray($json.tags) ? $json.tags.join(', ') : $json.tags }}",
-            "Category": "={{ $json.category }}",
-            "Theme": "={{ $json.theme }}",
-            "Group": "={{ $json.group }}",
-            "Share Twitter": "={{ $json.share_text_twitter }}",
-            "Share Facebook": "={{ $json.share_text_facebook }}",
-            "Share Pinterest": "={{ $json.share_text_pinterest }}",
-            "Share WhatsApp": "={{ $json.share_text_whatsapp }}"
-          }
+            "status": "open",
+            "id": "={{ $json.id }}",
+            "title": "={{ $json.title }}",
+            "content": "={{ $json.content }}",
+            "json_prompt": "={{ $json.json_prompt }}",
+            "tags": "={{ $json.tags }}",
+            "category": "={{ $json.category }}",
+            "theme": "={{ $json.theme }}",
+            "group": "={{ $json.group }}",
+            "share_text_twitter": "={{ $json.share_text_twitter }}",
+            "share_text_facebook": "={{ $json.share_text_facebook }}",
+            "share_text_pinterest": "={{ $json.share_text_pinterest }}",
+            "share_text_whatsapp": "={{ $json.share_text_whatsapp }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "json_prompt",
+              "displayName": "json_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tags",
+              "displayName": "tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "theme",
+              "displayName": "theme",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "group",
+              "displayName": "group",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "share_text_twitter",
+              "displayName": "share_text_twitter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "share_text_facebook",
+              "displayName": "share_text_facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "share_text_pinterest",
+              "displayName": "share_text_pinterest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "share_text_whatsapp",
+              "displayName": "share_text_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
-      "id": "a4b2c3d4-1234-4e5f-8f8g-123456789abc",
+      "id": "f4216b19-bd5a-4f4c-94eb-e0de92702958",
       "name": "Save to Sheets (Open)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
       "position": [
-        800,
-        200
-      ]
+        1040,
+        304
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "C3N8gmiebUY0gdZa",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
         "resource": "folder",
-        "name": "={{ $execution.id }}",
-        "parents": [
-          "BURAYA_DRIVE_KLASOR_ID_YAZIN"
-        ],
+        "name": "={{ $json.id }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1bgwXOQel84Y2S14QdD6fGmM1C5E_XA8b",
+          "mode": "list",
+          "cachedResultName": "FreePrompts",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1bgwXOQel84Y2S14QdD6fGmM1C5E_XA8b"
+        },
         "options": {}
       },
-      "id": "b5c3d4e5-1234-4f6g-9g9h-123456789abc",
+      "id": "578291a5-3309-4f9e-95a2-15968f79575b",
       "name": "Create Drive Folder",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        1000,
-        200
-      ]
+        1248,
+        304
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rlMbsFYKtQdaCdmU",
+          "name": "Google Drive account"
+        }
+      }
     },
     {
       "parameters": {
-        "fileContent": "={{ JSON.stringify($node[\"Parse JSON\"].json, null, 2) }}",
         "name": "prompt_data.json",
-        "parents": [
-          "={{ $node['Create Drive Folder'].json.id }}"
-        ],
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $node['Create Drive Folder'].json.id }}",
+          "mode": "id"
+        },
         "options": {}
       },
-      "id": "c6d4e5f6-1234-4g7h-0h0i-123456789abc",
+      "id": "92844f06-a755-4b10-86ab-ba1ad1270799",
       "name": "Save JSON to Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        1200,
-        200
-      ]
+        1632,
+        304
+      ],
+      "notesInFlow": false,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rlMbsFYKtQdaCdmU",
+          "name": "Google Drive account"
+        }
+      }
     },
     {
       "parameters": {
         "name": "image.jpg",
-        "parents": [
-          "={{ $node['Create Drive Folder'].json.id }}"
-        ],
-        "binaryData": true,
-        "binaryPropertyName": "data",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $node['Create Drive Folder'].json.id }}",
+          "mode": "id"
+        },
         "options": {}
       },
-      "id": "e8f6g7h8-1234-4i9j-2j2k-123456789abc",
+      "id": "450fe666-a480-47f9-adac-07ed8a9c5649",
       "name": "Save Image to Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        1500,
-        200
-      ]
+        2624,
+        304
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rlMbsFYKtQdaCdmU",
+          "name": "Google Drive account"
+        }
+      }
     },
     {
       "parameters": {
@@ -198,7 +390,7 @@
           "parameters": [
             {
               "name": "x-api-key",
-              "value": "BURAYA_NETLIFY_N8N_API_KEY_YAZIN"
+              "value": "22011981"
             },
             {
               "name": "Content-Type",
@@ -208,16 +400,16 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\n  \"id\": \"={{ $node['Parse JSON'].json.id }}\",\n  \"title\": \"={{ $node['Parse JSON'].json.title }}\",\n  \"content\": \"={{ $node['Parse JSON'].json.content }}\",\n  \"json_prompt\": \"={{ typeof $node['Parse JSON'].json.json_prompt === 'object' ? JSON.stringify($node['Parse JSON'].json.json_prompt).replace(/\\\"/g, '\\\\\"') : $node['Parse JSON'].json.json_prompt }}\",\n  \"tags\": \"={{ Array.isArray($node['Parse JSON'].json.tags) ? $node['Parse JSON'].json.tags.join(', ') : $node['Parse JSON'].json.tags }}\",\n  \"category\": \"={{ $node['Parse JSON'].json.category }}\",\n  \"theme\": \"={{ $node['Parse JSON'].json.theme }}\",\n  \"group\": \"={{ $node['Parse JSON'].json.group }}\",\n  \"share_text_twitter\": \"={{ $node['Parse JSON'].json.share_text_twitter }}\",\n  \"share_text_facebook\": \"={{ $node['Parse JSON'].json.share_text_facebook }}\",\n  \"share_text_pinterest\": \"={{ $node['Parse JSON'].json.share_text_pinterest }}\",\n  \"share_text_whatsapp\": \"={{ $node['Parse JSON'].json.share_text_whatsapp }}\",\n  \"image_url\": \"={{ 'https://image.pollinations.ai/prompt/' + encodeURIComponent($node['Parse JSON'].json.title + ' high quality professional illustration, visually stunning') }}\"\n}",
+        "jsonBody": "={{ JSON.stringify({\n  \"id\": $node[\"Parse JSON\"].json.id,\n  \"title\": $node[\"Parse JSON\"].json.title,\n  \"content\": $node[\"Parse JSON\"].json.content,\n  \"json_prompt\": typeof $node[\"Parse JSON\"].json.json_prompt === \"object\" ? JSON.stringify($node[\"Parse JSON\"].json.json_prompt) : $node[\"Parse JSON\"].json.json_prompt,\n  \"tags\": Array.isArray($node[\"Parse JSON\"].json.tags) ? $node[\"Parse JSON\"].json.tags.join(', ') : $node[\"Parse JSON\"].json.tags,\n  \"category\": $node[\"Parse JSON\"].json.category,\n  \"theme\": $node[\"Parse JSON\"].json.theme,\n  \"group\": $node[\"Parse JSON\"].json.group,\n  \"share_text_twitter\": $node[\"Parse JSON\"].json.share_text_twitter,\n  \"share_text_facebook\": $node[\"Parse JSON\"].json.share_text_facebook,\n  \"share_text_pinterest\": $node[\"Parse JSON\"].json.share_text_pinterest,\n  \"share_text_whatsapp\": $node[\"Parse JSON\"].json.share_text_whatsapp,\n  \"image_url\": \"https://image.pollinations.ai/prompt/\" + encodeURIComponent($node[\"Parse JSON\"].json.title + \" high quality professional illustration, visually stunning\")\n}) }}",
         "options": {}
       },
-      "id": "f9g7h8i9-1234-4j0k-3k3l-123456789abc",
+      "id": "d7910eae-a4bb-4fac-8409-098ba23cf288",
       "name": "Send to FreePrompts API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        1700,
-        200
+        2832,
+        304
       ]
     },
     {
@@ -225,63 +417,212 @@
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "BURAYA_EXCEL_ID_YAZIN",
-          "mode": "id"
+          "value": "1XEwdxi3bxqFpUl7Vn2vIhkJRm7Ti2-kgLWyH0HROrzs",
+          "mode": "list",
+          "cachedResultName": "freeprompts_generatring_archive",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEwdxi3bxqFpUl7Vn2vIhkJRm7Ti2-kgLWyH0HROrzs/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Sheet1",
-          "mode": "id"
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sayfa1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEwdxi3bxqFpUl7Vn2vIhkJRm7Ti2-kgLWyH0HROrzs/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Prompt ID": "={{ $node['Parse JSON'].json.id }}",
-            "Status": "closed",
-            "Prompt URL": "={{ $node['Send to FreePrompts API'].json.data && $node['Send to FreePrompts API'].json.data.url ? $node['Send to FreePrompts API'].json.data.url : ($node['Send to FreePrompts API'].json.prompt ? $node['Send to FreePrompts API'].json.prompt : '') }}"
+            "status": "closed",
+            "url": "={{ $json.prompt.url }}",
+            "id": "={{ $node['Parse JSON'].json.id }}"
           },
           "matchingColumns": [
-            "Prompt ID"
-          ]
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "json_prompt",
+              "displayName": "json_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tags",
+              "displayName": "tags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "theme",
+              "displayName": "theme",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "group",
+              "displayName": "group",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "share_text_twitter",
+              "displayName": "share_text_twitter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "share_text_facebook",
+              "displayName": "share_text_facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "share_text_pinterest",
+              "displayName": "share_text_pinterest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "share_text_whatsapp",
+              "displayName": "share_text_whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
-      "id": "g0h8i9j0-1234-4k1l-4l4m-123456789abc",
+      "id": "0cfa9a2b-5d6f-47cc-b7d3-f29f3199b148",
       "name": "Update Sheets (Closed)",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.2,
       "position": [
-        2050,
-        200
-      ]
+        3040,
+        304
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "C3N8gmiebUY0gdZa",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "20c78e1d-c9b0-4a81-9b16-41e17d653775",
-              "name": "Prompt ID",
-              "value": "={{ $node['Parse JSON'].json.id }}",
-              "type": "string"
-            },
-            {
-              "id": "30c78e1d-c9b0-4a81-9b16-41e17d653776",
-              "name": "Prompt URL",
-              "value": "={{ $json.prompt }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
+        "jsCode": "for (const item of $input.all()) {\n  const jsonContent = JSON.stringify($node[\"Parse JSON\"].json, null, 2);\n  item.binary = {\n    data: {\n      data: Buffer.from(jsonContent).toString('base64'),\n      mimeType: 'application/json',\n      fileName: 'prompt_data.json'\n    }\n  };\n}\nreturn $input.all();"
       },
-      "id": "set-prompt-id-node",
-      "name": "Set Prompt ID",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "id": "893e5bbe-fd74-4099-972a-f60431b04311",
+      "name": "Text to Binary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        1850,
-        200
+        1440,
+        304
       ]
     },
     {
@@ -293,7 +634,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer BURAYA_KIE_API_KEY_YAZIN"
+              "value": "Bearer 92009e57467fe8cf19e49c78ee41df67"
             },
             {
               "name": "Content-Type",
@@ -303,74 +644,72 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ \"model\": \"gpt-image-2-text-to-image\", \"input\": { \"prompt\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content } }) }}",
+        "jsonBody": "={{ JSON.stringify({ \"model\": \"gpt-image-2-text-to-image\", \"input\": { \"prompt\": $node['Parse JSON'].json.title + ' ' + $node['Parse JSON'].json.content, \"aspect_ratio\": \"9:16\" } }) }}",
         "options": {}
       },
-      "id": "kie-create-task",
       "name": "Create Task (Kie.ai)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        1300,
-        200
-      ]
+        1840,
+        304
+      ],
+      "id": "4f666fe4-40c6-4f71-b646-584c15aab414"
     },
     {
       "parameters": {
-        "amount": 20,
+        "amount": 60,
         "unit": "seconds"
       },
-      "id": "kie-wait",
       "name": "Wait 20s",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
       "position": [
-        1450,
-        200
+        2048,
+        304
       ],
-      "webhookId": "some-webhook-id"
+      "id": "f86cfb2e-10e7-4f03-9672-81081f73404c",
+      "webhookId": "e612404a-6b4a-42ca-8cc1-4986930b1c4e"
     },
     {
       "parameters": {
-        "method": "GET",
         "url": "={{ 'https://api.kie.ai/api/v1/jobs/recordInfo?taskId=' + $node['Create Task (Kie.ai)'].json.data.taskId }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer BURAYA_KIE_API_KEY_YAZIN"
+              "value": "Bearer 92009e57467fe8cf19e49c78ee41df67"
             }
           ]
         },
         "options": {}
       },
-      "id": "kie-check-task",
       "name": "Check Task (Kie.ai)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        1600,
-        200
-      ]
+        2240,
+        304
+      ],
+      "id": "ef31be4b-2eef-40a1-88cd-3097a3a433f1"
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "={{ $json.data.result || $json.data.imageUrl || $json.data.images[0] || $json.data.images[0].url || $json.data.data.url }}",
-        "responseFormat": "file",
+        "url": "={{ JSON.parse($node['Check Task (Kie.ai)'].json.data.resultJson).resultUrls[0] }}",
         "options": {}
       },
-      "id": "kie-download",
       "name": "Download Image",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        1750,
-        200
-      ]
+        2448,
+        304
+      ],
+      "id": "38fbb843-6de7-48b8-bcdb-ccb6787f3535"
     }
   ],
+  "pinData": {},
   "connections": {
     "Schedule Trigger": {
       "main": [
@@ -431,7 +770,7 @@
       "main": [
         [
           {
-            "node": "Save JSON to Drive",
+            "node": "Text to Binary",
             "type": "main",
             "index": 0
           }
@@ -464,17 +803,6 @@
       "main": [
         [
           {
-            "node": "Set Prompt ID",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Set Prompt ID": {
-      "main": [
-        [
-          {
             "node": "Update Sheets (Closed)",
             "type": "main",
             "index": 0
@@ -482,11 +810,11 @@
         ]
       ]
     },
-    "Generate Image (Pollinations Flux)": {
+    "Text to Binary": {
       "main": [
         [
           {
-            "node": "Save Image to Drive",
+            "node": "Save JSON to Drive",
             "type": "main",
             "index": 0
           }
@@ -537,5 +865,17 @@
         ]
       ]
     }
-  }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0544811a-fe5c-43aa-b857-42b7fd85a435",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "08bae02a5857d6f07e9c77ce59ce9a6cd407e7780a13ace9fce49ccdd75edbf8"
+  },
+  "id": "IiHylV3butbL0QNo",
+  "tags": []
 }
