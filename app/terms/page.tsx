@@ -1,3 +1,10 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms and Conditions",
+  description: "Read our terms and conditions for using the FreePrompts platform.",
+};
+
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-white py-12">

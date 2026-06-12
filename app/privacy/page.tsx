@@ -1,3 +1,10 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "Learn how FreePrompts collects, uses, and protects your personal data.",
+};
+
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white py-12">

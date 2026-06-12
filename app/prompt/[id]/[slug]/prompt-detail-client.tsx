@@ -18,6 +18,34 @@ import type { Database } from "@/lib/database.types";
 
 type Prompt = Database['public']['Tables']['prompts']['Row'];
 
+function FAQAccordionItem({ q, a }: { q: string; a: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border border-gray-200 rounded-lg overflow-hidden mb-3">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-4 bg-gray-50 text-left text-sm font-medium text-black hover:bg-gray-100 transition-colors"
+      >
+        <span>{q}</span>
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {isOpen && (
+        <div className="p-4 bg-white border-t border-gray-200 text-sm text-gray-700 leading-relaxed">
+          {a}
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface PromptDetailClientProps {
   params: { id: string; slug: string };
   initialPrompt: Prompt | null;
@@ -537,8 +565,60 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
           {/* Right Side - Content */}
           <div className="lg:order-2">
             {/* Title */}
-            <h1 className="text-3xl font-semibold text-black mb-8">{prompt.title}</h1>
-         
+            <h1 className="text-3xl font-semibold text-black mb-4">{prompt.title}</h1>
+          
+            {/* AI Summary Card (GEO Optimization) */}
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-4 flex items-center gap-2">
+                <svg className="w-4 h-4 text-yellow-500 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.46 5.05L5.75 4.35a1 1 0 10-1.41 1.41l.71.7zM4 10a1 1 0 01-1 1H2a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1a1 1 0 112 0v1a1 1 0 11-2 0zM5.657 13.05a1 1 0 10-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM15.657 14.343a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707z" />
+                </svg>
+                {globalSiteLanguage === 'turkish' ? 'Prompt Genel Bakış ve Uyumluluk' : 'AI Prompt Overview & Compatibility'}
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div className="bg-white p-3 rounded-md border border-gray-150">
+                  <span className="block text-xs text-gray-400">{globalSiteLanguage === 'turkish' ? 'Hedef Modeller' : 'Target Models'}</span>
+                  <span className="font-medium text-sm text-black">
+                    {prompt.tags?.some((t: string) => ['midjourney', 'stable diffusion', 'dall-e', 'dalle', 'image', 'art'].includes(t.toLowerCase())) 
+                      ? "Midjourney, DALL-E, SD" 
+                      : "ChatGPT, Claude, Gemini"}
+                  </span>
+                </div>
+                <div className="bg-white p-3 rounded-md border border-gray-150">
+                  <span className="block text-xs text-gray-400">{globalSiteLanguage === 'turkish' ? 'Yanıt Türü' : 'Response Type'}</span>
+                  <span className="font-medium text-sm text-black">
+                    {prompt.tags?.some((t: string) => ['midjourney', 'stable diffusion', 'dall-e', 'dalle', 'image', 'art'].includes(t.toLowerCase()))
+                      ? (globalSiteLanguage === 'turkish' ? 'Görsel Sanat / Resim' : 'Visual Artwork / Image')
+                      : (globalSiteLanguage === 'turkish' ? 'Metinsel Yanıt / Kod' : 'Textual Answer / Code')}
+                  </span>
+                </div>
+                <div className="bg-white p-3 rounded-md border border-gray-150">
+                  <span className="block text-xs text-gray-400">{globalSiteLanguage === 'turkish' ? 'Mevcut Format' : 'Format Available'}</span>
+                  <span className="font-medium text-sm text-black">
+                    {prompt.json_prompt ? "Text & JSON" : "Text Prompt"}
+                  </span>
+                </div>
+                {prompt.category && (
+                  <div className="bg-white p-3 rounded-md border border-gray-150">
+                    <span className="block text-xs text-gray-400">{globalSiteLanguage === 'turkish' ? 'Kategori' : 'Category'}</span>
+                    <span className="font-medium text-sm text-black">{prompt.category}</span>
+                  </div>
+                )}
+                {prompt.theme && (
+                  <div className="bg-white p-3 rounded-md border border-gray-150">
+                    <span className="block text-xs text-gray-400">{globalSiteLanguage === 'turkish' ? 'Tema' : 'Theme'}</span>
+                    <span className="font-medium text-sm text-black">{prompt.theme}</span>
+                  </div>
+                )}
+                {prompt.group && (
+                  <div className="bg-white p-3 rounded-md border border-gray-150">
+                    <span className="block text-xs text-gray-400">{globalSiteLanguage === 'turkish' ? 'Grup' : 'Group'}</span>
+                    <span className="font-medium text-sm text-black">{prompt.group}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Published on date */}
             <div className="flex items-center gap-2 bg-gray-50 text-gray-700 px-3 py-2 rounded-md border border-gray-300 hover:bg-gray-100 transition-colors mb-6 w-fit">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -619,61 +699,39 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
               )}
             </div>
 
-            {/* Translate Prompt Section removed */}
-
-            {/* Theme, Category, Group */}
-            {(prompt.theme || prompt.category || prompt.group) && (
-              <div className="mb-8">
-                <h3 className="text-lg font-medium text-black mb-4">Details</h3>
-                <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
-                  <div className="grid grid-cols-1 gap-4">
-                    {prompt.theme && (
-                      <div className="bg-white border border-gray-300 rounded-lg p-3 flex items-center gap-3">
-                        <div className="bg-gray-100 p-2 rounded-full">
-                          <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500">Theme</p>
-                          <p className="font-medium text-black">{prompt.theme}</p>
-                        </div>
-                      </div>
-                    )}
-                    {prompt.category && (
-                      <div className="bg-white border border-gray-300 rounded-lg p-3 flex items-center gap-3">
-                        <div className="bg-gray-100 p-2 rounded-full">
-                          <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500">Category</p>
-                          <p className="font-medium text-black">{prompt.category}</p>
-                        </div>
-                      </div>
-                    )}
-                    {prompt.group && (
-                      <div className="bg-white border border-gray-300 rounded-lg p-3 flex items-center gap-3">
-                        <div className="bg-gray-100 p-2 rounded-full">
-                          <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500">Group</p>
-                          <p className="font-medium text-black">{prompt.group}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* How to Use Section (GEO / SEO Optimization) */}
+            <div className="mb-6 bg-yellow-50/50 border border-yellow-200 rounded-lg p-5">
+              <h3 className="text-lg font-semibold text-black mb-3 flex items-center gap-2">
+                <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                {globalSiteLanguage === 'turkish' ? 'Bu Prompt Nasıl Kullanılır?' : 'How to Use this Prompt'}
+              </h3>
+              <ol className="space-y-2 text-sm text-gray-700 list-decimal pl-4">
+                <li>
+                  <strong>{globalSiteLanguage === 'turkish' ? 'Kopyalayın:' : 'Copy the Prompt:'} </strong>
+                  {globalSiteLanguage === 'turkish' 
+                    ? 'Yukarıdaki "Copy Prompt" butonuna tıklayarak prompt metnini panoya kopyalayın.' 
+                    : 'Click the "Copy Prompt" button above to copy the prompt text to your clipboard.'}
+                </li>
+                <li>
+                  <strong>{globalSiteLanguage === 'turkish' ? 'AI Aracını Açın:' : 'Open your AI tool:'} </strong>
+                  {prompt.tags?.some((t: string) => ['midjourney', 'stable diffusion', 'dall-e', 'dalle', 'image', 'art'].includes(t.toLowerCase()))
+                    ? (globalSiteLanguage === 'turkish' ? 'Discord üzerinden Midjourney\'i veya kullandığınız görsel yapay zeka aracını (DALL-E 3, SD) açın.' : 'Open Midjourney in Discord, or your preferred AI image generator (DALL-E 3, Stable Diffusion).')
+                    : (globalSiteLanguage === 'turkish' ? 'ChatGPT, Claude veya Google Gemini uygulamasını başlatın.' : 'Open ChatGPT, Claude, or Google Gemini.')}
+                </li>
+                <li>
+                  <strong>{globalSiteLanguage === 'turkish' ? 'Düzenleyin ve Çalıştırın:' : 'Customize & Run:'} </strong>
+                  {globalSiteLanguage === 'turkish' 
+                    ? 'Metni yapıştırın. Köşeli parantezler [ ] içindeki alanları kendi konunuzla doldurun ve enter tuşuna basın.' 
+                    : 'Paste the text, fill in any bracketed fields [ ] with your specific topic or context, and press enter.'}
+                </li>
+              </ol>
+            </div>
 
             {/* Tags */}
-            <div className="mb-8">
-              <h3 className="text-lg font-medium text-black mb-4">Tags</h3>
+            <div className="mb-6">
+              <h3 className="text-lg font-medium text-black mb-3">{globalSiteLanguage === 'turkish' ? 'Etiketler' : 'Tags'}</h3>
               <div className="flex flex-wrap gap-2">
                 {prompt.tags.map((tag, index) => (
                   <span
@@ -682,6 +740,47 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
                   >
                     {tag}
                   </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Dynamic FAQ Section (GEO / SEO Optimization) */}
+            <div className="mb-6 border-t border-gray-200 pt-6">
+              <h3 className="text-lg font-semibold text-black mb-4">
+                {globalSiteLanguage === 'turkish' ? 'Sıkça Sorulan Sorular' : 'Frequently Asked Questions'}
+              </h3>
+              <div className="space-y-1">
+                {(prompt.tags?.some((t: string) => ['midjourney', 'stable diffusion', 'dall-e', 'dalle', 'image', 'art'].includes(t.toLowerCase())) || ['midjourney', 'dall-e', 'stable diffusion', 'görsel', 'resim'].includes(prompt.category?.toLowerCase() || '')
+                  ? [
+                      {
+                        q: globalSiteLanguage === 'turkish' ? `Bu ${prompt.title} promptu ücretsiz mi?` : `Is this ${prompt.title} AI prompt free to use?`,
+                        a: globalSiteLanguage === 'turkish' ? 'Evet, web sitemizdeki tüm promptlar gibi bu görsel promptu da tamamen ücretsizdir. Kişisel veya ticari amaçlarla serbestçe kullanabilirsiniz.' : 'Yes, this prompt is completely free to copy and use for both personal and commercial projects. No attribution is required.'
+                      },
+                      {
+                        q: globalSiteLanguage === 'turkish' ? 'Midjourney haricindeki görsel yapay zekalarla uyumlu mu?' : 'Is it compatible with other AI image generators?',
+                        a: globalSiteLanguage === 'turkish' ? 'Evet; bu prompt Midjourney için optimize edilmiş olsa da, benzer yapıları kullanarak DALL-E 3, Stable Diffusion ve Adobe Firefly üzerinde de başarılı sonuçlar alabilirsiniz.' : 'Yes! While optimized for Midjourney, it can be adapted easily for DALL-E 3, Stable Diffusion, and Adobe Firefly with minor adjustments.'
+                      },
+                      {
+                        q: globalSiteLanguage === 'turkish' ? 'Görsel kalitesini nasıl değiştirebilirim?' : 'How do I change the image quality or ratio?',
+                        a: globalSiteLanguage === 'turkish' ? 'Midjourney V6 parametrelerini (örneğin aspect ratio için --ar 16:9, stil derecesi için --stylize) promptun sonuna ekleyerek çıktıyı değiştirebilirsiniz.' : 'You can append parameters like aspect ratio (--ar 16:9) or stylize values (--stylize 250) at the end of the prompt to control output quality and dimensions.'
+                      }
+                    ]
+                  : [
+                      {
+                        q: globalSiteLanguage === 'turkish' ? `Bu prompt ChatGPT dışında çalışır mı?` : `Will this prompt work on other tools besides ChatGPT?`,
+                        a: globalSiteLanguage === 'turkish' ? 'Evet, bu prompt ChatGPT (GPT-3.5, GPT-4), Claude 3, Google Gemini ve Llama gibi tüm gelişmiş dil modellerinde yüksek başarı oranıyla çalışır.' : 'Yes, this prompt is designed to work with all major LLMs including ChatGPT, Claude 3, Google Gemini, and Llama 3.'
+                      },
+                      {
+                        q: globalSiteLanguage === 'turkish' ? 'Prompt parametrelerini nasıl özelleştirebilirim?' : 'How do I customize the parameters?',
+                        a: globalSiteLanguage === 'turkish' ? 'Prompt metni içerisinde köşeli parantezler [ ] ile çevrili alanları silerek kendi sektörünüzü, hedef kitlenizi veya konunuzu yazmanız yeterlidir.' : 'Simply locate the bracketed placeholders [ ] in the prompt content, replace them with your own details, and run it.'
+                      },
+                      {
+                        q: globalSiteLanguage === 'turkish' ? 'En iyi sonucu almak için ne yapmalıyım?' : 'What is the best way to get the optimal response?',
+                        a: globalSiteLanguage === 'turkish' ? 'AI modelinin çıktısı üzerinde sistem talimatlarınıza (Tone, Constraints, Format) bağlı kalması için kopyaladığınız promptun ardından ek örnekler (Few-shot prompting) vermeyi deneyebilirsiniz.' : 'To get the best output, provide clear initial instructions and try giving a few examples (few-shot prompting) after pasting this template.'
+                      }
+                    ]
+                ).map((faq, idx) => (
+                  <FAQAccordionItem key={idx} q={faq.q} a={faq.a} />
                 ))}
               </div>
             </div>

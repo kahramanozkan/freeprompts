@@ -196,6 +196,124 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ i
               })
             }}
           />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: (() => {
+                const tagsLower = prompt.tags?.map((t: string) => t.toLowerCase()) || [];
+                const catLower = prompt.category?.toLowerCase() || '';
+                const isImg = tagsLower.some((t: string) => 
+                  ['midjourney', 'stable diffusion', 'dall-e', 'dalle', 'image', 'görsel', 'resim', 'art', 'logo'].includes(t)
+                ) || ['midjourney', 'dall-e', 'stable diffusion', 'görsel', 'resim'].includes(catLower);
+
+                const faqList = isImg ? [
+                  {
+                    "@type": "Question",
+                    "name": `Is this ${prompt.title} AI prompt free to use?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Yes, this Midjourney/AI image prompt is 100% free to copy and use for both personal and commercial projects. You can generate unlimited images without any attribution.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Bu ${prompt.title} yapay zeka promptunu kullanmak ücretsiz mi?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Evet, bu Midjourney/görsel yapay zeka hazır promptunu kopyalamak ve hem kişisel hem de ticari projelerinizde kullanmak tamamen ücretsizdir. Herhangi bir atıfta bulunmadan sınırsız görsel üretebilirsiniz.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Which AI models are compatible with this image prompt?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `This visual prompt is optimized for Midjourney (V5, V6, and newer versions), but it can also be used to generate stunning images in DALL-E 3, Stable Diffusion, and Adobe Firefly with minor modifications.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Bu görsel promptu hangi yapay zeka modelleriyle uyumludur?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Bu görsel promptu öncelikli olarak Midjourney (V5, V6 ve üzeri) için optimize edilmiştir. Ancak küçük değişikliklerle DALL-E 3, Stable Diffusion ve Adobe Firefly gibi diğer yapay zeka görsel araçlarında da harika sonuçlar verir.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `How do I customize the parameters in this prompt?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `You can customize the prompt by editing the variables inside the brackets or by changing style keywords (e.g., camera types, lighting, colors) to match your desired creative vision.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Bu hazır prompttaki parametreleri nasıl özelleştirebilirim?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Köşeli parantezler içindeki değişkenleri kendi konunuzla değiştirebilir veya arzu ettiğiniz yaratıcı sonuca göre kamera açıları, ışıklandırma ve renk gibi stil kelimelerini düzenleyebilirsiniz.`
+                    }
+                  }
+                ] : [
+                  {
+                    "@type": "Question",
+                    "name": `How do I use the ${prompt.title} ChatGPT prompt?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Simply copy the prompt text, paste it into ChatGPT, Claude, or Gemini, and customize any bracketed parameters or placeholders to tailor the response to your specific task.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Bu ${prompt.title} ChatGPT hazır promptunu nasıl kullanırım?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Prompt metnini kopyalayın, ChatGPT, Claude veya Gemini arayüzüne yapıştırın. Yanıtı projenize veya ihtiyacınıza göre uyarlamak için köşeli parantez içindeki değişkenleri kendi konunuzla doldurun.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Is this prompt compatible with GPT-4 and Claude 3?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Yes, this conversational prompt works perfectly with advanced models like GPT-4o, GPT-3.5, Claude 3.5 Sonnet, Google Gemini, and Llama 3.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Bu hazır prompt GPT-4 ve Claude 3 ile çalışır mı?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Evet, bu metin tabanlı hazır prompt GPT-4o, GPT-3.5, Claude 3.5 Sonnet, Google Gemini ve Llama 3 gibi en güncel büyük dil modelleri (LLM) ile kusursuz çalışır.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Can I modify this prompt for commercial copywriting or coding?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Absolutely. All our templates are open-source and customizable. You can adjust the tone, format, constraints, and instructions for any professional business use case.`
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": `Bu promptu profesyonel iş veya kodlama projelerim için değiştirebilir miyim?`,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": `Kesinlikle. Platformumuzdaki tüm hazır promptlar açık kaynaklıdır ve özelleştirilebilir. İş hedeflerinize veya kodlama ihtiyaçlarınıza göre prompt içindeki tonu, kısıtlamaları ve formatı serbestçe düzenleyebilirsiniz.`
+                    }
+                  }
+                ];
+
+                return JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": faqList
+                });
+              })()
+            }}
+          />
         </>
       )}
       <script

@@ -9,10 +9,43 @@ type Prompt = Database['public']['Tables']['prompts']['Row'] & {
   variantCount?: number;
 };
 
-export const metadata: Metadata = {
-  title: 'Browse Prompts',
-  description: 'Discover and explore AI prompts for various purposes including ChatGPT, Claude, and other AI models.',
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    category?: string;
+    tag?: string;
+    theme?: string;
+    group?: string;
+    q?: string;
+  }>;
+}): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const { category, tag, theme, group, q } = resolvedParams;
+
+  let title = "Browse AI Prompts";
+  let description = "Discover and explore AI prompts for various purposes including ChatGPT, Claude, and other AI models.";
+
+  const filters = [];
+  if (category) filters.push(category);
+  if (tag) filters.push(`#${tag}`);
+  if (theme) filters.push(theme);
+  if (group) filters.push(group);
+
+  if (filters.length > 0) {
+    const filterText = filters.join(" ");
+    title = `Free ${filterText} AI Prompts & Ready to Use Templates`;
+    description = `Discover and copy free ${filterText.toLowerCase()} AI prompts. Ready-to-use templates for ChatGPT, Claude, Gemini, and Midjourney.`;
+  } else if (q) {
+    title = `Search Results for "${q}" AI Prompts`;
+    description = `Browse AI prompts matching "${q}". Find and copy free templates for ChatGPT, Claude, Gemini, and Midjourney.`;
+  }
+
+  return {
+    title,
+    description,
+  };
+}
 
 export const revalidate = 60;
 
