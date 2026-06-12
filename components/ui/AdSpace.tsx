@@ -35,8 +35,10 @@ export default function AdSpace({
     }
   }, [slot]);
 
+  const disableAds = process.env.NEXT_PUBLIC_DISABLE_ADS === "true";
+
   // Check if we have the basic configuration
-  const hasConfig = Boolean(publisherId && publisherId.startsWith("ca-pub-"));
+  const hasConfig = Boolean(publisherId && publisherId.startsWith("ca-pub-")) && !disableAds;
   
   if (!hasConfig) return null;
 

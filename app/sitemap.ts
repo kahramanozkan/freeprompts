@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { promptsApi, listsApi } from '@/lib/supabase-queries';
+import { blogPosts } from '@/lib/blog-data';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://freeprompts.store';
@@ -47,6 +48,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       },
       {
+        url: `${baseUrl}/blog`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
         url: `${baseUrl}/about`,
         lastModified: new Date(),
         changeFrequency: 'monthly',
@@ -86,7 +93,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-    return [...staticPages, ...promptPages, ...listPages];
+    const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.publishedAt),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    }));
+
+    return [...staticPages, ...promptPages, ...listPages, ...blogPages];
   } catch (error) {
     console.error('Error generating sitemap:', error);
     

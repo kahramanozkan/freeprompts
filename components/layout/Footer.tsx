@@ -40,6 +40,11 @@ export default function Footer() {
                   FAQ
                 </Link>
               </li>
+              <li>
+                <Link href="/blog" className="text-sm text-gray-600 hover:text-black">
+                  Blog
+                </Link>
+              </li>
             </ul>
           </div>
 

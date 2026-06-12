@@ -58,6 +58,12 @@ export default function Header() {
             >
               Browse Lists
             </Link>
+            <Link
+              href="/blog"
+              className="text-sm text-gray-600 hover:text-black transition-colors"
+            >
+              {t('nav.blog')}
+            </Link>
             {user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
@@ -157,6 +163,13 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Browse Lists
+              </Link>
+              <Link
+                href="/blog"
+                className="text-sm text-gray-600 hover:text-black"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {t('nav.blog')}
               </Link>
               {user ? (
                 <>

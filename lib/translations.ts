@@ -10,6 +10,7 @@ export const translations = {
     'nav.profile': 'Profile',
     'nav.signIn': 'Sign In',
     'nav.signOut': 'Sign Out',
+    'nav.blog': 'Blog',
     
     // Common
     'common.loading': 'Loading...',
@@ -72,6 +73,15 @@ export const translations = {
     'home.faq.a2': 'Yes, all our templates are fully compatible with and optimized for the latest AI tools and models, including Midjourney, Nano Banana, and GPT Image 2.',
     'home.faq.q3': 'How do I use Midjourney templates?',
     'home.faq.a3': 'Simply copy the prompt content, paste it into Discord or your visual AI generator interface, customize the placeholder values (in brackets), and execute.',
+    
+    // Blog
+    'blog.title': 'Guides & Tutorials',
+    'blog.subtitle': 'Learn how to write better prompts, create consistent AI art, and optimize your workflows.',
+    'blog.readMore': 'Read Article',
+    'blog.backToBlog': 'Back to Blog',
+    'blog.published': 'Published on',
+    'blog.readTime': 'Read Time',
+    'blog.author': 'Author',
   },
   turkish: {
     // Navigation
@@ -83,6 +93,7 @@ export const translations = {
     'nav.profile': 'Profil',
     'nav.signIn': 'Giriş Yap',
     'nav.signOut': 'Çıkış Yap',
+    'nav.blog': 'Blog',
     
     // Common
     'common.loading': 'Yükleniyor...',
@@ -145,6 +156,15 @@ export const translations = {
     'home.faq.a2': 'Evet, sitemizdeki tüm hazır promptlar ve şablonlar Midjourney, Nano Banana ve GPT Image 2 gibi en güncel yapay zeka sistemlerinde test edilmiş ve uyumlu hale getirilmiştir.',
     'home.faq.q3': 'Midjourney şablonlarını nasıl kullanırım?',
     'home.faq.a3': 'Prompt içeriğini kopyalayın, Discord\'a veya kullandığınız görsel yapay zeka arayüzüne yapıştırın. Köşeli parantezler [ ] içindeki alanları kendi konunuzla doldurun ve çalıştırın.',
+    
+    // Blog
+    'blog.title': 'Rehberler & Eğitimler',
+    'blog.subtitle': 'Nasıl daha iyi prompt yazacağınızı, tutarlı yapay zeka görselleri üreteceğinizi ve iş akışlarınızı nasıl optimize edeceğinizi öğrenin.',
+    'blog.readMore': 'Makaleyi Oku',
+    'blog.backToBlog': 'Bloga Geri Dön',
+    'blog.published': 'Yayınlanma Tarihi',
+    'blog.readTime': 'Okuma Süresi',
+    'blog.author': 'Yazar',
   },
   russian: {
     // Navigation
