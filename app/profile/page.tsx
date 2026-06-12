@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSiteLanguage } from "@/contexts/SiteLanguageContext";
 import { getTranslation } from "@/lib/translations";
-import { usersApi } from "@/lib/supabase-queries";
+import { usersApi, promptsApi } from "@/lib/supabase-queries";
+import Link from "next/link";
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -19,6 +20,8 @@ export default function ProfilePage() {
   const [editedBio, setEditedBio] = useState('');
   const [editedSocialLinks, setEditedSocialLinks] = useState<string[]>([]);
   const [newSocialLink, setNewSocialLink] = useState('');
+  const [likedPrompts, setLikedPrompts] = useState<any[]>([]);
+  const [loadingLikedPrompts, setLoadingLikedPrompts] = useState(false);
 
 
 useEffect(() => {
@@ -37,10 +40,18 @@ useEffect(() => {
         setEditedUsername(data?.username || '');
         setEditedBio(data?.bio || '');
         setEditedSocialLinks(data?.social_links || []);
+
+        // Fetch liked prompts
+        if (data?.liked_prompts && data.liked_prompts.length > 0) {
+          setLoadingLikedPrompts(true);
+          const promptsData = await promptsApi.getByIds(data.liked_prompts);
+          setLikedPrompts(promptsData || []);
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {
         setLoadingUserData(false);
+        setLoadingLikedPrompts(false);
       }
     };
     fetchUserData();
@@ -348,13 +359,81 @@ return (
           </div>
         </div>
 
-        {/* Settings Box - Right */}
+        {/* Favorite Prompts Box - Right */}
         <div className="bg-white border border-gray-200 rounded-lg p-8">
-          <h2 className="text-2xl font-semibold text-black mb-6">Settings</h2>
-          <div className="text-gray-500 text-center py-12">
-            <p className="mb-4">Settings area will be populated soon.</p>
-            <p className="text-sm">Functionality to be added later.</p>
-          </div>
+          <h2 className="text-2xl font-semibold text-black mb-6">
+            {globalSiteLanguage === 'turkish' ? 'Beğendiğim Promptlar' : 'Favorite Prompts'}
+          </h2>
+          
+          {loadingLikedPrompts ? (
+            <div className="flex justify-center py-12">
+              <div className="w-6 h-6 border-2 border-gray-300 border-t-black rounded-full animate-spin"></div>
+            </div>
+          ) : likedPrompts.length > 0 ? (
+            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+              {likedPrompts.map((p) => {
+                const slug = p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                return (
+                  <Link 
+                    key={p.id} 
+                    href={`/prompt/${p.id}/${slug}`}
+                    className="flex items-center space-x-4 p-3 border border-gray-100 rounded-xl hover:border-black/20 hover:bg-gray-50 transition-all group"
+                  >
+                    {p.image ? (
+                      <div className="w-12 h-16 relative rounded-md overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
+                        <img 
+                          src={p.image} 
+                          alt={p.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-12 h-16 rounded-md bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 flex-shrink-0 border border-gray-100">
+                        No Image
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-semibold text-black truncate group-hover:text-gray-700 transition-colors">
+                        {p.title}
+                      </h3>
+                      <p className="text-xs text-gray-400 mt-0.5 capitalize">
+                        {p.category || 'General'}
+                      </p>
+                      <div className="flex items-center space-x-3 mt-2 text-[10px] text-gray-400">
+                        <span className="flex items-center">
+                          <svg className="w-3 h-3 mr-0.5 fill-red-400 text-red-400" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                          </svg>
+                          {p.likes}
+                        </span>
+                        <span>
+                          {new Date(p.created_at).toLocaleDateString(globalSiteLanguage === 'turkish' ? 'tr-TR' : 'en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-gray-400 group-hover:text-black transition-colors">
+                      <svg className="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-gray-500 border border-dashed border-gray-200 rounded-xl">
+              <svg className="w-8 h-8 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              <p className="text-sm">
+                {globalSiteLanguage === 'turkish' ? 'Henüz hiçbir promptu beğenmediniz.' : "You haven't liked any prompts yet."}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

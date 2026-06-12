@@ -240,5 +240,459 @@ export const blogPosts: BlogPost[] = [
         `
       }
     }
+  },
+  {
+    slug: "claude-artifacts-prompts-guide",
+    publishedAt: "2026-06-09",
+    author: "FreePrompts Editorial",
+    readTime: "6 min read",
+    image: "/blog/claude_artifacts_cover.png",
+    translations: {
+      english: {
+        title: "Claude 3.5 Sonnet Artifacts prompts: How to Write Prompts to Build Interactive Apps",
+        excerpt: "Discover the best Claude 3.5 Sonnet artifacts prompts to automatically generate full React pages, SVG components, and games in your browser.",
+        tags: ["Claude AI", "Web Development", "Artifacts"],
+        content: `
+          <p>With the release of Claude 3.5 Sonnet, Anthropic introduced a game-changing feature: <strong>Artifacts</strong>. This feature allows Claude to render code, SVGs, websites, and games directly in a side panel next to the chat. However, writing generic prompts often results in half-finished scripts. To build fully functional interactive apps in seconds, you need optimized prompt structures.</p>
+
+          <h2>Understanding Claude Artifacts</h2>
+          <p>An Artifact is triggered whenever Claude generates standalone content (more than 15 lines of code) that you can preview, edit, or copy. This includes React components, HTML/CSS pages, games, or Vector graphics.</p>
+
+          <h2>Optimized Prompt Blueprint for Claude Artifacts</h2>
+          <p>To ensure Claude generates a fully working product, you should use the following structured blueprint:</p>
+          <pre><code>Create a fully functional [App Name / Page Name] using React, Tailwind CSS, and Lucide React icons.
+- Ensure all interactive states are fully simulated in local memory (use React useState).
+- The design must be premium, dark mode base, modern glassmorphism aesthetic.
+- Do not use placeholders or stub functions; write the complete code.
+- Implement responsive design suitable for both desktop and mobile screens.</code></pre>
+
+          <h2>3 Copy-Paste Prompts for Claude 3.5 Sonnet</h2>
+
+          <h3>1. Interactive Financial Calculator & Dashboard</h3>
+          <pre><code>Build an interactive loan amortization calculator React component. Include fields for loan amount, interest rate, term, and extra monthly payments. Render a beautiful responsive line chart showing debt reduction over time, and list the amortization table in a clean table format. Use Lucide icons for tabs.</code></pre>
+
+          <h3>2. Browser-Based Pomodoro Timer & Task Manager</h3>
+          <pre><code>Create a Pomodoro timer application. It should have a countdown circular visual indicator, play/pause controls, and options for short/long breaks. Combine it with a simple Kanban task board where users can add, drag, and complete tasks. Save settings in local state.</code></pre>
+
+          <h3>3. Custom SVG Icon Generator</h3>
+          <pre><code>Build a tool where I can customize geometric abstract SVG patterns. Add range slider inputs for grid size, colors, corner radius, and rotation. Preview the generated SVG in real-time, and provide an export button to copy the SVG code to clipboard.</code></pre>
+
+          <h2>Why This Works</h2>
+          <p>Claude 3.5 Sonnet excels at reasoning. By setting explicit constraints like "simulate all interactive states" and "no stub functions", you prevent the AI from lazy-loading components or writing comments like <code>// implement logic here</code>. This forces Claude to write 100% production-ready frontend code.</p>
+        `
+      },
+      turkish: {
+        title: "Claude 3.5 Sonnet Artifacts Promtları: İnteraktif Uygulamalar Geliştirme Rehberi",
+        excerpt: "Tarayıcınızda otomatik olarak tam React sayfaları, SVG bileşenleri ve oyunlar oluşturmak için en iyi Claude 3.5 Sonnet Artifacts promtlarını keşfedin.",
+        tags: ["Claude AI", "Web Geliştirme", "Artifacts"],
+        content: `
+          <p>Claude 3.5 Sonnet ile Anthropic, yapay zeka dünyasında devrim yaratan bir özellik tanıttı: <strong>Artifacts (Yapaylar)</strong>. Bu özellik, Claude'un yazdığı kodları, web sitelerini ve oyunları sohbet ekranının yanındaki bir panelde canlı olarak çalıştırmasını sağlar. Ancak basit yönergeler yazmak genellikle yarım kalmış kodlara yol açar. Birkaç saniye içinde çalışan uygulamalar geliştirmek için optimize edilmiş şablonları kullanmalısınız.</p>
+
+          <h2>Claude Artifacts Nedir?</h2>
+          <p>Claude, 15 satırdan fazla kod, SVG çizimi veya web sayfası ürettiğinde bu içerik otomatik olarak bağımsız bir Artifact olarak açılır. Burada kodun canlı önizlemesini görebilir, düzenleyebilir veya doğrudan kopyalayabilirsiniz.</p>
+
+          <h2>Claude Artifacts İçin Optimize Edilmiş Şablon Taslağı</h2>
+          <p>Claude'un eksiksiz ve çalışan bir ürün üretmesini garanti altına almak için şu yapısal şablonu kullanın:</p>
+          <pre><code>React, Tailwind CSS ve Lucide React ikonlarını kullanarak tamamen çalışan bir [Uygulama Adı] oluştur.
+- Tüm etkileşimli durumları (state) yerel hafızada simüle et (React useState kullan).
+- Tasarım modern, karanlık mod tabanlı ve cam efekti (glassmorphism) içermelidir.
+- Kodda yer tutucu veya boş fonksiyon bırakma; tüm mantığı eksiksiz yaz.
+- Hem mobil hem masaüstü ekranlar için tam uyumlu (responsive) bir tasarım kullan.</code></pre>
+
+          <h2>Kullanıma Hazır 3 Claude 3.5 Sonnet Hazır Şablonu</h2>
+
+          <h3>1. İnteraktif Finansal Hesaplama Aracı ve Grafik</h3>
+          <pre><code>Kullanıcıların kredi tutarı, faiz oranı, vade ve ek ödeme miktarını girebileceği bir konut kredisi hesaplama React bileşeni oluştur. Zaman içindeki borç azalışını gösteren şık bir çizgi grafik ekle ve tüm ödeme planını detaylı bir tablo halinde listele. Sekmeler için Lucide ikonları kullan.</code></pre>
+
+          <h3>2. Pomodoro Zamanlayıcı & Kanban Görev Panosu</h3>
+          <pre><code>Görsel bir geri sayım dairesi içeren Pomodoro zamanlayıcı uygulaması yap. Oynat, durdur ve mola sürelerini ayarlama butonları ekle. Zamanlayıcının hemen altına, kullanıcıların görev ekleyip tamamlandı yapabileceği basit bir Kanban panosu entegre et.</code></pre>
+
+          <h3>3. Özelleştirilebilir SVG Geometrik Desen Üretici</h3>
+          <pre><code>Soyut geometrik SVG desenleri tasarlayabileceğim interaktif bir araç oluştur. Izgara boyutu, renkler, köşe yuvarlaklığı ve döndürme gibi parametreler için slider girişleri ekle. Üretilen deseni canlı önizle ve SVG kodunu kopyalama butonu koy.</code></pre>
+
+          <h2>Neden Bu Şablonları Kullanmalıyız?</h2>
+          <p>Claude 3.5 Sonnet, kod yazmada en yüksek başarı oranına sahip modeldir. "Yer tutucu bırakma" ve "tüm mantığı eksiksiz yaz" gibi kısıtlamalar koyarak, yapay zekanın <code>// buraya kod gelecek</code> şeklinde yorum bırakmasını engeller, doğrudan çalışan bir kod bloğu elde edersiniz.</p>
+        `
+      }
+    }
+  },
+  {
+    slug: "midjourney-v6-grid-split-pan-techniques",
+    publishedAt: "2026-06-08",
+    author: "FreePrompts Editorial",
+    readTime: "5 min read",
+    image: "/blog/midjourney_split_cover.png",
+    translations: {
+      english: {
+        title: "Midjourney v6 Grid Split & Pan Techniques for Perfect Compositions",
+        excerpt: "Learn how to expand your canvases, split grids, and steer visual direction in Midjourney v6 using pan buttons and zoom controls.",
+        tags: ["Midjourney", "Visual Art", "Composition"],
+        content: `
+          <p>Generating a beautiful image in Midjourney v6 is easy, but getting the composition exactly right is a science. Sometimes, your subject is cropped too tightly, or you want to expand the scene to the left or right without losing the core details. This is where <strong>Pan</strong>, <strong>Zoom</strong>, and <strong>Vary (Region)</strong> parameters come in. Let's master these advanced canvas controls.</p>
+
+          <h2>1. Steering the Camera with Pan (Arrows)</h2>
+          <p>Once you upscale an image in Midjourney, you will see four directional arrow buttons (Left, Right, Up, Down). Clicking these triggers the Pan function, expanding your canvas in that direction:</p>
+          <ul>
+            <li><strong>How it works:</strong> Midjourney keeps your original image intact and uses the prompt keywords to generate new matching environments in the selected direction.</li>
+            <li><strong>Steering:</strong> When you click Pan, you can change the prompt text for the newly added area. For example, if you pan right, you can add "a vintage car parked on the street" to populate only the new space.</li>
+          </ul>
+
+          <h2>2. Outpainting with Custom Zoom</h2>
+          <p>Zoom Out buttons (1.5x and 2.0x) allow you to pull the camera back. The <strong>Custom Zoom (--zoom)</strong> feature gives you precise control over the scaling factor and aspect ratio simultaneously:</p>
+          <pre><code>/imagine prompt: [original prompt] --zoom 1.5 --ar 16:9</code></pre>
+          <p>Use Zoom to place a tightly cropped character portrait into a cinematic landscape backdrop without warping their facial features.</p>
+
+          <h2>3. Grid Splitting & Framing Prompts</h2>
+          <p>Want to generate split panels, comic strips, or side-by-side comparisons? You can force Midjourney to split the canvas grid internally by using specific framing keywords:</p>
+          <ul>
+            <li><strong>Triptych / Diptych:</strong> Divides the image into three or two distinct vertical frames (ideal for concept art and landscapes).</li>
+            <li><strong>2-panel comic strip:</strong> Generates a storyboard look showing two consecutive scenes.</li>
+            <li><strong>Side-by-side comparison:</strong> Perfect for showing a character from the front and back (turnaround sheets).</li>
+          </ul>
+          <pre><code>/imagine prompt: A triptych concept art of a futuristic cyber city, neon lighting, split into 3 vertical panels, cinematic illustration --ar 16:9 --v 6.0</code></pre>
+
+          <h2>Practical Composition Workflow</h2>
+          <p>Generate a central character portrait first. Upscale the image, use <strong>Pan Left</strong> or <strong>Pan Right</strong> to build the setting, and then apply <strong>Custom Zoom</strong> to pull the camera back to create a complete landscape painting. This modular workflow gives you complete creative direction.</p>
+        `
+      },
+      turkish: {
+        title: "Midjourney v6 Pan ve Görsel Kaydırma Teknikleri ile Mükemmel Kompozisyonlar",
+        excerpt: "Kamera kaydırma yön tuşlarını ve yakınlaştırma kontrollerini kullanarak Midjourney v6'da sahnelerinizi nasıl genişleteceğinizi öğrenin.",
+        tags: ["Midjourney", "Görsel Tasarım", "Kompozisyon"],
+        content: `
+          <p>Midjourney v6'da kaliteli bir görsel üretmek kolaydır ancak kompozisyonu tam olarak yönetmek ayrı bir uzmanlık gerektirir. Bazen görseliniz çok dar bir çerçevede kalır veya orijinal detayları bozmadan sahneyi sola veya sağa doğru uzatmak istersiniz. Bu rehberde **Pan (Yön Kaydırma)**, **Zoom (Uzaklaştırma)** ve **Görsel Bölme** tekniklerini inceleyeceğiz.</p>
+
+          <h2>1. Pan Yön Tuşları ile Kamerayı Kaydırmak</h2>
+          <p>Midjourney'de bir görseli büyüttüğünüzde (Upscale), görselin altında yön okları (Sol, Sağ, Yukarı, Aşağı) belirir. Bu oklar Pan özelliğini tetikler:</p>
+          <ul>
+            <li><strong>Nasıl Çalışır:</strong> Midjourney mevcut görselinizi korur ve seçtiğiniz yön boyunca sahneye uyumlu yeni alanlar üretir.</li>
+            <li><strong>Prompt Yönlendirme:</strong> Yön okuna bastığınızda promptu değiştirebilirsiniz. Örneğin sağa doğru kaydırırken promptun sonuna "a parked car" yazarak sadece yeni açılan alanda bir araba belirmesini sağlayabilirsiniz.</li>
+          </ul>
+
+          <h2>2. Özel Uzaklaştırma (Custom Zoom)</h2>
+          <p>Görseli 1.5x veya 2.0x oranında geriye çekebileceğiniz gibi, **Custom Zoom** seçeneği ile hem uzaklaşma miktarını hem de en boy oranını aynı anda değiştirebilirsiniz:</p>
+          <pre><code>/imagine prompt: [orijinal prompt] --zoom 1.7 --ar 16:9</code></pre>
+          <p>Portre olarak ürettiğiniz bir karakteri, yüz hatlarını bozmadan geniş bir sinematik manzaranın içine yerleştirmek için Zoom en ideal yöntemdir.</p>
+
+          <h2>3. Görsel Bölme (Split Grid) Yöntemi</h2>
+          <p>Yapay zekanın tek seferde yan yana iki veya üç farklı panel üretmesini istiyorsanız, promptunuza kompozisyon terimleri eklemelisiniz:</p>
+          <ul>
+            <li><strong>Triptych / Diptych:</strong> Görseli dikey olarak 3 veya 2 panele böler. Konsept sanatı için harikadır.</li>
+            <li><strong>Side-by-side comparison:</strong> Karakterin hem ön hem de arka görünümünü yan yana tasarlamak için kullanılır (Karakter paftası).</li>
+          </ul>
+          <pre><code>/imagine prompt: A triptych concept art of a futuristic cyber city, neon lighting, split into 3 vertical panels, cinematic illustration --ar 16:9 --v 6.0</code></pre>
+
+          <h2>Örnek İş Akışı</h2>
+          <p>Önce portre odaklı bir görsel üretin. Ardından **Pan Right** veya **Pan Left** tuşlarıyla sahnenin arka planını genişletin. Son olarak **Custom Zoom** uygulayarak kamerayı geriye çekip resmi tamamlayın. Bu adımlar görsel üzerindeki kontrolünüzü maksimuma çıkaracaktır.</p>
+        `
+      }
+    }
+  },
+  {
+    slug: "stable-diffusion-prompt-weights-negative-list",
+    publishedAt: "2026-06-07",
+    author: "FreePrompts Editorial",
+    readTime: "5 min read",
+    image: "/blog/stable_diffusion_weights_cover.png",
+    translations: {
+      english: {
+        title: "Stable Diffusion Prompt Weights & Negative Prompt Guide",
+        excerpt: "Master prompt weighting, bracket syntax, and the ultimate negative prompt list to generate flawless Stable Diffusion images.",
+        tags: ["Stable Diffusion", "Prompt Weights", "Negative Prompts"],
+        content: `
+          <p>Unlike Midjourney, which interprets natural language, Stable Diffusion (especially SDXL and SD 1.5/2.1 models) relies heavily on mathematical syntax. If you don't assign prompt weights or specify a proper negative prompt list, your output will often contain visual glitches, distorted limbs, and low-quality textures. Here is how to master Stable Diffusion prompt math.</p>
+
+          <h2>1. Understanding Prompt Weighting Syntax</h2>
+          <p>Prompt weights tell Stable Diffusion which words are most important. The default weight of any word is 1.0. You can increase or decrease this using brackets:</p>
+          <ul>
+            <li><strong>Parentheses ( ):</strong> Increases the attention weight of the enclosed word by a factor of 1.1.
+              <ul>
+                <li><code>(castle)</code> = weight 1.1</li>
+                <li><code>((castle))</code> = weight 1.21</li>
+              </ul>
+            </li>
+            <li><strong>Brackets [ ]:</strong> Decreases the attention weight of the enclosed word by a factor of 0.9.
+              <ul>
+                <li><code>[castle]</code> = weight 0.9</li>
+              </ul>
+            </li>
+            <li><strong>Numeric weights (Recommended):</strong> You can specify exact weights inside parentheses followed by a colon and the decimal value:
+              <ul>
+                <li><code>(castle:1.3)</code> = increases importance by 30%.</li>
+                <li><code>(foggy weather:0.85)</code> = dampens fog effect by 15%.</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h2>2. The Ultimate Negative Prompt List</h2>
+          <p>Negative prompts are words you want Stable Diffusion to actively avoid. A strong negative prompt is critical to prevent anatomically incorrect fingers, blurry faces, and bad lighting. Copy-paste this standard negative list for photo-realistic renders:</p>
+          <pre><code>(deformed, distorted, disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation, extra fingers, mutated hands, bad proportions, lowres, bad quality, worst quality, artifact, signature, watermark, username</code></pre>
+
+          <h2>3. Balancing Positive vs. Negative Weights</h2>
+          <p>If you set your positive weights too high (e.g., above 1.5), the image will look "burned" or oversaturated (artifacts). Keep weights between 1.1 and 1.3 for best results. Always place the most critical subject at the very beginning of the prompt box, as Stable Diffusion assigns higher priority to the first 75 tokens.</p>
+        `
+      },
+      turkish: {
+        title: "Stable Diffusion Prompt Ağırlıkları ve Negatif Prompt Yazım Kılavuzu",
+        excerpt: "Kusursuz Stable Diffusion görselleri üretmek için prompt ağırlıklandırmayı, parantez sözdizimini ve en güncel negatif prompt listesini öğrenin.",
+        tags: ["Stable Diffusion", "Prompt Ağırlıkları", "Negatif Promptlar"],
+        content: `
+          <p>Doğal dili yorumlayan Midjourney'nin aksine, Stable Diffusion (özellikle SDXL, SD 1.5/2.1 modelleri) matematiksel bir sözdizimine güvenir. Eğer kelime ağırlıkları belirlemez veya doğru bir negatif prompt listesi kullanmazsanız, görsellerinizde bozuk uzuvlar, bulanıklık ve kalitesiz dokular oluşur. Bu rehberde Stable Diffusion'ın prompt matematiğini inceleyeceğiz.</p>
+
+          <h2>1. Kelime Ağırlığı (Weighting) Sözdizimi</h2>
+          <p>Stable Diffusion'da her kelimenin varsayılan gücü 1.0'dır. Bu gücü parantezler yardımıyla artırıp azaltabilirsiniz:</p>
+          <ul>
+            <li><strong>Parantez ( ):</strong> Parantez içine alınan kelimenin ağırlığını %10 (1.1 kat) artırır.
+              <ul>
+                <li><code>(castle)</code> = 1.1 ağırlık</li>
+                <li><code>((castle))</code> = 1.21 ağırlık</li>
+              </ul>
+            </li>
+            <li><strong>Köşeli Parantez [ ]:</strong> Kelimenin ağırlığını %10 (0.9 kat) azaltır.
+              <ul>
+                <li><code>[castle]</code> = 0.9 ağırlık</li>
+              </ul>
+            </li>
+            <li><strong>Sayısal Ağırlık Belirtme (Önerilen):</strong> Parantez içinde iki nokta üst üste koyarak tam sayısal değer yazabilirsiniz:
+              <ul>
+                <li><code>(castle:1.3)</code> = Şatoyu %30 daha belirgin yapar.</li>
+                <li><code>(foggy:0.8)</code> = Sisi %20 azaltır.</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h2>2. Profesyonel Negatif Prompt Listesi</h2>
+          <p>Negatif promptlar, yapay zekanın görselde kesinlikle **üretmemesini** istediğiniz unsurlardır. Bozuk parmaklar ve kalitesiz ışığı engellemek için şu listeyi kopyalayıp kullanabilirsiniz:</p>
+          <pre><code>(deformed, distorted, disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation, extra fingers, mutated hands, bad proportions, lowres, bad quality, worst quality, artifact, signature, watermark, username</code></pre>
+
+          <h2>3. Ağırlıkları Dengede Tutmak</h2>
+          <p>Pozitif ağırlıkları çok yüksek (örn. 1.5 üstü) tutarsanız görsel "yanmış" veya aşırı doygun görünür (artefakt). Kelime ağırlıklarını 1.1 ile 1.3 arasında tutmak en dengeli sonucu verir. Ayrıca en önemli konuyu her zaman promptun başına yazın, çünkü Stable Diffusion ilk 75 kelimeye en yüksek önceliği verir.</p>
+        `
+      }
+    }
+  },
+  {
+    slug: "ai-logo-design-prompts-vector-style",
+    publishedAt: "2026-06-06",
+    author: "FreePrompts Editorial",
+    readTime: "4 min read",
+    image: "/blog/ai_logo_design_cover.png",
+    translations: {
+      english: {
+        title: "AI Logo Design Prompts: Copy-Paste Templates for Vector Style Branding",
+        excerpt: "Learn how to write precise AI prompts for logos and corporate branding using clean, flat vector terms in Midjourney and DALL-E.",
+        tags: ["Logo Design", "Branding", "Vector Art"],
+        content: `
+          <p>AI image generators are fantastic at creating complex art, but they struggle with simplicity. When you ask for a "logo", the AI often outputs busy 3D objects with text errors. To get clean, modern, flat vector-style logos suitable for branding, you need to use specific design vocabulary. Here is your AI logo design prompt guide.</p>
+
+          <h2>1. Essential Keywords for Flat Logo Design</h2>
+          <p>To prevent the AI from generating busy shading and realistic textures, always include these design terms in your prompts:</p>
+          <ul>
+            <li><code>Flat vector logo</code> / <code>Minimalist design</code></li>
+            <li><code>2D geometry</code> / <code>Clean line art</code></li>
+            <li><code>Corporate branding asset</code></li>
+            <li><code>Solid background</code> / <code>Isolated on white background</code></li>
+          </ul>
+
+          <h2>2. Copy-Paste Logo Design Templates</h2>
+
+          <h3>Geometric Tech Logo (Midjourney v6)</h3>
+          <pre><code>A flat vector logo of a geometric abstract bird in flight, minimalist style, 2D design, sharp angles, primary colors, isolated on white background, corporate branding --no realistic shadows, 3d, gradient --ar 1:1 --v 6.0</code></pre>
+
+          <h3>Line-Art Coffee Brand Mascot</h3>
+          <pre><code>Minimalist clean line-art logo of a smiling coffee cup character, retro vintage style, solid brown lines, cream background, circular border emblem style, flat vector --ar 1:1</code></pre>
+
+          <h3>Modern Real Estate Monogram</h3>
+          <pre><code>A flat minimalist monogram logo featuring the letters 'H' and 'O' merged with a house outline, modern architecture icon, dark blue and gold color scheme, isolated on white background, vector logo file --v 6.0</code></pre>
+
+          <h2>3. Pro Tips: Using --no Parameter (Negative Prompting)</h2>
+          <p>In Midjourney, using the negative prompt parameter <code>--no</code> is critical for logos. Always append <code>--no realistic photo, shadows, 3d rendering, gradients, text, letters</code> to ensure your logo is flat and ready for vectorization in Illustrator.</p>
+        `
+      },
+      turkish: {
+        title: "Yapay Zeka ile Logo Tasarımı: Vektörel Hazır Şablonlar",
+        excerpt: "Temiz ve düz vektör terimlerini kullanarak Midjourney ve DALL-E ile kurumsal marka logoları üretme rehberi.",
+        tags: ["Logo Tasarımı", "Markalaşma", "Vektör Sanatı"],
+        content: `
+          <p>Yapay zeka görsel üreticileri karmaşık sanatsal görsellerde harikadır ancak sadelikte zorlanırlar. Sadece "logo" yazdığınızda, yapay zeka genellikle karmaşık, 3 boyutlu ve üzerinde hatalı yazılar olan tasarımlar sunar. Temiz, vektörel kullanıma uygun düz (flat) logolar üretmek için doğru tasarım kelimelerini kullanmalısınız.</p>
+
+          <h2>1. Vektörel Logo Tasarımı İçin Temel Kelimeler</h2>
+          <p>Yapay zekanın gölgelendirmeli ve gerçekçi dokular üretmesini engellemek için promptlarınıza şu terimleri ekleyin:</p>
+          <ul>
+            <li><code>Flat vector logo</code> (Düz vektör logo)</li>
+            <li><code>Minimalist design</code> (Minimalist tasarım)</li>
+            <li><code>Clean line art</code> (Temiz çizgi sanatı)</li>
+            <li><code>Isolated on white background</code> (Beyaz arka planda izole edilmiş)</li>
+          </ul>
+
+          <h2>2. Kullanıma Hazır Hazır Logo Promptları</h2>
+
+          <h3>Geometrik Teknoloji Logosu (Midjourney v6)</h3>
+          <pre><code>A flat vector logo of a geometric abstract bird in flight, minimalist style, 2D design, sharp angles, primary colors, isolated on white background, corporate branding --no realistic shadows, 3d, gradient --ar 1:1 --v 6.0</code></pre>
+
+          <h3>Kahve Markası Çizgisel Maskot Logosu</h3>
+          <pre><code>Minimalist clean line-art logo of a smiling coffee cup character, retro vintage style, solid brown lines, cream background, circular border emblem style, flat vector --ar 1:1</code></pre>
+
+          <h3>Modern Emlak Monogram Logosu</h3>
+          <pre><code>A flat minimalist monogram logo featuring the letters 'H' and 'O' merged with a house outline, modern architecture icon, dark blue and gold color scheme, isolated on white background, vector logo file --v 6.0</code></pre>
+
+          <h2>3. İpucu: Negatif Parametreleri Kullanmak (--no)</h2>
+          <p>Midjourney'de logolar için negatif <code>--no</code> parametresini kullanmak hayatidir. Logonun düz olması ve Illustrator'da kolayca vektöre çevrilebilmesi için promptun sonuna mutlaka <code>--no realistic photo, shadows, 3d rendering, gradients, text, letters</code> ekleyin.</p>
+        `
+      }
+    }
+  },
+  {
+    slug: "chatgpt-pdf-analysis-summarization-prompts",
+    publishedAt: "2026-06-05",
+    author: "FreePrompts Editorial",
+    readTime: "4 min read",
+    image: "/blog/chatgpt_pdf_analysis_cover.png",
+    translations: {
+      english: {
+        title: "ChatGPT Prompts for PDF Analysis: How to Summarize Long Documents",
+        excerpt: "Learn how to write effective prompts to summarize financial reports, research papers, and PDFs without losing key details.",
+        tags: ["ChatGPT", "Document Analysis", "Productivity"],
+        content: `
+          <p>Analyzing long PDFs (such as financial statements, medical studies, or legal contracts) is one of ChatGPT's most powerful capabilities. However, simply uploading a document and typing "summarize this" often leads to generic summaries that miss critical figures or context. To get high-utility, accurate summaries, you need to structure your analysis prompts.</p>
+
+          <h2>1. The Role-Based Extraction Prompt</h2>
+          <p>Define a role for ChatGPT to focus its analysis on the most important metrics. For example, if you are analyzing a business report:</p>
+          <pre><code>Act as an expert financial analyst. Analyze this PDF and extract the following:
+- Key financial metrics (Revenue, Operating Margin, Year-on-Year growth).
+- 3 major risks identified by the company.
+- Future outlook statements.
+Format the output in a clean markdown table.</code></pre>
+
+          <h2>2. The 'Explain Like I'm 5' (ELI5) Research Summarizer</h2>
+          <p>Perfect for reading complex academic or medical papers. This prompt breaks down technical jargon into accessible language:</p>
+          <pre><code>Analyze the attached research paper. Generate a summary containing:
+1. Core thesis: What is the main discovery?
+2. Methodology: How did they test it (briefly)?
+3. Non-technical summary: Explain the main finding using simple terms (ELI5 style).
+4. Key takeaways: 3 bullet points.</code></pre>
+
+          <h2>3. The Executive Summary Prompt</h2>
+          <p>When you have a 50+ page document and only need the absolute essentials, use a hierarchical summarization prompt:</p>
+          <pre><code>Read this PDF and write a structured executive summary.
+- Start with a single-sentence overview of the document's purpose.
+- List the top 5 decisions or action points mentioned.
+- Provide a summary of the conclusions in 3 sentences.</code></pre>
+
+          <h2>Important: Prevent AI Hallucinations</h2>
+          <p>To ensure ChatGPT does not invent details not present in the PDF, always append this critical constraint: <strong>"Only base your answers on the provided document. If the document does not contain information to answer a question, explicitly state 'not found in document' instead of guessing."</strong></p>
+        `
+      },
+      turkish: {
+        title: "ChatGPT ile PDF Analizi: Uzun Belgeleri Özetleme Teknikleri",
+        excerpt: "Finansal raporları, akademik makaleleri ve PDF belgelerini detayları kaybetmeden özetlemek için etkili prompt şablonlarını kullanın.",
+        tags: ["ChatGPT", "Belge Analizi", "Verimlilik"],
+        content: `
+          <p>Uzun PDF belgelerini (finansal tablolar, hukuki sözleşmeler, akademik makaleler) analiz etmek ChatGPT'nin en güçlü yönlerinden biridir. Ancak sadece "bunu özetle" yazmak, genellikle kritik bilgileri kaçıran yüzeysel özetlerle sonuçlanır. Doğru ve yüksek faydalı çıktılar almak için analitik promptlar yazmalısınız.</p>
+
+          <h2>1. Rol Odaklı Metrik Çıkarma Promptu</h2>
+          <p>ChatGPT'ye bir uzman rolü vererek analiz hedefini daraltın. Örneğin bir şirket faaliyet raporu için:</p>
+          <pre><code>Uzman bir finansal analist gibi davran. Bu PDF'i analiz et ve şunları çıkar:
+- Temel finansal göstergeler (Gelir, Faaliyet Marjı, Yıllık büyüme).
+- Şirket tarafından belirtilen 3 ana risk.
+- Geleceğe yönelik öngörüler.
+Çıktıyı temiz bir markdown tablosu halinde formatla.</code></pre>
+
+          <h2>2. Akademik Makaleler İçin Sadeleştirme (ELI5) Şablonu</h2>
+          <p>Karmaşık teknik terimler barındıran bilimsel yazıları okumak için idealdir. Konuyu basit bir dille açıklar:</p>
+          <pre><code>Ekli makaleyi analiz et. Şu başlıkları içeren bir özet oluştur:
+1. Ana Tez: Temel keşif nedir?
+2. Metot: Testi nasıl yaptılar (kısaca)?
+3. Basit Anlatım: Ana bulguyu teknik olmayan terimlerle açıkla.
+4. Önemli Çıkarımlar: 3 maddelik liste.</code></pre>
+
+          <h2>3. Yönetici Özeti (Executive Summary) Şablonu</h2>
+          <p>50 sayfadan uzun belgelerdeki en can alıcı noktaları yakalamak için hiyerarşik özet şablonunu kullanın:</p>
+          <pre><code>Bu PDF belgesini oku ve yapılandırılmış bir yönetici özeti yaz.
+- Belgenin amacını özetleyen tek bir cümle ile başla.
+- Belgede adı geçen en önemli 5 karar veya aksiyon noktasını listele.
+- Sonuç kısmını 3 cümlede özetle.</code></pre>
+
+          <h2>Önemli: Yanılsamaları (Hallucination) Önlemek</h2>
+          <p>Yapay zekanın PDF'te olmayan bilgileri uydurmasını engellemek için promptunuzun sonuna mutlaka şu kısıtlamayı ekleyin: <strong>"Yalnızca sağlanan belgedeki bilgilere dayanarak yanıt ver. Eğer belgede bir sorunun cevabı yoksa, tahmin yürütmek yerine açıkça 'belgede bulunamadı' ifadesini kullan."</strong></p>
+        `
+      }
+    }
+  },
+  {
+    slug: "gemini-nano-local-prompt-engineering",
+    publishedAt: "2026-06-04",
+    author: "FreePrompts Editorial",
+    readTime: "4 min read",
+    image: "/blog/gemini_nano_local_cover.png",
+    translations: {
+      english: {
+        title: "Google Gemini Nano: Prompt Engineering Guide for Local On-Device Models",
+        excerpt: "Learn how to write optimized low-token prompts for Google Gemini Nano to run AI tasks locally on Android and Chrome browser.",
+        tags: ["Gemini Nano", "Local AI", "Prompt Engineering"],
+        content: `
+          <p>Google Gemini Nano is the most efficient AI model designed to run locally on mobile hardware (such as Android devices) and directly inside Chrome browsers. Because local models have smaller parameter counts (around 1.8B to 3B parameters) and limited processing memory compared to cloud models like Gemini Advanced, standard long-winded prompts will fail. You need to adapt your prompt engineering for local AI constraints.</p>
+
+          <h2>1. Keep Prompts Short and Token-Efficient</h2>
+          <p>Gemini Nano operates on your device's memory. To avoid performance lag, keep instructions extremely concise. Eliminate polite filler words and get straight to the point.</p>
+          <ul>
+            <li><strong>Bad (High tokens):</strong> "Hello! Could you please look at this sentence and write a very brief summary of what it means in one simple sentence, thank you!"</li>
+            <li><strong>Good (Low tokens):</strong> "Summarize this text in 1 sentence:"</li>
+          </ul>
+
+          <h2>2. Use Few-Shot Prompting (Examples)</h2>
+          <p>Small local models struggle with abstract reasoning. The single most effective way to guide Gemini Nano is by providing 1 or 2 examples of the input and desired output (Few-shot prompting):</p>
+          <pre><code>Classify customer sentiment as Positive or Negative.
+Input: "The delivery arrived early and the product is great!"
+Output: Positive
+Input: "The app keeps crashing on startup."
+Output: Negative
+Input: "It works okay but is a bit slow."
+Output:</code></pre>
+
+          <h2>3. Enforce Strict Output Formatting</h2>
+          <p>Local models tend to ramble if not restricted. If you need a specific output format, specify it explicitly at the end of the prompt:</p>
+          <pre><code>Correct the grammar of this text. Output ONLY the corrected text. Do not write intros or explanations.
+Text: "She don't like going to store."</code></pre>
+
+          <h2>Summary: The Golden Rules for Gemini Nano</h2>
+          <p>Focus on simple, single-step tasks (grammar correction, translation, sentiment analysis, simple entity extraction). Do not ask local models to write 1000-word essays or debug complex algorithms. By matching your task complexity to the hardware's capabilities, you unlock lightning-fast, offline AI utilities.</p>
+        `
+      },
+      turkish: {
+        title: "Google Gemini Nano: Cihaz İçi Yerel Modeller İçin Prompt Mühendisliği",
+        excerpt: "Android ve Chrome tarayıcısında çalışan Google Gemini Nano modelinden maksimum performans almak için düşük tokenli prompt yazma teknikleri.",
+        tags: ["Gemini Nano", "Yerel Yapay Zeka", "Prompt Yazımı"],
+        content: `
+          <p>Google Gemini Nano, Android cihazlarda ve doğrudan Chrome tarayıcılarında çalışmak üzere tasarlanmış, cihaz içi (on-device) en verimli yapay zeka modelidir. Yerel modeller, bulutta çalışan büyük modellere (Gemini Advanced, GPT-4) kıyasla daha küçük parametre boyutuna (1.8B - 3B) sahip olduğundan, uzun ve karmaşık promptlar performans kaybına yol açar. Prompt mühendisliğinizi yerel model kısıtlamalarına göre uyarlamalısınız.</p>
+
+          <h2>1. Promptları Kısa ve Token Dostu Tutun</h2>
+          <p>Gemini Nano, cihazınızın RAM belleği üzerinde çalışır. Bellek dar boğazını önlemek için talimatları olabildiğince kısa tutun. Kibarlık veya dolaylı anlatımlardan kaçının, doğrudan emre odaklanın.</p>
+          <ul>
+            <li><strong>Kötü (Yüksek token kullanımı):</strong> "Merhaba! Lütfen bu paragrafı inceleyip benim için en önemli noktaları tek bir cümleyle özetleyebilir misiniz, çok teşekkürler."</li>
+            <li><strong>İyi (Düşük token kullanımı):</strong> "Metni tek bir cümlede özetle:"</li>
+          </ul>
+
+          <h2>2. Örneklendirme (Few-Shot Prompting) Kullanın</h2>
+          <p>Küçük modeller soyut akıl yürütmede zorlanırlar. Gemini Nano'yu yönlendirmenin en etkili yolu, ona ne istediğinize dair 1 veya 2 örnek sunmaktır:</p>
+          <pre><code>Müşteri yorumunu Olumlu veya Olumsuz olarak sınıflandır.
+Girdi: "Ürün zamanında ulaştı ve gayet kaliteli."
+Çıktı: Olumlu
+Girdi: "Uygulama açılır açılmaz çöküyor."
+Çıktı: Olumsuz
+Girdi: "Ürün idare eder ama kargo yavaştı."
+Çıktı:</code></pre>
+
+          <h2>3. Katı Çıktı Formatları Tanımlayın</h2>
+          <p>Yerel modeller kısıtlanmadıklarında gereksiz açıklamalar yazma eğilimindedir. Sadece hedef çıktıyı almak için promptun sonuna sınırlayıcı ekleyin:</p>
+          <pre><code>Bu cümlenin dilbilgisini düzelt. SADECE düzeltilmiş cümleyi yaz. Giriş veya açıklama ekleme.
+Cümle: "Gidicez dediler ama gitmediler."</code></pre>
+
+          <h2>Gemini Nano İçin Altın Kurallar</h2>
+          <p>Yerel modelleri dilbilgisi düzeltme, çeviri, duygu analizi ve kısa özet çıkarma gibi tek adımlı, hafif görevler için kullanın. Nano'dan 1000 kelimelik makale yazmasını istemek verimsiz olacaktır. Görev karmaşıklığını yerel donanım sınırlarına göre ayarlayarak çevrim dışı ve ışık hızında yapay zeka deneyimi elde edebilirsiniz.</p>
+        `
+      }
+    }
   }
 ];
+

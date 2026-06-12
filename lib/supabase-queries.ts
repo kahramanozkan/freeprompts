@@ -148,6 +148,31 @@ export const promptsApi = {
     return data
   },
 
+  // Get multiple prompts by IDs
+  async getByIds(ids: string[]) {
+    if (!ids || ids.length === 0) return [];
+    
+    // Filter to valid UUIDs to prevent database query errors
+    const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    const validIds = ids.filter(id => id && uuidRegex.test(id));
+    
+    if (validIds.length === 0) return [];
+
+    const { data, error } = await supabase
+      .from('prompts')
+      .select('id, title, image, tags, likes, views, created_at, category, sort_order')
+      .in('id', validIds)
+      .order('sort_order', { ascending: true, nullsFirst: false })
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Supabase getByIds error:', error);
+      throw error;
+    }
+
+    return data;
+  },
+
   // Create new prompt
   async create(prompt: PromptInsert, userData?: any) {
     // Ensure user exists in users table first

@@ -74,23 +74,23 @@ function PromptCard({ prompt, initialLiked = false, variantCount = 0 }: PromptCa
 
   return (
     <Link href={`/prompt/${prompt.id}/${slug}`}>
-      <div className="group relative bg-gray-200 rounded-lg overflow-hidden border border-gray-300 hover:border-black transition-all duration-300" style={{ aspectRatio: '2/3' }}>
+      <div className="group relative bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-black/60 hover:shadow-xl hover:shadow-black/[0.04] hover:-translate-y-1 transition-all duration-300" style={{ aspectRatio: '2/3' }}>
         {/* Background Image */}
         {prompt.image && (
           <ImageWithLoader
             src={prompt.image}
             alt={prompt.title || "Prompt Image"}
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
           />
         )}
 
         {/* Variant count badge - always visible */}
-        <div className="absolute top-2 right-2 bg-yellow-100 text-gray-800 text-xs font-bold px-2 py-1 rounded-full z-10">
+        <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-black text-[10px] font-bold px-2.5 py-1 rounded-full z-10 border border-gray-100 shadow-sm">
           {variantCount} {variantCount === 1 ? 'variant' : 'variants'}
         </div>
 
         {/* Default Overlay - Always visible */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-between">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-4 flex flex-col justify-between">
           {/* Bottom section */}
           <div className="mt-auto">
             {/* Tags */}
@@ -98,7 +98,7 @@ function PromptCard({ prompt, initialLiked = false, variantCount = 0 }: PromptCa
               {(prompt.tags || []).slice(0, 3).map((tag, index) => (
                 <span
                   key={index}
-                  className="px-2 py-1 bg-white/20 backdrop-blur-sm text-white rounded text-xs border border-white/30"
+                  className="px-2 py-0.5 bg-white/10 backdrop-blur-md text-white rounded-full text-[10px] border border-white/10 font-medium"
                 >
                   {tag}
                 </span>
