@@ -580,7 +580,7 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
                   <span className="block text-xs text-gray-400">{globalSiteLanguage === 'turkish' ? 'Hedef Modeller' : 'Target Models'}</span>
                   <span className="font-medium text-sm text-black">
                     {prompt.tags?.some((t: string) => ['midjourney', 'stable diffusion', 'dall-e', 'dalle', 'image', 'art'].includes(t.toLowerCase())) 
-                      ? "Midjourney, DALL-E, SD" 
+                      ? "Midjourney, Nano Banana, GPT Image 2" 
                       : "ChatGPT, Claude, Gemini"}
                   </span>
                 </div>
@@ -717,7 +717,7 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
                 <li>
                   <strong>{globalSiteLanguage === 'turkish' ? 'AI Aracını Açın:' : 'Open your AI tool:'} </strong>
                   {prompt.tags?.some((t: string) => ['midjourney', 'stable diffusion', 'dall-e', 'dalle', 'image', 'art'].includes(t.toLowerCase()))
-                    ? (globalSiteLanguage === 'turkish' ? 'Discord üzerinden Midjourney\'i veya kullandığınız görsel yapay zeka aracını (DALL-E 3, SD) açın.' : 'Open Midjourney in Discord, or your preferred AI image generator (DALL-E 3, Stable Diffusion).')
+                    ? (globalSiteLanguage === 'turkish' ? 'Midjourney, Nano Banana veya tercih ettiğiniz görsel yapay zeka aracını (GPT Image 2) açın.' : 'Open Midjourney, Nano Banana, or your preferred AI image generator (GPT Image 2).')
                     : (globalSiteLanguage === 'turkish' ? 'ChatGPT, Claude veya Google Gemini uygulamasını başlatın.' : 'Open ChatGPT, Claude, or Google Gemini.')}
                 </li>
                 <li>
@@ -758,7 +758,7 @@ export default function PromptDetailClient({ params, initialPrompt, error }: Pro
                       },
                       {
                         q: globalSiteLanguage === 'turkish' ? 'Midjourney haricindeki görsel yapay zekalarla uyumlu mu?' : 'Is it compatible with other AI image generators?',
-                        a: globalSiteLanguage === 'turkish' ? 'Evet; bu prompt Midjourney için optimize edilmiş olsa da, benzer yapıları kullanarak DALL-E 3, Stable Diffusion ve Adobe Firefly üzerinde de başarılı sonuçlar alabilirsiniz.' : 'Yes! While optimized for Midjourney, it can be adapted easily for DALL-E 3, Stable Diffusion, and Adobe Firefly with minor adjustments.'
+                        a: globalSiteLanguage === 'turkish' ? 'Evet; bu prompt Midjourney için optimize edilmiş olsa da, benzer yapıları kullanarak Nano Banana ve GPT Image 2 üzerinde de başarılı sonuçlar alabilirsiniz.' : 'Yes! While optimized for Midjourney, it can be adapted easily for other visual AI tools like Nano Banana and GPT Image 2 with minor adjustments.'
                       },
                       {
                         q: globalSiteLanguage === 'turkish' ? 'Görsel kalitesini nasıl değiştirebilirim?' : 'How do I change the image quality or ratio?',

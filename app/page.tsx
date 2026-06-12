@@ -18,6 +18,7 @@ const HomeSlider = dynamic(() => import('@/components/ui/HomeSlider'), { ssr: tr
 const LiveStats = dynamic(() => import('@/components/ui/LiveStats'), { ssr: true });
 import AutoRefresh from '@/components/ui/AutoRefresh';
 import ImageWithLoader from "@/components/ui/ImageWithLoader";
+import HomeFAQ from "@/components/ui/HomeFAQ";
 
 // Revalidate every 60 seconds
 export const revalidate = 60;
@@ -221,10 +222,74 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Homepage FAQ Section */}
+      <HomeFAQ />
+
       {/* Subscribe Section */}
       <section className="py-16 bg-gray-50">
         <Subscribe />
       </section>
+
+      {/* Homepage FAQ Schema for Search Engines */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a copy-paste AI prompt?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A copy-paste AI prompt is a pre-written text instruction that you can copy from freeprompts.store and paste directly into tools like ChatGPT, Google Gemini, or Claude to get high-quality outputs instantly."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Yapay zeka hazır promptları nedir?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yapay zeka hazır promptları, ChatGPT, Google Gemini veya Claude gibi araçlara doğrudan yapıştırabileceğiniz metin şablonlarıdır. Metni kopyalayıp değişkenleri düzenleyerek anında profesyonel çıktılar alabilirsiniz."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are these prompts compatible with newer tools like Nano Banana or GPT Image 2?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, all our templates are fully compatible with and optimized for the latest AI tools and models, including Midjourney, Nano Banana, and GPT Image 2."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Bu promptlar Nano Banana veya GPT Image 2 gibi araçlarla uyumlu mudur?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Evet, sitemizdeki tüm hazır promptlar ve şablonlar Midjourney, Nano Banana ve GPT Image 2 gibi en güncel yapay zeka sistemlerinde test edilmiş ve uyumlu hale getirilmiştir."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do I use Midjourney templates?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Simply copy the prompt content, paste it into Discord or your visual AI generator interface, customize the placeholder values (in brackets), and execute."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Midjourney şablonlarını nasıl kullanırım?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Prompt içeriğini kopyalayın, Discord'a veya kullandığınız görsel yapay zeka arayüzüne yapıştırın. Köşeli parantezler [ ] içindeki alanları kendi konunuzla doldurun ve çalıştırın."
+                }
+              }
+            ]
+          })
+        }}
+      />
     </div>
   );
 }

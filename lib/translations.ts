@@ -58,6 +58,20 @@ export const translations = {
     'auth.forgotPassword': 'Forgot Password?',
     'auth.noAccount': "Don't have an account?",
     'auth.hasAccount': 'Already have an account?',
+    
+    // Hero
+    'hero.title': 'Discover Free Copy-Paste AI Prompts',
+    'hero.subtitle': 'Browse high-quality free prompts for Midjourney, Nano Banana, GPT Image 2, and other AI tools. Easily copy-paste and use prompts.',
+    'hero.button': 'Discover Prompts',
+
+    // Homepage FAQ
+    'home.faq.title': 'Frequently Asked Questions',
+    'home.faq.q1': 'What is a copy-paste AI prompt?',
+    'home.faq.a1': 'A copy-paste AI prompt is a pre-written text instruction that you can copy from freeprompts.store and paste directly into tools like ChatGPT, Google Gemini, or Claude to get high-quality outputs instantly.',
+    'home.faq.q2': 'Are these prompts compatible with newer tools like Nano Banana or GPT Image 2?',
+    'home.faq.a2': 'Yes, all our templates are fully compatible with and optimized for the latest AI tools and models, including Midjourney, Nano Banana, and GPT Image 2.',
+    'home.faq.q3': 'How do I use Midjourney templates?',
+    'home.faq.a3': 'Simply copy the prompt content, paste it into Discord or your visual AI generator interface, customize the placeholder values (in brackets), and execute.',
   },
   turkish: {
     // Navigation
@@ -117,6 +131,20 @@ export const translations = {
     'auth.forgotPassword': 'Şifremi Unuttum?',
     'auth.noAccount': 'Hesabınız yok mu?',
     'auth.hasAccount': 'Zaten hesabınız var mı?',
+    
+    // Hero
+    'hero.title': 'Kopyala-Yapıştır Ücretsiz Yapay Zeka Promptlarını Keşfedin',
+    'hero.subtitle': 'Midjourney, Nano Banana, GPT Image 2 ve diğer yapay zeka araçları için yüksek kaliteli ücretsiz promptları inceleyin. Kolayca kopyalayıp kullanın.',
+    'hero.button': 'Promptları Keşfet',
+
+    // Homepage FAQ
+    'home.faq.title': 'Sıkça Sorulan Sorular',
+    'home.faq.q1': 'Yapay zeka hazır promptları nedir?',
+    'home.faq.a1': 'Yapay zeka hazır promptları, ChatGPT, Google Gemini veya Claude gibi araçlara doğrudan yapıştırabileceğiniz metin şablonlarıdır. Metni kopyalayıp değişkenleri düzenleyerek anında profesyonel çıktılar alabilirsiniz.',
+    'home.faq.q2': 'Bu promptlar Nano Banana veya GPT Image 2 gibi araçlarla uyumlu mudur?',
+    'home.faq.a2': 'Evet, sitemizdeki tüm hazır promptlar ve şablonlar Midjourney, Nano Banana ve GPT Image 2 gibi en güncel yapay zeka sistemlerinde test edilmiş ve uyumlu hale getirilmiştir.',
+    'home.faq.q3': 'Midjourney şablonlarını nasıl kullanırım?',
+    'home.faq.a3': 'Prompt içeriğini kopyalayın, Discord\'a veya kullandığınız görsel yapay zeka arayüzüne yapıştırın. Köşeli parantezler [ ] içindeki alanları kendi konunuzla doldurun ve çalıştırın.',
   },
   russian: {
     // Navigation

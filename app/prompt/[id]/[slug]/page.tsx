@@ -228,7 +228,7 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ i
                     "name": `Which AI models are compatible with this image prompt?`,
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": `This visual prompt is optimized for Midjourney (V5, V6, and newer versions), but it can also be used to generate stunning images in DALL-E 3, Stable Diffusion, and Adobe Firefly with minor modifications.`
+                      "text": `This visual prompt is optimized for Midjourney, but it can also be used to generate stunning images in other tools like Nano Banana and GPT Image 2 with minor modifications.`
                     }
                   },
                   {
@@ -236,7 +236,7 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ i
                     "name": `Bu görsel promptu hangi yapay zeka modelleriyle uyumludur?`,
                     "acceptedAnswer": {
                       "@type": "Answer",
-                      "text": `Bu görsel promptu öncelikli olarak Midjourney (V5, V6 ve üzeri) için optimize edilmiştir. Ancak küçük değişikliklerle DALL-E 3, Stable Diffusion ve Adobe Firefly gibi diğer yapay zeka görsel araçlarında da harika sonuçlar verir.`
+                      "text": `Bu görsel promptu öncelikli olarak Midjourney için optimize edilmiştir. Ancak küçük değişikliklerle Nano Banana ve GPT Image 2 gibi diğer yapay zeka görsel araçlarında da harika sonuçlar verir.`
                     }
                   },
                   {
