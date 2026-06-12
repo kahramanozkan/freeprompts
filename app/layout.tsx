@@ -115,11 +115,13 @@ export default function RootLayout({
         </Script>
 
         {/* Google AdSense */}
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5496537037248215"
-          strategy="lazyOnload"
-          crossOrigin="anonymous"
-        />
+        {process.env.NEXT_PUBLIC_DISABLE_ADS !== "true" && (
+          <Script
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID || "ca-pub-5496537037248215"}`}
+            strategy="lazyOnload"
+            crossOrigin="anonymous"
+          />
+        )}
         {/* Google Tag Manager (head) */}
         {process.env.NEXT_PUBLIC_GTM_ID && (
           <Script
