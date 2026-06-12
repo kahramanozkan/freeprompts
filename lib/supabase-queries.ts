@@ -748,6 +748,27 @@ export const userLikesApi = {
       console.warn('Exception in getUserLikesForPrompts:', err);
       return {};
     }
+  },
+
+  // Get all prompt IDs liked by a user
+  async getLikedPromptIds(userId: string): Promise<string[]> {
+    try {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from('user_likes')
+        .select('prompt_id')
+        .eq('user_id', userId);
+
+      if (error) {
+        console.error('Error fetching liked prompt IDs:', error);
+        throw error;
+      }
+
+      return data?.map((item: any) => item.prompt_id) || [];
+    } catch (err) {
+      console.error('Exception fetching liked prompt IDs:', err);
+      return [];
+    }
   }
 }
 

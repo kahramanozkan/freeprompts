@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSiteLanguage } from "@/contexts/SiteLanguageContext";
 import { getTranslation } from "@/lib/translations";
-import { usersApi, promptsApi } from "@/lib/supabase-queries";
+import { usersApi, promptsApi, userLikesApi } from "@/lib/supabase-queries";
 import Link from "next/link";
 
 export default function ProfilePage() {
@@ -42,10 +42,13 @@ useEffect(() => {
         setEditedSocialLinks(data?.social_links || []);
 
         // Fetch liked prompts
-        if (data?.liked_prompts && data.liked_prompts.length > 0) {
-          setLoadingLikedPrompts(true);
-          const promptsData = await promptsApi.getByIds(data.liked_prompts);
+        setLoadingLikedPrompts(true);
+        const likedPromptIds = await userLikesApi.getLikedPromptIds(user.id);
+        if (likedPromptIds && likedPromptIds.length > 0) {
+          const promptsData = await promptsApi.getByIds(likedPromptIds);
           setLikedPrompts(promptsData || []);
+        } else {
+          setLikedPrompts([]);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
