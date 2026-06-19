@@ -693,6 +693,205 @@ Cümle: "Gidicez dediler ama gitmediler."</code></pre>
         `
       }
     }
+  },
+  {
+    slug: "gpt-4o-multimodal-prompting-guide",
+    publishedAt: "2026-06-19",
+    author: "FreePrompts Editorial",
+    readTime: "5 min read",
+    image: "/blog/gpt_multimodal_cover.png",
+    translations: {
+      english: {
+        title: "GPT-4o and Beyond: How to Write Prompts for the Latest Multimodal AI Models",
+        excerpt: "Discover how to write optimized prompts that combine text, images, and voice for Next-Gen multimodal models like GPT-4o.",
+        tags: ["GPT-4o", "Multimodal", "Prompt Engineering"],
+        content: `
+          <p>With the launch of multimodal AI models like GPT-4o, prompt engineering has evolved from writing simple text commands to designing inputs that combine images, audio, and text. Because multimodal models process different types of media in a single shared neural network, they can understand relationships between visual elements and spoken words far better than previous systems. Here is how to write high-performance multimodal prompts.</p>
+
+          <h2>1. Vision Prompting: Guide the Focus</h2>
+          <p>When uploading an image to GPT-4o for analysis, do not just ask "what is this?" Instead, give the AI a clear role and establish spatial cues:</p>
+          <ul>
+            <li><strong>Define the Zone:</strong> "Analyze the dashboard in the top-right corner of the image..."</li>
+            <li><strong>Specify the Task:</strong> "Identify any anomalies in the user retention graph, focusing on the sharp drop in May."</li>
+            <li><strong>Provide Context:</strong> "This is a wireframe for a mobile banking app. List 3 usability issues regarding button placement."</li>
+          </ul>
+
+          <h2>2. Voice and Audio Prompting: Tone and Structure</h2>
+          <p>GPT-4o natively accepts audio inputs. When dictating prompts, remember that the AI captures vocal inflections, pauses, and accentuation. To structure complex audio prompts:</p>
+          <pre><code>State your main goal first -> Explain the context verbally -> Ask the AI to repeat the core requirements back to you to check understanding.</code></pre>
+          <p>Example: "Act as my public speaking coach. I will read a short pitch. Listen to my tone, pace, and energy, and give me constructive feedback on my confidence level."</p>
+
+          <h2>3. Cross-Modal Reference (Combining Visuals and Text)</h2>
+          <p>One of GPT-4o's greatest strengths is cross-referencing text files with images. You can upload a PDF design document and a screenshot of your website, then prompt:</p>
+          <pre><code>Compare the layout of the homepage in screenshot.png with the layout guidelines defined on page 4 of design_guide.pdf. List any deviations in font size and padding.</code></pre>
+
+          <h2>Pro Tip: Keep Media Token-Efficient</h2>
+          <p>Images consume a significant number of tokens (typically 85 to 258 tokens depending on resolution). Crop out unnecessary background elements and compress your images before uploading. This saves tokens, reduces latency, and keeps the AI focused on the critical details of your task.</p>
+        `
+      },
+      turkish: {
+        title: "GPT-4o ve Ötesi: Yeni Multimodal Yapay Zeka Modelleri İçin Prompt Yazım Kılavuzu",
+        excerpt: "GPT-4o gibi yeni nesil multimodal modeller için metin, görsel ve ses girdilerini birleştiren optimize edilmiş prompt yazma teknikleri.",
+        tags: ["GPT-4o", "Multimodal", "Prompt Yazımı"],
+        content: `
+          <p>GPT-4o gibi multimodal yapay zeka modellerinin hayatımıza girmesiyle birlikte, prompt mühendisliği sadece metin yazmaktan çıkıp ses, görsel ve metin girdilerini bir arada kullanmaya evrildi. Multimodal modeller farklı veri türlerini ortak bir sinir ağında işlediği için, görsel öğeler ile kelimeler arasındaki ilişkileri eski sistemlere göre çok daha iyi anlarlar. İşte yüksek performanslı multimodal prompt yazma teknikleri.</p>
+
+          <h2>1. Görsel (Vision) Promptları Yazma: Odağı Yönlendirin</h2>
+          <p>GPT-4o'ya analiz için bir görsel yüklediğinizde sadece "Bu nedir?" diye sormayın. Bunun yerine yapay zekaya bir rol verin ve görseldeki belirli alanları işaret edin:</p>
+          <ul>
+            <li><strong>Bölgeyi Tanımlayın:</strong> "Görselin sağ üst köşesindeki grafik panelini incele..."</li>
+            <li><strong>Görevi Netleştirin:</strong> "Kullanıcı tutundurma (retention) grafiğindeki anomalileri tespit et, özellikle Mayıs ayındaki sert düşüşe odaklan."</li>
+            <li><strong>Bağlam Sunun:</strong> "Bu bir mobil bankacılık uygulamasının arayüz taslağıdır. Buton yerleşimleri açısından 3 adet kullanılabilirlik sorunu listele."</li>
+          </ul>
+
+          <h2>2. Sesli (Voice) Promptlar: Tonlama ve Yapılandırma</h2>
+          <p>GPT-4o ses girdilerini doğal olarak kabul eder. Promptları dikte ederken, yapay zekanın ses tonunuzu, duraksamalarınızı ve vurgularınızı yakaladığını unutmayın. Sesli promptları şu sırada yapılandırın:</p>
+          <pre><code>Önce ana hedefi belirtin -> Bağlamı sesli olarak açıklayın -> Doğru anladığından emin olmak için yapay zekadan temel gereksinimleri özetlemesini isteyin.</code></pre>
+
+          <h2>3. Çapraz Model Referansı (Görsel ve Metni Birleştirme)</h2>
+          <p>GPT-4o'nun en güçlü yanlarından biri, bir metin belgesi ile bir görseli çapraz referanslayabilmesidir. Örneğin, bir tasarım rehberi PDF'i ile web sitenizin ekran görüntüsünü yükleyip şu promptu yazabilirsiniz:</p>
+          <pre><code>Ekran görüntüsündeki anasayfa yerleşimi ile tasarim_rehberi.pdf belgesinin 4. sayfasındaki kuralları karşılaştır. Yazı tipi boyutu ve boşluk (padding) sapmalarını listele.</code></pre>
+
+          <h2>İpucu: Görselleri Optimize Edin</h2>
+          <p>Görseller çözünürlüklerine göre ciddi miktarda token harcar (genellikle 85 ila 258 token arası). Analiz hızını artırmak ve gereksiz token tüketimini önlemek için görselleri yüklemeden önce kırpın ve sıkıştırın. Bu, yapay zekanın sadece hedefe odaklanmasını sağlayacaktır.</p>
+        `
+      }
+    }
+  },
+  {
+    slug: "midjourney-dalle3-text-typography-prompts",
+    publishedAt: "2026-06-18",
+    author: "FreePrompts Editorial",
+    readTime: "4 min read",
+    image: "/blog/typography_text_cover.png",
+    translations: {
+      english: {
+        title: "How to Render Clean Text and Typography in Midjourney v6 and DALL-E 3",
+        excerpt: "Master the prompt syntax required to generate correct, unglitched text inside AI images for banners, posters, and social media.",
+        tags: ["Midjourney", "DALL-E 3", "Typography"],
+        content: `
+          <p>Historically, generating readable text inside AI-generated images was almost impossible. AI models would yield strange, alien-like glyphs. However, Midjourney v6 and DALL-E 3 have introduced robust text-rendering capabilities. By learning the specific syntax and framing methods, you can design professional posters, logo mockups, and social media banners with crisp, readable text.</p>
+
+          <h2>1. Midjourney v6 Text Rendering Syntax</h2>
+          <p>In Midjourney v6, to print text, you must enclose the target words in **double quotation marks** <code>"like this"</code>. You must also specify where the text should go:</p>
+          <pre><code>/imagine prompt: A neon sign on a brick wall at night glowing with the text "OPEN 24 HOURS" in cyan light, cyberpunk aesthetic --v 6.0</code></pre>
+          <p>To get clean fonts, combine the text with terms like <code>bold sans-serif font</code>, <code>retro script typography</code>, or <code>minimalist logo text</code>.</p>
+
+          <h2>2. DALL-E 3 Text Rendering</h2>
+          <p>DALL-E 3 (available in ChatGPT Plus) is exceptionally good at text integration because of its advanced language comprehension. Simply describe the text as part of the scene description:</p>
+          <pre><code>A photo of a classic wooden street sign that reads "DESTINATION SUCCESS". The background is a sunny path leading into a forest.</code></pre>
+
+          <h2>3. Troubleshooting AI Typography Errors</h2>
+          <p>Even with new models, AI still occasionally misspells words or adds extra letters. Here is how to fix it:</p>
+          <ul>
+            <li><strong>Use Negative Prompts:</strong> In Midjourney, append <code>--no gibberish, spelling errors, multiple letters, distorted text</code> to the end of your prompt.</li>
+            <li><strong>Vary Region (Inpainting):</strong> If the image is perfect but one letter is wrong, select the text area using the Vary (Region) tool and re-prompt with the exact text in quotes.</li>
+            <li><strong>Isolate Text:</strong> Ask the AI to place the text on a plain, solid background. This makes it extremely easy to clean up or replace using Canva or Photoshop.</li>
+          </ul>
+
+          <h2>Summary: Keep It Short</h2>
+          <p>The shorter the text, the higher the success rate. Attempting to write a full paragraph in Midjourney will fail. Stick to 1 to 4 words for optimal, glitch-free typography rendering.</p>
+        `
+      },
+      turkish: {
+        title: "Midjourney v6 ve DALL-E 3 ile Görsellerde Kusursuz Yazı Yazdırma Teknikleri",
+        excerpt: "Banner, poster ve sosyal medya tasarımlarınız için yapay zeka görsellerinin içine hatasız ve net yazılar yazdırma teknikleri.",
+        tags: ["Midjourney", "DALL-E 3", "Tipografi"],
+        content: `
+          <p>Yapay zeka ile görsel üretiminin ilk dönemlerinde, görsellere okunabilir metinler eklemek neredeyse imkansızdı. Modeller anlamsız, uzay dili benzeri semboller üretirdi. Ancak Midjourney v6 ve DALL-E 3 bu durumu kökten değiştirdi. Doğru sözdizimini (syntax) kullanarak afişler, logolar ve sosyal medya bannerları için net ve okunabilir metinler tasarlayabilirsiniz.</p>
+
+          <h2>1. Midjourney v6 Yazı Yazdırma Sözdizimi</h2>
+          <p>Midjourney v6'da görselin içine yazı yazdırmak için yazılacak kelimeleri mutlaka **çift tırnak içinde** <code>"bu şekilde"</code> belirtmelisiniz. Ayrıca yazının nerede yer alacağını da tarif etmelisiniz:</p>
+          <pre><code>/imagine prompt: A neon sign on a brick wall at night glowing with the text "OPEN 24 HOURS" in cyan light, cyberpunk aesthetic --v 6.0</code></pre>
+          <p>Temiz yazı tipleri elde etmek için promptunuza <code>bold sans-serif font</code>, <code>retro script typography</code> veya <code>clean flat font</code> gibi terimler ekleyin.</p>
+
+          <h2>2. DALL-E 3 ile Yazı Yazdırma</h2>
+          <p>DALL-E 3 (ChatGPT Plus içinde yer alan), gelişmiş dil modeli sayesinde metin yerleştirmede son derece başarılıdır. Sahneyi betimlerken yazıyı doğal bir şekilde tanımlamanız yeterlidir:</p>
+          <pre><code>A photo of a classic wooden street sign that reads "DESTINATION SUCCESS". The background is a sunny path leading into a forest.</code></pre>
+
+          <h2>3. Yapay Zekadaki Tipografi Hatalarını Giderme</h2>
+          <p>Modeller gelişmiş olsa da bazen harfleri karıştırabilir veya fazla harf ekleyebilir. Bu hataları düzeltmek için şu yolları izleyebilirsiniz:</p>
+          <ul>
+            <li><strong>Negatif Prompt Kullanın:</strong> Midjourney'de promptun sonuna <code>--no gibberish, spelling errors, distorted text</code> ekleyin.</li>
+            <li><strong>Bölgesel Varyasyon (Vary Region):</strong> Görsel mükemmel ama sadece bir harf hatalıysa, o harfin olduğu alanı seçip çift tırnak içinde kelimenin doğrusunu yazarak tekrar üretin.</li>
+            <li><strong>Kısa Metinler Seçin:</strong> Yazı ne kadar kısa olursa başarı oranı o kadar yüksek olur. Görsele 1-3 kelimelik kısa metinler yazdırmaya odaklanın.</li>
+          </ul>
+        `
+      }
+    }
+  },
+  {
+    slug: "advanced-prompt-chaining-workflows-guide",
+    publishedAt: "2026-06-17",
+    author: "FreePrompts Editorial",
+    readTime: "5 min read",
+    image: "/blog/prompt_chain_cover.png",
+    translations: {
+      english: {
+        title: "Advanced Prompt Chaining: How to Break Complex Tasks into Multi-Step AI Workflows",
+        excerpt: "Learn how to design prompt chains where the output of one model becomes the input of another, creating robust automated systems.",
+        tags: ["Prompt Chaining", "AI Workflows", "Automation"],
+        content: `
+          <p>When users are disappointed with AI outputs, it is usually because they asked the AI to do too much at once. Asking a model to "research a topic, write a 1000-word article, format it in HTML, and generate meta tags" in a single prompt yields mediocre, generic results. To achieve elite performance, you must use <strong>Prompt Chaining</strong>—breaking a complex task into smaller sub-tasks where the output of one prompt serves as the input for the next.</p>
+
+          <h2>What is Prompt Chaining?</h2>
+          <p>Prompt Chaining is a modular workflow design. Instead of generating a product in one go, you guide the AI step-by-step. This mirrors how human professionals work: planning, drafting, reviewing, and formatting are distinct phases.</p>
+
+          <h2>The 4-Step Article Writing Chain</h2>
+
+          <h3>Step 1: Outline Generation</h3>
+          <p>First, prompt the AI to build the structural skeleton of your project:</p>
+          <pre><code>Prompt 1: Create a detailed heading outline for an article about [Topic]. Include 5 main sections and sub-bullets for each.</code></pre>
+
+          <h3>Step 2: Section-by-Section Drafting</h3>
+          <p>Pass the generated outline back to the model and ask it to write only one specific section at a time. This prevents the AI from rushing or running out of memory:</p>
+          <pre><code>Prompt 2: Write a detailed 300-word content body for Section 1 of this outline: [Insert Outline Section 1]. Use an informative tone.</code></pre>
+
+          <h3>Step 3: Editing and SEO Optimization</h3>
+          <p>Combine the generated drafts and prompt a clean editing pass:</p>
+          <pre><code>Prompt 3: Act as a senior editor. Review this article for flow and readability. Additionally, naturally integrate the following keywords: [Insert Keywords].</code></pre>
+
+          <h3>Step 4: Meta Tag Generation</h3>
+          <p>Finally, generate metadata for SEO based on the finalized article content:</p>
+          <pre><code>Prompt 4: Based on the finished article below, generate an optimized SEO meta description under 150 characters and select 5 relevant tags. [Insert Article]</code></pre>
+
+          <h2>Why Prompt Chaining is Superior</h2>
+          <p>By focusing the LLM's attention on a single narrow task, you dramatically improve quality. Chaining also allows you to insert human review steps between links in the chain, ensuring absolute control over the final product before it is finalized or published.</p>
+        `
+      },
+      turkish: {
+        title: "İleri Düzey Prompt Zincirleme: Karmaşık Görevleri Çok Adımlı Yapay Zeka İş Akışlarına Bölme",
+        excerpt: "Bir yapay zeka modelinin çıktısını diğerinin girdisi yaparak karmaşık işleri otomatize etmenizi sağlayan prompt zincirleme teknikleri.",
+        tags: ["Prompt Zincirleme", "Yapay Zeka İş Akışları", "Otomasyon"],
+        content: `
+          <p>Yapay zeka çıktılarının kalitesiz olmasının en büyük sebebi, tek seferde çok fazla şey istenmesidir. Bir modele "konuyu araştır, 1000 kelimelik makale yaz, bunu HTML olarak biçimlendir ve SEO etiketlerini oluştur" demek sıradan ve yüzeysel bir metne yol açar. Profesyonel sonuçlar elde etmek için **Prompt Zincirleme (Prompt Chaining)** yöntemini kullanmalısınız. Yani, karmaşık bir görevi, birinin çıktısı diğerinin girdisi olacak şekilde küçük adımlara bölmelisiniz.</p>
+
+          <h2>Prompt Zincirleme Nedir?</h2>
+          <p>Prompt zincirleme, modüler bir iş akışıdır. Ürünü tek seferde üretmek yerine yapay zekayı adım adım yönlendirirsiniz. Bu süreç, insanların çalışma şeklini taklit eder: araştırma, taslak oluşturma, düzenleme ve biçimlendirme ayrı aşamalardır.</p>
+
+          <h2>Örnek: 4 Adımlı Makale Yazım Zinciri</h2>
+
+          <h3>Adım 1: Taslak (Outline) Oluşturma</h3>
+          <p>İlk adımda yapay zekaya projenin iskeletini oluşturun:</p>
+          <pre><code>Prompt 1: [Konu] hakkında yazılacak bir makale için detaylı bir başlık taslağı oluştur. 5 ana bölüm ve alt maddelerini içersin.</code></pre>
+
+          <h3>Adım 2: Bölüm Bölüm İçerik Yazımı</h3>
+          <p>Taslağı yapay zekaya geri verip, her seferinde sadece tek bir bölümü yazmasını isteyin. Bu sayede model acele etmeden, uzun ve detaylı paragraflar oluşturur:</p>
+          <pre><code>Prompt 2: Bu taslağın 1. Bölümü için 300 kelimelik detaylı bir metin yaz: [Taslağın 1. Bölümü]. Bilgilendirici bir ton kullan.</code></pre>
+
+          <h3>Adım 3: Düzenleme ve SEO Optimizasyonu</h3>
+          <p>Bölümleri birleştirin ve yapay zekaya bir editör gözüyle inceletin:</p>
+          <pre><code>Prompt 3: Editör gibi davran. Bu makaleyi akıcılık ve okunabilirlik açısından gözden geçir. Ayrıca şu anahtar kelimeleri metne doğal olarak entegre et: [Anahtar Kelimeler].</code></pre>
+
+          <h3>Adım 4: Meta Veri Üretimi</h3>
+          <p>Son olarak, tamamlanmış metne dayanarak SEO etiketlerini hazırlatın:</p>
+          <pre><code>Prompt 4: Aşağıdaki tamamlanmış makaleye dayanarak, 150 karakteri geçmeyen bir SEO meta açıklaması ve 5 etiket üret: [Makale Metni]</code></pre>
+
+          <h2>Neden Prompt Zincirleme?</h2>
+          <p>Yapay zekanın odak noktasını daraltarak, her adımda en yüksek performansı alırsınız. Ayrıca adımlar arasına kendi incelemenizi de katarak nihai ürün üzerindeki kontrolünüzü artırabilirsiniz.</p>
+        `
+      }
+    }
   }
 ];
 
