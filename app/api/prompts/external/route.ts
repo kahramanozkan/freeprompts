@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase-server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 // We must explicitly configure this API route to handle larger payloads if needed, 
 // but by default Next.js route handlers handle typical json up to a few MBs fine.
@@ -70,9 +70,9 @@ export async function POST(request: Request) {
         const filePath = `n8n-uploads/${filename}`;
         
         console.log(`Uploading to Supabase storage: ${filePath}`);
-        const { data: uploadData, error: uploadError } = await supabaseServer
+        const { data: uploadData, error: uploadError } = await supabaseAdmin
           .storage
-          .from('prompts')
+          .from('prompt-images')
           .upload(filePath, buffer, {
             contentType: contentType,
             upsert: false
@@ -84,9 +84,9 @@ export async function POST(request: Request) {
           finalImageUrl = image_url;
         } else {
           // Get the public URL
-          const { data: { publicUrl } } = supabaseServer
+          const { data: { publicUrl } } = supabaseAdmin
             .storage
-            .from('prompts')
+            .from('prompt-images')
             .getPublicUrl(filePath);
             
           finalImageUrl = publicUrl;
@@ -140,7 +140,7 @@ export async function POST(request: Request) {
       // updated_at and created_at usually default to now()
     };
 
-    const { data: promptData, error: dbError } = await supabaseServer
+    const { data: promptData, error: dbError } = await supabaseAdmin
       .from('prompts')
       .insert(insertData)
       .select()
