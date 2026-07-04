@@ -92,7 +92,7 @@ export default function TermsPage() {
             If you have any questions about these Terms, please contact us at:
           </p>
           <p className="text-gray-600 mb-6">
-            <strong>Email:</strong> <a href="mailto:hello@freeprompts.store" className="text-black underline">hello@freeprompts.store</a>
+            <strong>Email:</strong> <a href="mailto:freeprompts.store@gmail.com" className="text-black underline">freeprompts.store@gmail.com</a>
           </p>
         </div>
       </div>

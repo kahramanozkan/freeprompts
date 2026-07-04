@@ -44,7 +44,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-semibold text-black mt-8 mb-4">Contact Us</h2>
           <p className="text-gray-600 mb-6">
             Have questions, suggestions, or feedback? We'd love to hear from you. You can reach
-            us through our community forums or <a href="mailto:hello@freeprompts.store" className="text-black underline">contact form</a>.
+            us through our community forums or <a href="mailto:freeprompts.store@gmail.com" className="text-black underline">contact form</a>.
           </p>
 
           <p className="text-gray-600">

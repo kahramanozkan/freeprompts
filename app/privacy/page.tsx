@@ -74,7 +74,7 @@ export default function PrivacyPage() {
             <li>• <strong>Opt‑out:</strong> You can unsubscribe from marketing emails and adjust notification preferences in your account settings.</li>
           </ul>
           <p className="text-gray-600 mb-6">
-            To exercise any of these rights, please contact us at <a href="mailto:hello@freeprompts.store" className="text-black underline">hello@freeprompts.store</a>.
+            To exercise any of these rights, please contact us at <a href="mailto:freeprompts.store@gmail.com" className="text-black underline">freeprompts.store@gmail.com</a>.
           </p>
 
           <h2 className="text-2xl font-semibold text-black mt-8 mb-4">Cookies and Tracking Technologies</h2>
@@ -102,7 +102,7 @@ export default function PrivacyPage() {
             If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us at:
           </p>
           <p className="text-gray-600 mb-6">
-            <strong>Email:</strong> <a href="mailto:hello@freeprompts.store" className="text-black underline">hello@freeprompts.store</a>
+            <strong>Email:</strong> <a href="mailto:freeprompts.store@gmail.com" className="text-black underline">freeprompts.store@gmail.com</a>
           </p>
         </div>
       </div>
