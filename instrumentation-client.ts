@@ -15,6 +15,16 @@ Sentry.init({
   // Enable logs to be sent to Sentry
   enableLogs: true,
 
+  // Ignore benign client-side network/connection abort errors
+  ignoreErrors: [
+    "Connection closed.",
+    "ResizeObserver loop limit exceeded",
+    "ResizeObserver loop completed with undelivered notifications.",
+    "Failed to fetch",
+    "NetworkError when attempting to fetch resource",
+    "Script error."
+  ],
+
   // Define how likely Replay events are sampled.
   // This sets the sample rate to be 10%. You may want this to be 100% while
   // in development and sample at a lower rate in production
