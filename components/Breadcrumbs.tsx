@@ -24,15 +24,23 @@ export default function Breadcrumbs({
     ...items
   ];
 
+  const baseUrl = "https://freeprompts.store";
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": breadcrumbItems.map((item, index) => ({
-      "@type": "ListItem",
-      "position": index + 1,
-      "name": item.label,
-      "item": item.href || undefined
-    }))
+    "itemListElement": breadcrumbItems.map((item, index) => {
+      let absoluteUrl = undefined;
+      if (item.href) {
+        absoluteUrl = item.href.startsWith('http') ? item.href : `${baseUrl}${item.href}`;
+      }
+      return {
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": item.label,
+        "item": absoluteUrl
+      };
+    })
   };
 
   return (
