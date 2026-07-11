@@ -268,11 +268,13 @@ export default function ListsClient({ initialLists }: ListsClientProps) {
               )}
             </p>
           </div>
-          <div className="mb-8">
-            <div className="bg-gray-100 rounded-lg p-6 text-center">
-              <AdSpace />
+          {process.env.NEXT_PUBLIC_DISABLE_ADS !== "true" && (
+            <div className="mb-8">
+              <div className="bg-gray-100 rounded-lg p-6 text-center">
+                <AdSpace />
+              </div>
             </div>
-          </div>
+          )}
 
           {displayedLists.length > 0 ? (
             <>
@@ -335,7 +337,7 @@ export default function ListsClient({ initialLists }: ListsClientProps) {
                           shouldShowAd = itemsShown % 3 === 0;
                         }
                         const isLastRow = rowIndex >= Math.ceil(displayedLists.length / listsPerRow) - 1;
-                        return shouldShowAd && !isLastRow ? (
+                        return shouldShowAd && !isLastRow && process.env.NEXT_PUBLIC_DISABLE_ADS !== "true" ? (
                           <div className="mt-8 bg-gray-100 rounded-lg p-6 text-center">
                             <AdSpace />
                           </div>

@@ -87,6 +87,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="alternate" type="application/rss+xml" title="freeprompts.store RSS Feed" href="/feed.xml" />
+        <link rel="search" type="application/opensearchdescription+xml" title="freeprompts.store" href="/opensearch.xml" />
+      </head>
       <body className={`${inter.className} antialiased`}>
         <NextTopLoader
           color="#000000"
@@ -102,7 +106,7 @@ export default function RootLayout({
         />
         {/* Google Analytics */}
         <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=G-9HG703EXQQ`}
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID || 'G-9HG703EXQQ'}`}
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -110,7 +114,7 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-9HG703EXQQ');
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID || 'G-9HG703EXQQ'}');
           `}
         </Script>
 

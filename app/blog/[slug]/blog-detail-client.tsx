@@ -6,12 +6,14 @@ import Image from "next/image";
 import { useSiteLanguage } from "@/contexts/SiteLanguageContext";
 import { getTranslation } from "@/lib/translations";
 import { BlogPost, BlogPostContent } from "@/lib/blog-data";
+import PromptCard from "@/components/ui/PromptCard";
 
 interface BlogDetailClientProps {
   post: BlogPost;
+  relatedPrompts?: any[];
 }
 
-export default function BlogDetailClient({ post }: BlogDetailClientProps) {
+export default function BlogDetailClient({ post, relatedPrompts = [] }: BlogDetailClientProps) {
   const { siteLanguage } = useSiteLanguage();
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -162,6 +164,20 @@ export default function BlogDetailClient({ post }: BlogDetailClientProps) {
           </div>
 
         </div>
+
+        {/* Related Prompts Section */}
+        {relatedPrompts && relatedPrompts.length > 0 && (
+          <div className="mt-16 pt-12 border-t border-gray-150" suppressHydrationWarning>
+            <h2 className="text-2xl font-bold text-black mb-8">
+              {activeLang === "turkish" ? "İlişkili Prompt Şablonları" : "Related Prompt Templates"}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+              {relatedPrompts.map((prompt) => (
+                <PromptCard key={prompt.id} prompt={prompt} />
+              ))}
+            </div>
+          </div>
+        )}
 
       </div>
 

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/lib/blog-data";
 import BlogDetailClient from "./blog-detail-client";
+import { getRelatedPromptsByTagsServer } from "@/lib/supabase-server-queries";
 
 // Generate static params for static page export/ISR
 export async function generateStaticParams() {
@@ -74,6 +75,12 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   const postUrl = `${baseUrl}/blog/${slug}`;
   const seoContent = post.translations.english;
 
+  // Fetch related prompts based on tags
+  const relatedPrompts = await getRelatedPromptsByTagsServer(seoContent.tags, 4).catch((err) => {
+    console.error("Failed to fetch related prompts on server:", err);
+    return [];
+  });
+
   return (
     <>
       {/* Schema.org Article JSON-LD for Google AdSense & SEO */}
@@ -141,7 +148,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         }}
       />
 
-      <BlogDetailClient post={post} />
+      <BlogDetailClient post={post} relatedPrompts={relatedPrompts || []} />
     </>
   );
 }

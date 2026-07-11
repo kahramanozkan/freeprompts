@@ -296,13 +296,15 @@ export default function ListDetailPage() {
       </section>
 
       {/* Ad Space below Header */}
-      <section className="py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gray-100 rounded-lg p-6 text-center">
-            <AdSpace />
+      {process.env.NEXT_PUBLIC_DISABLE_ADS !== "true" && (
+        <section className="py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gray-100 rounded-lg p-6 text-center">
+              <AdSpace />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Prompts Grid with Ads */}
       <section className="py-12">
@@ -330,7 +332,7 @@ export default function ListDetailPage() {
                   </div>
                   
                   {/* Ad after every row except the last one */}
-                  {rowIndex < Math.ceil(displayedPrompts.length / PROMPTS_PER_ROW) - 1 && (
+                  {rowIndex < Math.ceil(displayedPrompts.length / PROMPTS_PER_ROW) - 1 && process.env.NEXT_PUBLIC_DISABLE_ADS !== "true" && (
                     <div className="mt-8 bg-gray-100 rounded-lg p-6 text-center">
                       <AdSpace />
                     </div>

@@ -256,9 +256,11 @@ export default function PromptsPage({
           )}
 
           {/* Ad Space */}
-          <div className="bg-gray-100 rounded-lg p-6 text-center">
-            <AdSpace format="horizontal" />
-          </div>
+          {process.env.NEXT_PUBLIC_DISABLE_ADS !== "true" && (
+            <div className="bg-gray-100 rounded-lg p-6 text-center">
+              <AdSpace format="horizontal" />
+            </div>
+          )}
         </div>
       </section>
 
@@ -314,7 +316,7 @@ export default function PromptsPage({
                       // Don't show ad after the last row
                       const isLastRow = rowIndex >= Math.ceil(filteredPrompts.length / PROMPTS_PER_ROW) - 1;
 
-                      return shouldShowAd && !isLastRow ? (
+                      return shouldShowAd && !isLastRow && process.env.NEXT_PUBLIC_DISABLE_ADS !== "true" ? (
                         <div className="mt-8 bg-gray-100 rounded-lg p-6 text-center">
                           <AdSpace format="horizontal" />
                         </div>

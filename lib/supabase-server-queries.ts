@@ -96,3 +96,21 @@ export async function getUserLikesServer(userId: string, promptIds: string[]) {
   })
   return likesMap
 }
+
+// Get related prompts by tags (server-side)
+export async function getRelatedPromptsByTagsServer(tags: string[], limit: number = 4) {
+  if (!tags || tags.length === 0) return []
+
+  const { data, error } = await supabaseServer
+    .from('prompts')
+    .select('id, title, image, tags, likes, created_at, user_id, sort_order')
+    .overlaps('tags', tags)
+    .limit(limit)
+
+  if (error) {
+    console.error('Error fetching related prompts:', error)
+    return []
+  }
+  return data
+}
+
