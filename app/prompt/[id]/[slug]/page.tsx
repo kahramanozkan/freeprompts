@@ -126,46 +126,24 @@ export default async function PromptDetailPage({ params }: { params: Promise<{ i
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 "@context": "https://schema.org",
-                "@type": "CreativeWork",
+                "@type": "Product",
                 "name": prompt.title,
                 "description": prompt.content.length > 160
                   ? `${prompt.content.substring(0, 157)}...`
                   : prompt.content,
+                "image": prompt.image ? [prompt.image] : ["https://freeprompts.store/logo.png"],
                 "url": `https://freeprompts.store/prompt/${prompt.id}/${slug}`,
-                "author": {
-                  "@type": "Person",
-                  "name": "Anonymous",
-                  "@id": "https://freeprompts.store/users/anonymous"
+                "sku": prompt.id,
+                "brand": {
+                  "@type": "Brand",
+                  "name": "FreePrompts"
                 },
-                "dateCreated": prompt.created_at,
-                "dateModified": prompt.updated_at,
-                "keywords": prompt.tags?.join(", "),
-                "image": prompt.image ? [prompt.image] : [],
-                "genre": "AI Prompt",
-                "about": [
-                  { "@type": "Thing", "name": "Artificial Intelligence" },
-                  { "@type": "Thing", "name": "Prompt Engineering" }
-                ],
-                "interactionStatistic": [
-                  {
-                    "@type": "InteractionCounter",
-                    "interactionType": "https://schema.org/LikeAction",
-                    "userInteractionCount": prompt.likes || 0
-                  },
-                  {
-                    "@type": "InteractionCounter",
-                    "interactionType": "https://schema.org/ViewAction",
-                    "userInteractionCount": prompt.views || 0
-                  }
-                ],
-                "isPartOf": {
-                  "@type": "Collection",
-                  "name": "FreePrompts AI Prompts",
-                  "url": "https://freeprompts.store"
-                },
-                "mainEntityOfPage": {
-                  "@type": "WebPage",
-                  "@id": `https://freeprompts.store/prompt/${prompt.id}/${slug}`
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD",
+                  "availability": "https://schema.org/InStock",
+                  "url": `https://freeprompts.store/prompt/${prompt.id}/${slug}`
                 },
                 "aggregateRating": {
                   "@type": "AggregateRating",
