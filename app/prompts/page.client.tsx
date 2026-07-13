@@ -25,6 +25,13 @@ interface PromptsPageProps {
   initialCategories: string[];
   initialThemes: string[];
   initialGroups: string[];
+  searchParams?: {
+    category?: string;
+    tag?: string;
+    theme?: string;
+    group?: string;
+    q?: string;
+  };
 }
 
 export default function PromptsPage({ 
@@ -33,17 +40,26 @@ export default function PromptsPage({
   initialTags,
   initialCategories,
   initialThemes,
-  initialGroups
+  initialGroups,
+  searchParams
 }: PromptsPageProps) {
   const [prompts, setPrompts] = useState<Prompt[]>(initialPrompts);
   const [totalPrompts, setTotalPrompts] = useState<number>(initialTotalCount);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    searchParams?.tag ? [searchParams.tag] : []
+  );
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    searchParams?.category ? [searchParams.category] : []
+  );
+  const [selectedThemes, setSelectedThemes] = useState<string[]>(
+    searchParams?.theme ? [searchParams.theme] : []
+  );
+  const [selectedGroups, setSelectedGroups] = useState<string[]>(
+    searchParams?.group ? [searchParams.group] : []
+  );
   const [loadingMore, setLoadingMore] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchParams?.q || "");
+  const [searchInput, setSearchInput] = useState(searchParams?.q || "");
 
   const [allTags, setAllTags] = useState<string[]>(initialTags);
   const [isMobile, setIsMobile] = useState(false);
@@ -197,6 +213,13 @@ export default function PromptsPage({
       setLoadingMore(false);
     }
   };
+
+  // Trigger search on mount if initial parameters are present
+  useEffect(() => {
+    if (searchParams?.q || searchParams?.category || searchParams?.tag || searchParams?.theme || searchParams?.group) {
+      handleSearchSubmit();
+    }
+  }, []);
 
   // Trigger search when any filter changes
   useEffect(() => {

@@ -7,8 +7,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
 
     // Get parameters
+    const type = searchParams.get("type") || "prompt";
     const title = searchParams.get("title") || "Free AI Prompt Marketplace";
     const category = searchParams.get("category") || "General";
+    const count = searchParams.get("count") || "0";
 
     return new ImageResponse(
       (
@@ -84,24 +86,58 @@ export async function GET(request: Request) {
               style={{
                 display: "flex",
                 alignItems: "center",
-                padding: "8px 16px",
-                borderRadius: "9999px",
-                backgroundColor: "rgba(245, 158, 11, 0.1)",
-                border: "1px solid rgba(245, 158, 11, 0.2)",
+                gap: "12px",
               }}
             >
-              <span
+              <div
                 style={{
-                  color: "#f59e0b",
-                  fontSize: "16px",
-                  fontWeight: "semibold",
-                  textTransform: "uppercase",
-                  letterSpacing: "1px",
-                  fontFamily: "sans-serif",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "8px 16px",
+                  borderRadius: "9999px",
+                  backgroundColor: type === "list" ? "rgba(99, 102, 241, 0.1)" : "rgba(245, 158, 11, 0.1)",
+                  border: type === "list" ? "1px solid rgba(99, 102, 241, 0.2)" : "1px solid rgba(245, 158, 11, 0.2)",
                 }}
               >
-                {category}
-              </span>
+                <span
+                  style={{
+                    color: type === "list" ? "#818cf8" : "#f59e0b",
+                    fontSize: "16px",
+                    fontWeight: "semibold",
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
+                    fontFamily: "sans-serif",
+                  }}
+                >
+                  {type === "list" ? "Curated Collection" : category}
+                </span>
+              </div>
+
+              {type === "list" && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "8px 16px",
+                    borderRadius: "9999px",
+                    backgroundColor: "rgba(245, 158, 11, 0.1)",
+                    border: "1px solid rgba(245, 158, 11, 0.2)",
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#f59e0b",
+                      fontSize: "16px",
+                      fontWeight: "semibold",
+                      textTransform: "uppercase",
+                      letterSpacing: "1px",
+                      fontFamily: "sans-serif",
+                    }}
+                  >
+                    {count} {parseInt(count) === 1 ? "Prompt" : "Prompts"}
+                  </span>
+                </div>
+              )}
             </div>
             <span
               style={{
@@ -135,7 +171,7 @@ export async function GET(request: Request) {
                 fontFamily: "sans-serif",
               }}
             >
-              Copy-Paste Free AI Prompt Templates
+              {type === "list" ? "Explore Hand-Picked AI Prompt Lists" : "Copy-Paste Free AI Prompt Templates"}
             </span>
             <div
               style={{

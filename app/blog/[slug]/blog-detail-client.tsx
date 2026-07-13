@@ -142,6 +142,29 @@ export default function BlogDetailClient({ post, relatedPrompts = [] }: BlogDeta
 
           {/* Article Text Content */}
           <div className="lg:col-span-3 prose prose-lg prose-gray max-w-none">
+            {/* GEO Quick Summary & Key Concept (AI Search Engine Optimization) */}
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl p-6 mb-8 shadow-sm">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-indigo-800 mb-3 flex items-center gap-2">
+                <svg className="w-5 h-5 text-indigo-600 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                {activeLang === 'turkish' ? 'Yapay Zeka Arama Motoru Özeti' : 'AI Search Overview & Takeaways'}
+              </h3>
+              <p className="text-sm text-gray-700 mb-4 leading-relaxed font-sans font-medium">
+                {content.excerpt}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans mt-4 pt-4 border-t border-indigo-100/50">
+                <div>
+                  <span className="block text-gray-400 font-semibold uppercase">{activeLang === 'turkish' ? 'Hedef Odaklı Teknolojiler' : 'Target Technologies'}</span>
+                  <span className="font-semibold text-gray-800 mt-1 block">{content.tags.slice(0, 3).join(', ')}</span>
+                </div>
+                <div>
+                  <span className="block text-gray-400 font-semibold uppercase">{activeLang === 'turkish' ? 'Önemli Anahtar Kelimeler' : 'Actionable Keywords'}</span>
+                  <span className="font-semibold text-indigo-700 mt-1 block">{content.tags.map(t => `#${t.replace(/\s+/g, '')}`).join(' ')}</span>
+                </div>
+              </div>
+            </div>
+
             {/* Render HTML Content */}
             <div 
               className="space-y-6 text-gray-700 leading-relaxed font-sans blog-content"

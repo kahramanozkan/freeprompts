@@ -122,7 +122,18 @@ async function getUniqueMetadata(): Promise<{ tags: string[], categories: string
   };
 }
 
-export default async function PromptsPage() {
+export default async function PromptsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    category?: string;
+    tag?: string;
+    theme?: string;
+    group?: string;
+    q?: string;
+  }>;
+}) {
+  const resolvedParams = await searchParams;
   const [initialData, metadata] = await Promise.all([
     getInitialPrompts(),
     getUniqueMetadata()
@@ -196,6 +207,7 @@ export default async function PromptsPage() {
         initialCategories={metadata.categories}
         initialThemes={metadata.themes}
         initialGroups={metadata.groups}
+        searchParams={resolvedParams}
       />
     </>
   );
