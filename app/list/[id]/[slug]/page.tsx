@@ -74,21 +74,15 @@ export default function ListDetailPage() {
         setLoading(true);
         setError(null);
 
-        // Get list by slug
-        const listData = await listsApi.getBySlug(params.slug as string);
+        // Get list by unique ID to be robust against name/slug changes
+        const listData = await listsApi.getById(params.id as string);
         setList(listData);
 
-        // Get prompts in this list with user data
-        const promptsData = await promptsWithUserApi.getAllWithUsers();
-        
-        // Filter prompts that belong to this list
-        const listPromptIds = listData.prompt_ids || [];
-        const filteredPrompts = promptsData.filter(prompt =>
-          listPromptIds.includes(prompt.id)
-        );
+        // Get only the prompts belonging to this list directly from Supabase
+        const promptsData = await promptsWithUserApi.getByListWithUsers(listData.id);
         
         // Transform to match interface
-        const transformedPrompts: Prompt[] = filteredPrompts.map((prompt: any) => ({
+        const transformedPrompts: Prompt[] = promptsData.map((prompt: any) => ({
           ...prompt,
           userName: prompt.user?.name || "Anonymous"
         }));
@@ -106,10 +100,10 @@ export default function ListDetailPage() {
       }
     };
 
-    if (params.slug) {
+    if (params.id) {
       loadListData();
     }
-  }, [params.slug]);
+  }, [params.id]);
 
   // Separate useEffect for scroll listener
   useEffect(() => {
